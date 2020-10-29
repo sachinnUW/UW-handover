@@ -63,7 +63,6 @@ TableLossModel::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
                                                                  Ptr<const MobilityModel> a,
                                                                  Ptr<const MobilityModel> b) const
 {
-  //std::cout << "*";
   Ptr<SpectrumValue> rxPsd = Copy<SpectrumValue> (txPsd);
   Values::iterator vit = rxPsd->ValuesBegin ();
   Bands::const_iterator fit = rxPsd->ConstBandsBegin ();
@@ -75,11 +74,9 @@ TableLossModel::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
   // assume a is the eNb, b is the UE, on the DL
   uint32_t enbId = a->GetObject<Node> ()->GetId();
   uint32_t ueId = b->GetObject<Node> ()->GetId();
+  //std::cout << ueId << std::endl;
+  //std::cout << enbId << std::endl;
   uint32_t currentRb = 0;
-  
-  //std::cout << enbId << "\n";
-  //std::cout << ueId << "\n";
-  //std::cout << currentRb << "\n";
   
   while (vit != rxPsd->ValuesEnd ())
     {
@@ -97,22 +94,23 @@ double
 TableLossModel::GetRxPsd (uint32_t enbId, uint32_t ueId, uint32_t rbIndex) const
 {
   // compute array index from 'now' which must be discretized to a 1us boundary
-  //std::cout << "*";
   uint64_t nowMs = Simulator::Now ().GetMilliSeconds ();
-  //std::cout << nowMs << "\n";
-  //std::cout << enbId << "\n";
-  //std::cout << ueId - m_numEnb << "\n";
-  //std::cout << rbIndex << "\n";
   // fetch and return value for (enbId, ueId, nowUs) from data structure
-  return m_traceVals[enbId][ueId - m_numEnb][rbIndex][nowMs];//the ueID variable in numbered UEID = (numeNb,...,numeNb+numUe-1) so a subtractor is needed
-  
+  if (ueId > enbId)
+  {
+    return m_traceVals[enbId][ueId - m_numEnb][rbIndex][nowMs];//the ueID variable in numbered UEID = (numeNb,...,numeNb+numUe-1) so a subtractor is needed
+  }
+  else
+  {
+  // The uplink case; what was passed in as a UE is actually an eNB
+    return m_traceVals[ueId][enbId - m_numEnb][rbIndex][nowMs];//the eID variable in numbered UEID = (numeNb,...,numeNb+numUe-1) so a subtractor is needed
+  }
 }
 
 
 void
 TableLossModel::initializeTraceVals (uint32_t numEnbs, uint32_t numUes, uint32_t numRbs, uint32_t simSubFrames)
 {
-  //std::cout << "*";
   m_numRb = numRbs;
   m_numEnb = numEnbs;
   m_numUe = numUes;
@@ -140,11 +138,6 @@ TableLossModel::initializeTraceVals (uint32_t numEnbs, uint32_t numUes, uint32_t
 void
 TableLossModel::LoadTrace (std::string path, std::string fileName)
 {
-  
-  // get the identifiers from the filename
-  // filename bust be formatted as such: 
-  //SECTION NOT DONE 
-  //std::string fileName = "ULDL_Channel_Response_TX_1_Sector_1_UE_1_.txt";
   std::vector <std::string> tokens; 
 
   std::stringstream toParse(fileName); 
@@ -155,10 +148,10 @@ TableLossModel::LoadTrace (std::string path, std::string fileName)
       tokens.push_back(temp); 
   } 
 
-    
-  int enbId = std::stoi(tokens[4]);
-  int ueId  = std::stoi(tokens[8]);
-  int sectorId = std::stoi(tokens[6]);
+  
+  int enbId = std::stoi(tokens[2]);
+  int ueId  = std::stoi(tokens[6]);
+  int sectorId = std::stoi(tokens[4]);
   
   
   std::ifstream  data(path + fileName);
@@ -173,7 +166,6 @@ TableLossModel::LoadTrace (std::string path, std::string fileName)
       for (uint32_t currentTimeIndex = 0; currentTimeIndex < m_numSubFrames; ++currentTimeIndex)
       {
           lineStream >> val;
-          //std::cout << "@" << std::endl;
           m_traceVals[3*(enbId-1)+(sectorId-1)][ueId-1][currentRb][currentTimeIndex] = val;
 
           if(lineStream.peek() == ' ') lineStream.ignore();

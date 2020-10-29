@@ -524,6 +524,17 @@ public:
    */
   typedef void (* TracedCallback)(Ptr<SpectrumValue> value);
 
+  Ptr<const SpectrumModel> m_spectrumModel; //!< The spectrum model
+
+
+  /**
+   * Set of values which implement the codomain of the functions in
+   * the Function Space defined by SpectrumValue. There is no restriction
+   * on what these values represent (a transmission power density, a
+   * propagation loss, etc.).
+   *
+   */
+  Values m_values;
 
 private:
   /**
@@ -604,17 +615,7 @@ private:
    */
   void Log ();
 
-  Ptr<const SpectrumModel> m_spectrumModel; //!< The spectrum model
-
-
-  /**
-   * Set of values which implement the codomain of the functions in
-   * the Function Space defined by SpectrumValue. There is no restriction
-   * on what these values represent (a transmission power density, a
-   * propagation loss, etc.).
-   *
-   */
-  Values m_values;
+  
 
 
 };

@@ -971,7 +971,8 @@ LteUePhy::ReportUeMeasurements ()
       ret.m_componentCarrierId = m_componentCarrierId;
 
       // report to UE measurements trace
-      m_reportUeMeasurements (m_rnti, (*it).first, avg_rsrp, avg_rsrq, ((*it).first == m_cellId ? 1 : 0), m_componentCarrierId);
+      //m_reportUeMeasurements (m_rnti, (*it).first, avg_rsrp, avg_rsrq, ((*it).first == m_cellId ? 1 : 0), m_componentCarrierId);
+      m_reportUeMeasurements (m_imsi, (*it).first, avg_rsrp, avg_rsrq, ((*it).first == m_cellId ? 1 : 0), m_componentCarrierId);
     }
 
   // report to RRC

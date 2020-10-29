@@ -39,7 +39,7 @@ trap control_c SIGINT
 #x2Distance=500
 #yDistanceForUe=1000
 useRlcUm=0
-scenarioName="0.1"
+scenarioName="0.3.1"
 handoverType="A3Rsrp"
 HystVal=(3)
 TTT=(256)

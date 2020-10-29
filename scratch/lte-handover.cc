@@ -52,6 +52,12 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <sys/types.h>
+
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("LteTcpX2Handover");
@@ -190,10 +196,10 @@ TracePosition (Ptr<Node> ue, Time interval)
 }
 
 void
-NotifyUeMeasurements (std::string context, uint16_t rnti, uint16_t cellId, double rsrpDbm, double rsrqDbm, bool servingCell, uint8_t ccId)
+NotifyUeMeasurements (std::string context, uint16_t imsi, uint16_t cellId, double rsrpDbm, double rsrqDbm, bool servingCell, uint8_t ccId)
 {
   g_ueMeasurements << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << " " 
-    << std::setw (3) << rnti << " "
+    << std::setw (3) << imsi << " "
     << std::setw (3) << cellId << " " 
     << std::setw (3) << (servingCell ? "1" : "0") << " " 
     << std::setw (8) << rsrpDbm << " " 
@@ -201,10 +207,10 @@ NotifyUeMeasurements (std::string context, uint16_t rnti, uint16_t cellId, doubl
 }
 
 void
-NotifyPacketSinkRx (std::string context, Ptr<const Packet> packet, const Address &address)
+NotifyPacketSinkRx (std::string context, Ptr<const Packet> packet, const Address &address, const Address &reciever)
 {
   g_packetSinkRx << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () 
-    << " " << std::setw (5) << packet->GetSize () << std::endl;
+    << " " << std::setw (5) << packet->GetSize () << std::setw (5) << " " << reciever << std::endl;
 }
 
 /*
@@ -247,13 +253,13 @@ main (int argc, char *argv[])
   
   // Constants that can be changed by command-line arguments
   double enbTxPowerDbm = 46.0;
-  std::string handoverType = "A2A4";
+  std::string handoverType = "A3Rsrp";
   bool useRlcUm = false;
   bool verbose = false;
   bool pcap = false;
   double hystVal = 3;
   double timeToTrigger = 256;
-  std::string scenarioName = "0.1";
+  std::string scenarioName = "0.3.1";
 
 
 
@@ -271,8 +277,10 @@ main (int argc, char *argv[])
 
   cmd.Parse (argc, argv);
 
-
-  std::string configFileName = "/home/collin/workspace/ns-3-dev-git/exampleTraces/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
+  char * homedir = getenv("HOME");
+  std::string homeDir = homedir;
+   
+  std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
   std::map<std::string,std::vector<double>> simParameters;
   
   std::ifstream  data(configFileName);
@@ -320,7 +328,8 @@ main (int argc, char *argv[])
   // Constants for this program (program is not designed to change these)
   uint16_t numberOfUes = simParameters.at("numberofUEs")[0];
   uint16_t numberOfEnbs = 3*simParameters.at("numberofBS")[0];//Each eNb has three sectors which are treated as separate eNb by NS-3
-
+  //std::cout << numberOfUes << std::endl;
+  //std::cout << numberOfEnbs << std::endl;
 
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
@@ -334,7 +343,7 @@ main (int argc, char *argv[])
   std::string traceFilePrefix = "lte-tcp-x2-handover";
   Time positionTracingInterval = Seconds (5);
   Time reportingInterval = Seconds (10);
-  uint32_t ftpSize = 2000000000; // 200 MB
+  uint64_t ftpSize = 4*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
 
   // change some default attributes so that they are reasonable for
@@ -360,7 +369,7 @@ main (int argc, char *argv[])
     }
 
   g_ueMeasurements.open ((traceFilePrefix + ".ue-measurements.dat").c_str(), std::ofstream::out);
-  g_ueMeasurements << "# time   rnti   cellId   isServingCell?  RSRP(dBm)  RSRQ(dB)" << std::endl;
+  g_ueMeasurements << "# time   imsi   cellId   isServingCell?  RSRP(dBm)  RSRQ(dB)" << std::endl;
   g_packetSinkRx.open ((traceFilePrefix + ".tcp-receive.dat").c_str(), std::ofstream::out);
   g_packetSinkRx << "# time   bytesRx" << std::endl;
   //g_cqiTrace.open ((traceFilePrefix + ".cqi.dat").c_str(), std::ofstream::out);
@@ -402,8 +411,10 @@ main (int argc, char *argv[])
 
   // Create a single RemoteHost
   NodeContainer remoteHostContainer;
-  remoteHostContainer.Create (1);
+  remoteHostContainer.Create (numberOfUes);
   Ptr<Node> remoteHost = remoteHostContainer.Get (0);
+  //Ptr<Node> remoteHost2 = remoteHostContainer.Get (1);
+  //Ptr<Node> remoteHost3 = remoteHostContainer.Get (2);
   InternetStackHelper internet;
   internet.Install (remoteHostContainer);
 
@@ -413,6 +424,8 @@ main (int argc, char *argv[])
   p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
   p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.010)));
   NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost);
+  //NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost2);
+  //NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost3);
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
   Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
@@ -424,19 +437,28 @@ main (int argc, char *argv[])
   // interface 0 is localhost, 1 is the p2p device
   remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
 
+
+
+
+
+
+
+
+
+
+
+
   // Install Mobility Model in eNB
   Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator> ();
   for (uint16_t i = 0; i < numberOfEnbs/3; i++)
   {
-  	for (int j = 0; j < 3; ++j) //each of the three sectors shares a location
-  	{
-  		Vector enbPosition (simParameters.at("BS" + std::to_string(i+1) + "location")[0], simParameters.at("BS" + std::to_string(i+1) + "location")[1], simParameters.at("BS" + std::to_string(i+1) + "location")[2]);
-    	enbPositionAlloc->Add (enbPosition);
-  	}
+    for (int j = 0; j < 3; ++j) //each of the three sectors shares a location
+    {
+      Vector enbPosition (simParameters.at("BS" + std::to_string(i+1) + "location")[0], simParameters.at("BS" + std::to_string(i+1) + "location")[1], simParameters.at("BS" + std::to_string(i+1) + "location")[2]);
+      //std::cout << enbPosition << std::endl;
+      enbPositionAlloc->Add (enbPosition);
+    }
   }
-    
-    
-    
     
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
@@ -450,8 +472,15 @@ main (int argc, char *argv[])
   
   for (uint16_t i = 0; i < numberOfUes; i++)
   {
-    ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (Vector (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]));
-    ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]));
+    Vector uePosition (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]);
+    //ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (Vector (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]));
+    ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
+    Vector ueVelocity (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]);
+    //ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]));
+    ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
+    
+    //std::cout << uePosition << std::endl;
+    //std::cout << ueVelocity << std::endl;
   }
   
   // Install LTE Devices in eNB and UEs
@@ -470,7 +499,8 @@ main (int argc, char *argv[])
   tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, simParameters.at("ResourceBlocks")[0], simTime*1000);
   
   
-  
+  //std::cout << i << std::endl;
+  //std::cout << i << std::endl;
   
   for (int i = 0; i < numberOfUes; ++i)
   {
@@ -478,7 +508,11 @@ main (int argc, char *argv[])
   	{
 	  for (int k = 0; k < 3; ++k)
   	  {
-  		  tableLossModel->LoadTrace ("/home/collin/workspace/ns-3-dev-git/exampleTraces/","ULDL_Channel_Response_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_.txt");// the filepath (first input), must be changed to your local filepath for these trace files
+        //std::cout << i << std::endl;
+        //std::cout << j << std::endl;
+        //std::cout << k << std::endl;
+        
+  		  tableLossModel->LoadTrace (homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
   	    //"/home/collin/Downloads/Scenario0.1/","ULDL_Channel_Response_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_.txt");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
@@ -502,8 +536,16 @@ main (int argc, char *argv[])
 
   Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (0)->GetObject<Ipv4> ());
   ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
-  BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
   
+  Ptr<Ipv4StaticRouting> ueStaticRouting2 = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (1)->GetObject<Ipv4> ());
+  ueStaticRouting2->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+  
+  Ptr<Ipv4StaticRouting> ueStaticRouting3 = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (2)->GetObject<Ipv4> ());
+  ueStaticRouting3->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+  
+  
+  
+  BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
   AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (0), port));
   ftpServer.SetAttribute ("Remote", remoteAddress);
   ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
@@ -512,11 +554,65 @@ main (int argc, char *argv[])
   sourceApp.Start (Seconds (1));
   sourceApp.Stop (Seconds (simTime));
 
-  Address sinkLocalAddress (InetSocketAddress (Ipv4Address::GetAny (), port));
+
+
+
+
+  BulkSendHelper ftpServer2 ("ns3::TcpSocketFactory", Address ());
+  AddressValue remoteAddress2 (InetSocketAddress (ueIpIfaces.GetAddress (1), port));
+  ftpServer2.SetAttribute ("Remote", remoteAddress2);
+  ftpServer2.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
+  //NS_LOG_LOGIC ("setting up TCP flow from remote host to UE");
+  ApplicationContainer sourceApp2 = ftpServer2.Install (remoteHost);
+  sourceApp2.Start (Seconds (1));
+  sourceApp2.Stop (Seconds (simTime));
+
+
+
+  BulkSendHelper ftpServer3 ("ns3::TcpSocketFactory", Address ());
+  AddressValue remoteAddress3 (InetSocketAddress (ueIpIfaces.GetAddress (2), port));
+  ftpServer3.SetAttribute ("Remote", remoteAddress3);
+  ftpServer3.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
+  //NS_LOG_LOGIC ("setting up TCP flow from remote host to UE");
+  ApplicationContainer sourceApp3 = ftpServer3.Install (remoteHost);
+  sourceApp3.Start (Seconds (1));
+  sourceApp3.Stop (Seconds (simTime));
+
+
+
+
+
+
+
+
+
+  Address sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (0), port));
   PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", sinkLocalAddress);
-  ApplicationContainer sinkApp = sinkHelper.Install (ueNodes.Get (0));
+  ApplicationContainer sinkApp = sinkHelper.Install (ueNodes.Get(0));
   sinkApp.Start (Seconds (1));
   sinkApp.Stop (Seconds (simTime));
+  
+  
+  
+  
+  
+  
+  Address sinkLocalAddress2 (InetSocketAddress (ueIpIfaces.GetAddress (1), port));
+  PacketSinkHelper sinkHelper2 ("ns3::TcpSocketFactory", sinkLocalAddress2);
+  ApplicationContainer sinkApp2 = sinkHelper2.Install (ueNodes.Get (1));
+  sinkApp2.Start (Seconds (1));
+  sinkApp2.Stop (Seconds (simTime));
+  
+  Address sinkLocalAddress3 (InetSocketAddress (ueIpIfaces.GetAddress (2), port));
+  PacketSinkHelper sinkHelper3 ("ns3::TcpSocketFactory", sinkLocalAddress3);
+  ApplicationContainer sinkApp3 = sinkHelper3.Install (ueNodes.Get (2));
+  sinkApp3.Start (Seconds (1));
+  sinkApp3.Stop (Seconds (simTime));
+  
+  
+  
+  
+  
   
   Ptr<EpcTft> tft = Create<EpcTft> ();
   EpcTft::PacketFilter dlpf;
@@ -525,6 +621,8 @@ main (int argc, char *argv[])
   tft->Add (dlpf);
   EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
   lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (0), bearer, tft);
+  lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (1), bearer, tft);
+  lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (2), bearer, tft);
 
   // Add X2 interface
   lteHelper->AddX2Interface (enbNodes);
@@ -561,7 +659,7 @@ main (int argc, char *argv[])
   // connect additional traces for more experiment tracing
   Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/ReportUeMeasurements",
                    MakeCallback (&NotifyUeMeasurements));
-  Config::Connect ("/NodeList/*/ApplicationList/*/$ns3::PacketSink/Rx",
+  Config::Connect ("/NodeList/*/ApplicationList/*/$ns3::PacketSink/RxWithAddresses",
                    MakeCallback (&NotifyPacketSinkRx));
   //Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteEnbNetDevice/ComponentCarrierMap/*/FfMacScheduler/$ns3::RrFfMacScheduler/WidebandCqiReport",
   //                 MakeCallback (&NotifyCqiReport));
