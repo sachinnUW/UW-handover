@@ -100,7 +100,7 @@ do
 			cd ${experimentDir}
 			cp $0 ${resultsDir}
 		done
-		python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
+		#python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
 	done
 done
 #cd ${resultsDir}

@@ -247,16 +247,17 @@ binWidth = 20;#number of points to average over
 
 for i in range(trials):
 	for j in range(numUE):
-		print("     Trial " + str(i+1) + ", UE " + str(j+1))
-		packetTime = [float(x) for x in packetData[i][j].keys()]
-		#temp = list(range(int(1000*(packetTime[0]+binWidth/2)),int(1000*(packetTime[-1]-binWidth/2)),int(1000*binWidth)))#converted to integers for range
-		dataRateTime[i][j] = [float(i)/1000 for i in range(int(1000*max(packetTime))+1)]#converted back to floats
-		recievedBytes = list(packetData[i][j].values())
-		for k in range(len(dataRateTime[i][j])):
-			if k < binWidth-1:
-				dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k)]))
-			else:
-				dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k-binWidth+1,k)]))
+		if len(packetData[i][j].keys()) > 0:
+			print("     Trial " + str(i+1) + ", UE " + str(j+1))
+			packetTime = [float(x) for x in packetData[i][j].keys()]
+			#temp = list(range(int(1000*(packetTime[0]+binWidth/2)),int(1000*(packetTime[-1]-binWidth/2)),int(1000*binWidth)))#converted to integers for range
+			dataRateTime[i][j] = [float(i)/1000 for i in range(int(1000*max(packetTime))+1)]#converted back to floats
+			recievedBytes = list(packetData[i][j].values())
+			for k in range(len(dataRateTime[i][j])):
+				if k < binWidth-1:
+					dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k)]))
+				else:
+					dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k-binWidth+1,k)]))
 
 
 

@@ -47,10 +47,12 @@
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/mobility-module.h"
+#include "ns3/netanim-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/spectrum-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
+#include "ns3/point-to-point-layout-module.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -260,9 +262,9 @@ main (int argc, char *argv[])
   double hystVal = 3;
   double timeToTrigger = 256;
   std::string scenarioName = "0.3.1";
-
-
-
+  
+  
+  
   // Command line arguments
   CommandLine cmd;
   cmd.AddValue ("enbTxPowerDbm", "TX power (dBm) used by eNBs", enbTxPowerDbm);
@@ -273,13 +275,13 @@ main (int argc, char *argv[])
   cmd.AddValue ("hystVal", "Hysteresis Value", hystVal);
   cmd.AddValue ("timeToTrigger", "time to trigger (TTT)", timeToTrigger);
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
-
-
+  
+  
   cmd.Parse (argc, argv);
-
+  
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
-   
+  
   std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
   std::map<std::string,std::vector<double>> simParameters;
   
@@ -330,14 +332,14 @@ main (int argc, char *argv[])
   uint16_t numberOfEnbs = 3*simParameters.at("numberofBS")[0];//Each eNb has three sectors which are treated as separate eNb by NS-3
   //std::cout << numberOfUes << std::endl;
   //std::cout << numberOfEnbs << std::endl;
-
+  
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
   NodeContainer enbNodes;
   enbNodes.Create (numberOfEnbs);
   ueNodes.Create (numberOfUes);
-
-
+  
+  
   // Additional constants (not changeable at command line)
   LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
   std::string traceFilePrefix = "lte-tcp-x2-handover";
@@ -345,14 +347,12 @@ main (int argc, char *argv[])
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 4*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
-
+  
   // change some default attributes so that they are reasonable for
   // this scenario, but do this before processing command line
   // arguments, so that the user is allowed to override these settings
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
-
   
-
   double simTime = simParameters.at("Simulationduration(s)")[0]; // seconds
   
   
@@ -362,12 +362,12 @@ main (int argc, char *argv[])
       LogComponentEnable ("A2A4RsrqHandoverAlgorithm", logLevel);
       LogComponentEnable ("A3RsrpHandoverAlgorithm", logLevel);
     }
-
+  
   if (useRlcUm == false)
     {
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
     }
-
+  
   g_ueMeasurements.open ((traceFilePrefix + ".ue-measurements.dat").c_str(), std::ofstream::out);
   g_ueMeasurements << "# time   imsi   cellId   isServingCell?  RSRP(dBm)  RSRQ(dB)" << std::endl;
   g_packetSinkRx.open ((traceFilePrefix + ".tcp-receive.dat").c_str(), std::ofstream::out);
@@ -386,7 +386,7 @@ main (int argc, char *argv[])
   Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper> ();
   lteHelper->SetEpcHelper (epcHelper);
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
-
+  
   if (handoverType == "A2A4")
     {
       lteHelper->SetHandoverAlgorithmType ("ns3::A2A4RsrqHandoverAlgorithm");
@@ -408,46 +408,7 @@ main (int argc, char *argv[])
       std::cout << "Unknown handover type: " << handoverType << std::endl;
       exit (1);
     }
-
-  // Create a single RemoteHost
-  NodeContainer remoteHostContainer;
-  remoteHostContainer.Create (numberOfUes);
-  Ptr<Node> remoteHost = remoteHostContainer.Get (0);
-  //Ptr<Node> remoteHost2 = remoteHostContainer.Get (1);
-  //Ptr<Node> remoteHost3 = remoteHostContainer.Get (2);
-  InternetStackHelper internet;
-  internet.Install (remoteHostContainer);
-
-  // Create the notional Internet
-  PointToPointHelper p2ph;
-  p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
-  p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
-  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.010)));
-  NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost);
-  //NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost2);
-  //NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost3);
-  Ipv4AddressHelper ipv4h;
-  ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
-  Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
-  //Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
-
-  // Routing of the Internet Host (towards the LTE network)
-  Ipv4StaticRoutingHelper ipv4RoutingHelper;
-  Ptr<Ipv4StaticRouting> remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting (remoteHost->GetObject<Ipv4> ());
-  // interface 0 is localhost, 1 is the p2p device
-  remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
-
-
-
-
-
-
-
-
-
-
-
-
+  
   // Install Mobility Model in eNB
   Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator> ();
   for (uint16_t i = 0; i < numberOfEnbs/3; i++)
@@ -455,16 +416,15 @@ main (int argc, char *argv[])
     for (int j = 0; j < 3; ++j) //each of the three sectors shares a location
     {
       Vector enbPosition (simParameters.at("BS" + std::to_string(i+1) + "location")[0], simParameters.at("BS" + std::to_string(i+1) + "location")[1], simParameters.at("BS" + std::to_string(i+1) + "location")[2]);
-      //std::cout << enbPosition << std::endl;
       enbPositionAlloc->Add (enbPosition);
     }
   }
-    
+  
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator (enbPositionAlloc);
   enbMobility.Install (enbNodes);
-
+  
   // Install Mobility Model in UE
   MobilityHelper ueMobility;
   ueMobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
@@ -473,14 +433,9 @@ main (int argc, char *argv[])
   for (uint16_t i = 0; i < numberOfUes; i++)
   {
     Vector uePosition (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]);
-    //ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (Vector (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]));
     ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
     Vector ueVelocity (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]);
-    //ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (Vector (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]));
     ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
-    
-    //std::cout << uePosition << std::endl;
-    //std::cout << ueVelocity << std::endl;
   }
   
   // Install LTE Devices in eNB and UEs
@@ -498,120 +453,94 @@ main (int argc, char *argv[])
   // Configure tableLossModel here, by e.g. pointing it to a trace file
   tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, simParameters.at("ResourceBlocks")[0], simTime*1000);
   
-  
-  //std::cout << i << std::endl;
-  //std::cout << i << std::endl;
-  
   for (int i = 0; i < numberOfUes; ++i)
   {
   	for (int j = 0; j < numberOfEnbs/3; ++j)
   	{
 	  for (int k = 0; k < 3; ++k)
   	  {
-        //std::cout << i << std::endl;
-        //std::cout << j << std::endl;
-        //std::cout << k << std::endl;
-        
   		  tableLossModel->LoadTrace (homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
-  	    //"/home/collin/Downloads/Scenario0.1/","ULDL_Channel_Response_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_.txt");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
   }
   
-  
-  
   dlChannel->AddSpectrumPropagationLossModel (tableLossModel);
-  //ulChannel->AddSpectrumPropagationLossModel (tableLossModel);// we want the UL/DL channels to be reciprocal
-  
-  // Install the IP stack on the UEs
-  internet.Install (ueNodes);
-  Ipv4InterfaceContainer ueIpIfaces;
-  ueIpIfaces = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
+  ulChannel->AddSpectrumPropagationLossModel (tableLossModel);// we want the UL/DL channels to be reciprocal
   
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
     {
       lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (simParameters.at("UE" + std::to_string(i+1) + "initialattachment")[0] - 1));
     }
-
-  Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (0)->GetObject<Ipv4> ());
-  ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
   
-  Ptr<Ipv4StaticRouting> ueStaticRouting2 = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (1)->GetObject<Ipv4> ());
-  ueStaticRouting2->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+  // Create a single RemoteHost
+  NodeContainer remoteHostContainer;
+  remoteHostContainer.Create (1);
+  Ptr<Node> remoteHost = remoteHostContainer.Get(0);
+  InternetStackHelper internet;
+  internet.Install (remoteHost);
   
-  Ptr<Ipv4StaticRouting> ueStaticRouting3 = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (2)->GetObject<Ipv4> ());
-  ueStaticRouting3->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+  // Create the notional Internet
+  PointToPointHelper p2ph;
+  p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
+  p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
+  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.010)));
+  NetDeviceContainer internetDevices = p2ph.Install (epcHelper->GetPgwNode (), remoteHost);
+  //PointToPointStarHelper star (numberOfUes, p2ph);
+  Ipv4AddressHelper ipv4h;
+  ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
+  Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
   
+  // Routing of the Internet Host (towards the LTE network)
+  Ipv4StaticRoutingHelper ipv4RoutingHelper;
+  Ptr<Ipv4StaticRouting> remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting (remoteHost->GetObject<Ipv4> ());
+  // interface 0 is localhost, 1 is the p2p device
+  remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
   
+  // Install the IP stack on the UEs
+  internet.Install (ueNodes);
+  Ipv4InterfaceContainer ueIpIfaces;
+  ueIpIfaces = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
   
+  // Update the static routing table with the addresses of the UE
+  Ptr<Ipv4StaticRouting> ueStaticRouting;// = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (0)->GetObject<Ipv4> ());
+  
+  for (uint32_t i = 0; i < numberOfUes; ++i)
+  {
+    ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (i)->GetObject<Ipv4> ());
+    ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+  }
+  
+  // Create the sender applications, 1 per UE, all originating from the remote node
   BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
-  AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (0), port));
-  ftpServer.SetAttribute ("Remote", remoteAddress);
   ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
-  NS_LOG_LOGIC ("setting up TCP flow from remote host to UE");
-  ApplicationContainer sourceApp = ftpServer.Install (remoteHost);
-  sourceApp.Start (Seconds (1));
-  sourceApp.Stop (Seconds (simTime));
-
-
-
-
-
-  BulkSendHelper ftpServer2 ("ns3::TcpSocketFactory", Address ());
-  AddressValue remoteAddress2 (InetSocketAddress (ueIpIfaces.GetAddress (1), port));
-  ftpServer2.SetAttribute ("Remote", remoteAddress2);
-  ftpServer2.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
-  //NS_LOG_LOGIC ("setting up TCP flow from remote host to UE");
-  ApplicationContainer sourceApp2 = ftpServer2.Install (remoteHost);
-  sourceApp2.Start (Seconds (1));
-  sourceApp2.Stop (Seconds (simTime));
-
-
-
-  BulkSendHelper ftpServer3 ("ns3::TcpSocketFactory", Address ());
-  AddressValue remoteAddress3 (InetSocketAddress (ueIpIfaces.GetAddress (2), port));
-  ftpServer3.SetAttribute ("Remote", remoteAddress3);
-  ftpServer3.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
-  //NS_LOG_LOGIC ("setting up TCP flow from remote host to UE");
-  ApplicationContainer sourceApp3 = ftpServer3.Install (remoteHost);
-  sourceApp3.Start (Seconds (1));
-  sourceApp3.Stop (Seconds (simTime));
-
-
-
-
-
-
-
-
-
-  Address sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (0), port));
-  PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", sinkLocalAddress);
-  ApplicationContainer sinkApp = sinkHelper.Install (ueNodes.Get(0));
-  sinkApp.Start (Seconds (1));
-  sinkApp.Stop (Seconds (simTime));
   
+  ApplicationContainer sourceApps;
   
+  for (uint32_t i = 0; i < numberOfUes; ++i)
+  {
+    AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+    ftpServer.SetAttribute ("Remote", remoteAddress);
+    sourceApps.Add (ftpServer.Install(remoteHost));
+  }
   
+  sourceApps.Start (Seconds (1));
+  sourceApps.Stop (Seconds (simTime));
   
+  // Create the packet sinks, 1 per UE, each at 1 UE
+  PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", Address ());
   
+  ApplicationContainer sinkApps;
   
-  Address sinkLocalAddress2 (InetSocketAddress (ueIpIfaces.GetAddress (1), port));
-  PacketSinkHelper sinkHelper2 ("ns3::TcpSocketFactory", sinkLocalAddress2);
-  ApplicationContainer sinkApp2 = sinkHelper2.Install (ueNodes.Get (1));
-  sinkApp2.Start (Seconds (1));
-  sinkApp2.Stop (Seconds (simTime));
+  for (uint32_t i = 0; i < numberOfUes; ++i)
+  {
+    AddressValue sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+    sinkHelper.SetAttribute ("Local", sinkLocalAddress);
+    sinkApps.Add (sinkHelper.Install(ueNodes.Get(i)));
+  }
   
-  Address sinkLocalAddress3 (InetSocketAddress (ueIpIfaces.GetAddress (2), port));
-  PacketSinkHelper sinkHelper3 ("ns3::TcpSocketFactory", sinkLocalAddress3);
-  ApplicationContainer sinkApp3 = sinkHelper3.Install (ueNodes.Get (2));
-  sinkApp3.Start (Seconds (1));
-  sinkApp3.Stop (Seconds (simTime));
-  
-  
-  
-  
+  sinkApps.Start (Seconds (1));
+  sinkApps.Stop (Seconds (simTime));
   
   
   Ptr<EpcTft> tft = Create<EpcTft> ();
@@ -620,10 +549,11 @@ main (int argc, char *argv[])
   dlpf.localPortEnd = port;
   tft->Add (dlpf);
   EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
-  lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (0), bearer, tft);
-  lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (1), bearer, tft);
-  lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (2), bearer, tft);
-
+  for (uint32_t i = 0; i < numberOfUes; ++i)
+  {
+    lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (i), bearer, tft);
+  }
+  
   // Add X2 interface
   lteHelper->AddX2Interface (enbNodes);
   
@@ -632,7 +562,7 @@ main (int argc, char *argv[])
     {
       p2ph.EnablePcapAll ("lte-tcp-x2-handover");
     }
-
+  
   lteHelper->EnableLogComponents();
   //lteHelper->EnablePhyTraces ();
   //lteHelper->EnableMacTraces ();
@@ -642,7 +572,7 @@ main (int argc, char *argv[])
   //rlcStats->SetAttribute ("EpochDuration", TimeValue (Seconds (1.0)));
   //Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats ();
   //pdcpStats->SetAttribute ("EpochDuration", TimeValue (Seconds (1.0)));
-
+  
   // connect custom trace sinks for RRC connection establishment and handover notification
   Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
                    MakeCallback (&NotifyConnectionEstablishedEnb));
@@ -663,33 +593,33 @@ main (int argc, char *argv[])
                    MakeCallback (&NotifyPacketSinkRx));
   //Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteEnbNetDevice/ComponentCarrierMap/*/FfMacScheduler/$ns3::RrFfMacScheduler/WidebandCqiReport",
   //                 MakeCallback (&NotifyCqiReport));
-
+  
   // Delay trace connection until TCP socket comes into existence
   Simulator::Schedule (Seconds (1.001), &ConnectTcpTrace);
   // Initiate position tracing
   Simulator::Schedule (Seconds (0), &TracePosition, ueNodes.Get(0), positionTracingInterval);
-
+  
   // Start to execute the program
   //Vector vUe = ueNodes.Get (0)->GetObject<MobilityModel> ()->GetPosition ();
   //Vector vEnb1 = enbNodes.Get (0)->GetObject<MobilityModel> ()->GetPosition ();
   //Vector vEnb2 = enbNodes.Get (1)->GetObject<MobilityModel> ()->GetPosition ();
   std::cout << "Simulation time: " << simTime << " sec" << std::endl;
-
+  
   Simulator::Schedule (reportingInterval, &ReportProgress, reportingInterval);
   
   Simulator::Stop (Seconds (simTime));
   Simulator::Run ();
-
+  
   // This method coordinates the deallocation of heap memory so that no
   // memory leaks are reported.
   Simulator::Destroy ();
-
+  
   // Close any open file descriptors
   g_ueMeasurements.close ();
   //g_cqiTrace.close ();
   g_packetSinkRx.close ();
   g_tcpCongStateTrace.close ();
   g_positionTrace.close ();
-
+  
   return 0;
 }
