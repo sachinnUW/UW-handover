@@ -59,6 +59,7 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/types.h>
+#include <math.h>
 
 using namespace ns3;
 
@@ -262,7 +263,7 @@ main (int argc, char *argv[])
   double hystVal = 3;
   double timeToTrigger = 256;
   std::string scenarioName = "0.3.1";
-  
+  double qOutRsrp = -80;//dB
   
   
   // Command line arguments
@@ -275,8 +276,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("hystVal", "Hysteresis Value", hystVal);
   cmd.AddValue ("timeToTrigger", "time to trigger (TTT)", timeToTrigger);
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
-  
-  
+  cmd.AddValue ("qOutRsrp","threshold on RSRP for RLF events",qOutRsrp);
   cmd.Parse (argc, argv);
   
   char * homedir = getenv("HOME");
@@ -345,13 +345,16 @@ main (int argc, char *argv[])
   std::string traceFilePrefix = "lte-tcp-x2-handover";
   Time positionTracingInterval = Seconds (5);
   Time reportingInterval = Seconds (10);
-  uint64_t ftpSize = 4*pow(10,12); // 2 TB
+  uint64_t ftpSize = 8*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
+  double qOutSinr = 10*log10(pow(10,qOutRsrp/10)/pow(2.1*10,-15));
   
   // change some default attributes so that they are reasonable for
   // this scenario, but do this before processing command line
   // arguments, so that the user is allowed to override these settings
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
+  Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(qOutSinr));
+  //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
   double simTime = simParameters.at("Simulationduration(s)")[0]; // seconds
   

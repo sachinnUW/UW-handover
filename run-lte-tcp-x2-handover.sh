@@ -39,11 +39,11 @@ trap control_c SIGINT
 #x2Distance=500
 #yDistanceForUe=1000
 useRlcUm=0
-scenarioName="0.3.1"
+scenarioName="0.4"
 handoverType="A3Rsrp"
 HystVal=(3)
 TTT=(256)
-trials=1
+trials=3
 
 
 dirname=lte-tcp-x2-handover
@@ -54,7 +54,7 @@ for hystVal in "${HystVal[@]}"
 do
 	for ttt in "${TTT[@]}"
 	do
-		for i in {1..1}
+		for (( i=1; i<=$trials; i++))
 		do
 			resultsDir=`pwd`/results/Scenario$scenarioName-${hystVal}-${ttt}/Scenario$scenarioName-${hystVal}-${ttt}-${i}
 
@@ -100,7 +100,7 @@ do
 			cd ${experimentDir}
 			cp $0 ${resultsDir}
 		done
-		#python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
+		python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
 	done
 done
 #cd ${resultsDir}

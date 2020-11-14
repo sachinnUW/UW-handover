@@ -32,15 +32,6 @@
 #TBD on the exact formatting but it will be a record of ping pong ratio and too-early/too-late ratio
 
 
-
-
-
-
-
-
-
-
-
 import sys
 import math
 import matplotlib.pyplot as plt
@@ -49,15 +40,17 @@ import scipy.stats
 import os
 import csv
 
-scenario = "Scenario" + sys.argv[1]
+scenario = sys.argv[1]
 HystVal = float(sys.argv[2])
 TTT = float(sys.argv[3])
 trials = int(sys.argv[4])
 
-#find some parameters via the config file
+print(" ")
+print("Analysis Script Starting")
+
 print("Determining Configuration Parameters")
 configData = {}
-with open("/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.3.1/simulation_config.txt") as config:
+with open("/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario "+scenario+"/simulation_config.txt") as config:
 	config_line = config.readline()
 	while config_line:
 		temp = config_line.split(':')
@@ -76,17 +69,12 @@ simuationDuration = configData["Simulation duration (s)"]
 samplingFrequency = configData["Sampling Frequency (Hz)"]
 
 
-#load in the files, two of relevance, 'lte-tcp-x2-handover.ue-measurements.dat' and 'lte-tcp-x2-handover.tcp-receive.dat' into memory
-
-#creating the variables
 print("Loading Data")
 rsrpRsrqTime = []
 rsrpData = []
 rsrqData = []
 currentServingCell = []
 packetData = []
-
-
 
 for i in range(trials):
 	rsrpRsrqTime.append([])
@@ -109,11 +97,13 @@ for i in range(trials):
 
 
 lineCounter = 0
+servingCellCount = 0
+servingCellSetFlag = 0
 resultsHome = "/home/collin/workspace/ns-3-dev-git/results/"
 for i in range(trials):
 	print("     Trial " + str(i+1))
 	#first load the RSRP/RSRQ measurements
-	scenarioFolder = scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "/" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "-" + str(i+1) + "/"
+	scenarioFolder = "Scenario" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "/" + "Scenario" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "-" + str(i+1) + "/"
 	rsrpRsrqFilename = "lte-tcp-x2-handover.ue-measurements.dat"
 	with open(resultsHome + scenarioFolder + rsrpRsrqFilename) as rsrpRsrqFile:
 		rsrpRsrq_line = rsrpRsrqFile.readline()
@@ -129,12 +119,19 @@ for i in range(trials):
 
 			if (lineCounter % (numBS*3)) == 0:#not(int(1000*time) in [int(1000*x) for x in rsrpRsrqTime[i][imsi-1]]):
 				rsrpRsrqTime[i][imsi-1].append(time)
-
+				
 			rsrpData[i][imsi-1][int(math.ceil((cellID)/3)-1)][int(((cellID - 1) % 3))].append(currentRsrp)
 			rsrqData[i][imsi-1][int(math.ceil((cellID)/3)-1)][int(((cellID - 1) % 3))].append(currentRsrq)
 
 			if servingCellFlag == 1:
 				currentServingCell[i][imsi-1].append(cellID)
+				servingCellSetFlag = 1
+
+			if (lineCounter % (numBS*3)) == (numBS*3)-1:
+				if servingCellSetFlag == 0:#this checks for the event that there is no serving cell, which occurs after RLFs
+					currentServingCell[i][imsi-1].append(0)
+				servingCellSetFlag = 0
+
 			lineCounter = lineCounter + 1
 			rsrpRsrq_line = rsrpRsrqFile.readline()
 
@@ -155,83 +152,9 @@ for i in range(trials):
 				packetData[i][rxAddress-2][time] = bytesRx
 			packet_line = packetFile.readline()
 
-
-#we are going to insert 0s into the packet data for subframes where no packets arrived.
-#We are doing this because otherwise the throughput analysis takes prohibatiely long
-
-for i in range(trials):
-    for j in range(numUE):
-        for k in range(int(1000*max([float(x) for x in packetData[i][j].keys()]))+1):
-            if float(k)/1000 not in packetData[i][j]:
-                packetData[i][j][str(float(k)/1000)] = 0
-
-
-#write the event report
-#what we want to do it create a sort of event report which records the following events(for now):
-#A3 events: when another cell has a higher RSRP than the current serving cell by HystVal (RSRP(otherCell) > RSRP(servingCell) + HystVal). Another A3 event
-#	will not be logged until the RSRP has dropped below the threshold handover has been finished. source: TS 36.839
-#RLF events: when the CQI of the current cell is less than Qout for T310 (a timer). Although there isn't currently a CQI trace output by NS-3 (there could be)
-# 	RLF events will show up in the currentServingCell variable when it's value drops to 0. source: TS 36.839
-#Handover Completion Events: after the A3 event has been true for TTT milliseconds handover will be triggered. at the end of this process the currentServingCell
-#	Will change to the cell which triggered the A3 event source: TS 36.839
-#Too-Late Handover Failure: Too-late handovers occur when the eNb waits to long to trigger handover results in an RLF after an A3 event. Specifically, if an RLF 
-#	event occurs within TTT of an A3 event then that is considered a too-late handover. Generally following a too-late handover the UE will connect to a new cell
-#	(likely the one which triggered the A3 event) but this is not gaurenteed. This definition follows from TS 36.839. TS 36.839 does not differentiate between
-#	too-early and too-late but their definition of handover failure is similar to academic definitions of too-late handover failure.
-#Too-Early Handover Failure: Too-early handovers occur when handover is triggered before it should be and results in an RLF immediately after a successful handover.
-#	specifically, if an RLF event occurs within TTT of a successful handover then that is considered a too-early handover. Generally after the RLF the UE will
-#	reconnect to the original cell (the one it was connected to before the handover) but this is not gaurenteed. This definition is related to the one found in 
-#	TS 36.839, essentially serving as a recipracol to the definition of too-late handover found therein
-#Ping-Pong Events: Ping Pong events are defined as a sequence of successful handovers which happen in quick succession between two cells. Specifically, if a UE is
-#	in cell A, then hands-over to cell B, then back to cell A in less than MTS (minimum time of stay) seconds a ping pong is considered to have occured. the 
-#	recomended value for MTS is 1 second. source: TS 36.839 (this source has a very detailed description of ping-pong and a good description of how to count them).
-
-#Note: I (Collin Brady) am somewhat suspicious of the specific definitions for too-early/late handover in the sense that I think TTT might be the wrong timer. 
-#Because we use TTT as the timer for handover failure but the RLF uses T310 and by default T310 > TTT (default T310 is 1 seconds, vs .256 s for TTT) I; 
-#1) dont thing that too-early handover failures can even occur (handover resets the T310 timer) and 2) think that the too-late handovers might end up 
-#underestimating things (the RLF has to start being logged well before the A3 event). On top of that because we are discussing using ML to vary TTT we 
-#may end up in a situation where if you set TTT very low we can never detect any handover failures. In the future I think it may be better to use identical 
-#definitions as above with TTT swapped out for T310 for the too-early handover failure and change the conditions of too-late handover to: if a cell change 
-#occurs within T310 of an RLF then that was a too-late handover failure.
-
-
-nLate = 0 #counter for too late handover failures
-nEarly = 0 #counter for too early handover failures
-nPingPong = 0 #counter for ping-pong events
-nRLF = 0 #counter for RLF events
-nHandover = 0 #counter for handovers/cell changes (the cell can change because of a reconection after an RLF, this is considered a handover for analysis purposes)
-nA3 = 0 #counter for A3 events
-T310 = 1 
-TMTS = 1 #minimum stay time, for ping pong detection
-
-for i in range(trials):
-	for j in range(len(rsrpRsrqTime[i])):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#from here we will do some smoothing on the recieve packet data to get data rate. Packet arrivals are binned together based upon the variable
-#binWidth, the data rate at the center of each bin is equal to the number of packets which arrive in that bin divided by binWidth. increasing binWidth
-#acts to smooth the data rate. an actual moving average filter can't be used because the packet arrivals arent uniformly sampled. another potential
-#technique would be to force uniform sampling by inserting 0 every millisecond which doesnt have a packet arrival then using a moving average filter.
-#such a technique would result in a data rate trace with more data rate points but the same issues with oversmoothing present in the binning method.
-#the binning method used here is approximately identical a downsampled version of the moving average method described above.
 print("Finding Data Rate")
 dataRate = []
 dataRateTime = []
-
 
 for i in range(trials):
 	dataRate.append([])
@@ -240,246 +163,190 @@ for i in range(trials):
 		dataRate[i].append([])
 		dataRateTime[i].append([])
 
-
-
-binWidth = 20;#number of points to average over
-
+binWidth = 2;#number of points to average over
 
 for i in range(trials):
-	for j in range(numUE):
-		if len(packetData[i][j].keys()) > 0:
-			print("     Trial " + str(i+1) + ", UE " + str(j+1))
-			packetTime = [float(x) for x in packetData[i][j].keys()]
-			#temp = list(range(int(1000*(packetTime[0]+binWidth/2)),int(1000*(packetTime[-1]-binWidth/2)),int(1000*binWidth)))#converted to integers for range
-			dataRateTime[i][j] = [float(i)/1000 for i in range(int(1000*max(packetTime))+1)]#converted back to floats
-			recievedBytes = list(packetData[i][j].values())
-			for k in range(len(dataRateTime[i][j])):
-				if k < binWidth-1:
-					dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k)]))
-				else:
-					dataRate[i][j].append(sum([recievedBytes[x]/binWidth for x in range(k-binWidth+1,k)]))
+    print("     Trial " +str(i+1))
+    for j in range(numUE):
+        if len(packetData[i][j].keys()) > 0:
+            print("          UE " + str(j+1))
+            packetTime = [float(x) for x in packetData[i][j].keys()]
+            recievedBytes = list((packetData[i][j].values()))
+            dataRateTime[i][j] = [float(i)/1000 for i in range(int(1000*simuationDuration))]
+            recievedBytes2 = [0 for x in range(len(dataRateTime[i][j]))]
+            for k in range(len(packetTime)):
+                recievedBytes2[int(packetTime[k]*1000-1)] = recievedBytes[k]
+            for k in range(len(dataRateTime[i][j])):
+                if k < binWidth-1:
+                    dataRate[i][j].append(sum([recievedBytes2[x]/(binWidth*.001) for x in range(k)]))
+                else:
+                    dataRate[i][j].append(sum([recievedBytes2[x]/(binWidth*.001) for x in range(k-binWidth+1,k)]))
 
+#for i in range(numUE):
+#    plt.plot(dataRateTime[0][i],dataRate[0][i],label="UE"+str(i+1))
+#    plt.legend()
+#    plt.show()
 
+#for i in range(numUE):
+#    for j in range(numBS):
+#        for k in range(3):#number of sectors
+#            plt.plot(rsrpRsrqTime[0][i],rsrpData[0][i][j][k],label="UE"+str(i+1)+", eNb"+str(j+1)+", sector"+str(k+1))
+#    plt.plot(rsrpRsrqTime[0][i],currentServingCell[0][i],label="UE"+str(i+1)+", Current Serving Cell")
+#    plt.legend()
+#    plt.show()
 
+#for i in range(numUE):
+#    plt.plot(rsrpRsrqTime[0][i],currentServingCell[0][i],label="UE"+str(i+1)+", Current Serving Cell")
+#    plt.legend()
+#    plt.show()
 
-
-
-
-
-#first find the averaged values (only do this if there is more than 1 trial)
 if trials > 1:
-	print("Finding Averages of Performance Indicators")
-
-	averageDataRateTime = []
-	averageDataRate = []
-	dataRateConfidenceInterval = []
-	for i in range(len(dataRateTime[0])):
-		#first is data rate
-		#grab the ith value 
-		#this is a sloppy way of doing things but will work for a first draft, it presumes that the packet arrivals begin and end at the same
-		#time for all files, which isnt nescesarily the case
-		tempTime = [x[i] for x in dataRateTime]
-		tempData = [x[i] for x in dataRate]
-		averageDataRateTime.append(sum(tempTime)/len(tempTime))
-		averageDataRate.append(sum(tempData)/len(tempData))
-		tempDataArray = 1.0 * np.array(tempData)
-		std = scipy.stats.sem(tempDataArray)
-		CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
-		dataRateConfidenceInterval.append(CI)
-
-
-	averageRsrpRsrqTime = []
-	averageRsrp = []
-	averageRsrq = []
-	rsrpConfidenceInterval = []
-	rsrqConfidenceInterval = []
-
-	for i in range(numBS):
-		averageRsrp.append([])
-		averageRsrq.append([])
-		rsrpConfidenceInterval.append([])
-		rsrqConfidenceInterval.append([])
-		for j in range(3):
-			averageRsrp[i].append([])
-			averageRsrq[i].append([])
-			rsrpConfidenceInterval[i].append([])
-			rsrqConfidenceInterval[i].append([])
-
-
-
-
-
-	for i in range(len(rsrpRsrqTime[0])):
-		#next RSRP/RSRQ/CellID, this has to be done in a separate for loop as the lengths are different
-		#this is less sloppy than for the data rate, the timestamps for all RSRP/RSRQ/CellID measurements should be identical
-		tempTime = [x[i] for x in rsrpRsrqTime]
-		averageRsrpRsrqTime.append(sum(tempTime)/len(tempTime))
-
-		for j in range(numBS):
-			for k in range(3):
-				tempRSRP = [x[j][k][i] for x in rsrpData]
-				tempRSRQ = [x[j][k][i] for x in rsrqData]
-
-				averageRsrp[j][k].append(sum(tempRSRP)/len(tempRSRP))
-				averageRsrq[j][k].append(sum(tempRSRQ)/len(tempRSRQ))
-				
-				tempRsrpArray = 1.0 * np.array(tempRSRP)
-				std = scipy.stats.sem(tempRsrpArray)
-				CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
-				rsrpConfidenceInterval[j][k].append(CI)
-
-				tempRsrqArray = 1.0 * np.array(tempRSRQ)
-				std = scipy.stats.sem(tempRsrqArray)
-				CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
-				rsrqConfidenceInterval[j][k].append(CI)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# currently commented out, dont want to use it
-if False:'''
-	#start with writing the files for each trial
-	home = os.getcwd()
-
-	for i in range(trials):
-		scenarioFolder = scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "/" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "-" + str(i+1) + "/"
-		os.chdir(resultsHome + scenarioFolder)
-		#data rate
-		temp = [dataRateTime[i],dataRate[i]]
-		file = open('dataRate,UE' + str(1) + ',binWidth' + str(binWidth) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-		with file:
-			write = csv.writer(file)
-			write.writerows(temp)
-
-
-		#RSRP over time
-		temp = [rsrpRsrqTime[i]]
-		for j in range(numBS):
-			for k in range(3):
-				temp.append(rsrpData[i][j][k])
-		file = open('RSRP,UE' + str(1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-		with file:
-			write = csv.writer(file)
-			write.writerows(temp)
-
-
-		#RSRQ over time
-		temp = [rsrpRsrqTime[i]]
-		for j in range(numBS):
-			for k in range(3):
-				temp.append(rsrqData[i][j][k])
-		file = open('RSRQ,UE' + str(1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-		with file:
-			write = csv.writer(file)
-			write.writerows(temp)
-
-
-		#cellID
-		temp = [rsrpRsrqTime[i],currentServingCell]
-		file = open('currentServingCell,UE' + str(1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-		with file:
-			write = csv.writer(file)
-			write.writerows(temp)
-
-	#now write the averages
-	scenarioFolder = scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT))
-	os.chdir(resultsHome + scenarioFolder)
-	#data rate
-	temp = [averageDataRateTime,averageDataRate,dataRateConfidenceInterval]
-	file = open('AveragedataRate,UE' + str(1) + ',binWidth' + str(binWidth) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-	with file:
-		write = csv.writer(file)
-		write.writerows(temp)
-
-
-	#RSRP over time
-	temp = [averageRsrpRsrqTime]
-	for j in range(numBS):
-		for k in range(3):
-			temp.append(averageRsrp[j][k])
-			temp.append(rsrpConfidenceInterval[j][k])
-	file = open('AverageRSRP,UE' + str(1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-	with file:
-		write = csv.writer(file)
-		write.writerows(temp)
-
-
-	#RSRQ over time
-	temp = [averageRsrpRsrqTime]
-	for j in range(numBS):
-		for k in range(3):
-			temp.append(averageRsrq[j][k])
-			temp.append(rsrqConfidenceInterval[j][k])
-	file = open('AverageRSRQ,UE' + str(1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
-	with file:
-		write = csv.writer(file)
-		write.writerows(temp)
-	os.chdir(home)'''
-
-
-
-
-
-
-
-
-
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][0][0],label="eNb1,sector1")
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][0][1],label="eNb1,sector2")
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][0][2],label="eNb1,sector3")
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][1][0],label="eNb2,sector1")
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][1][1],label="eNb2,sector2")
-#plt.plot(rsrpRsrqTime[0],rsrpData[0][1][2],label="eNb2,sector3")
-#plt.plot(averageRsrpRsrqTime,averageRsrp[0][0],label="average")
-
-
-
-
-#tempTime = [sum(x)/2 for x in zip(dataRateTime[0],dataRateTime[1])]
-#tempData = [sum(x)/2 for x in zip(dataRate[0],dataRate[1])]
-#plt.plot(dataRateTime[0],dataRate[0],label="trial1")
-#plt.plot(dataRateTime[1],dataRate[1],label="trial2")
-#plt.plot(averageDataRateTime,averageDataRate,label="average")
-
-#plt.plot(averageDataRateTime,dataRateConfidenceInterval,label="CI")
-#plt.legend()
-#plt.show()
-#
-
-
-
-
-
-
-
+    print("Finding Averages of Performance Indicators")
+    #creating the variables to hold the averages
+    averageDataRateTime = []
+    averageDataRate = []
+    dataRateConfidenceInterval = []
+    
+    averageRsrpRsrqTime = []
+    averageRsrp = []
+    averageRsrq = []
+    rsrpConfidenceInterval = []
+    rsrqConfidenceInterval = []
+    
+    for i in range(numUE):
+        averageDataRateTime.append([])
+        averageDataRate.append([])
+        dataRateConfidenceInterval.append([])
+        
+        averageRsrpRsrqTime.append([])
+        averageRsrp.append([])
+        averageRsrq.append([])
+        rsrpConfidenceInterval.append([])
+        rsrqConfidenceInterval.append([])
+        for j in range(numBS):
+            averageRsrp[i].append([])
+            averageRsrq[i].append([])
+            rsrpConfidenceInterval[i].append([])
+            rsrqConfidenceInterval[i].append([])
+            for k in range(3):
+                averageRsrp[i][j].append([])
+                averageRsrq[i][j].append([])
+                rsrpConfidenceInterval[i][j].append([])
+                rsrqConfidenceInterval[i][j].append([])
+    
+    for i in range(numUE):
+        print("     UE" + str(i+1))
+        for j in range(int(1000*simuationDuration)):#first the data rate
+            tempTime = [x[i][j] for x in dataRateTime]
+            tempData = [x[i][j] for x in dataRate]
+            averageDataRateTime[i].append(sum(tempTime)/len(tempTime))
+            averageDataRate[i].append(sum(tempData)/len(tempData))
+            tempDataArray = 1.0 * np.array(tempData)
+            std = scipy.stats.sem(tempDataArray)
+            CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
+            dataRateConfidenceInterval[i].append(CI)
+        
+        for j in range(len(rsrpRsrqTime[0][0])):#next the RSRP/RSRQ
+            tempTime = [x[i][j] for x in rsrpRsrqTime]
+            averageRsrpRsrqTime[i].append(sum(tempTime)/len(tempTime))
+            for k in range(numBS):
+                for l in range(3):
+                    tempRSRP = [x[i][k][l][j] for x in rsrpData]
+                    tempRSRQ = [x[i][k][l][j] for x in rsrqData]
+                    
+                    averageRsrp[i][k][l].append(sum(tempRSRP)/len(tempRSRP))
+                    averageRsrq[i][k][l].append(sum(tempRSRQ)/len(tempRSRQ))
+                    
+                    tempRsrpArray = 1.0 * np.array(tempRSRP)
+                    std = scipy.stats.sem(tempRsrpArray)
+                    CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
+                    rsrpConfidenceInterval[i][k][l].append(CI)
+                    
+                    tempRsrqArray = 1.0 * np.array(tempRSRQ)
+                    std = scipy.stats.sem(tempRsrqArray)
+                    CI = std * scipy.stats.t.ppf((1 + .95)/2.,trials-1)
+                    rsrqConfidenceInterval[i][k][l].append(CI)
+
+print("Writing Generated Traces")
+home = os.getcwd()
+
+#start with writing the files for each trial
+for i in range(trials):
+    scenarioFolder = "Scenario" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "/" + "Scenario" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT)) + "-" + str(i+1) + "/"
+    os.chdir(resultsHome + scenarioFolder)
+    for j in range(numUE):
+        #data rate
+        temp  = [dataRateTime[i][j],dataRate[i][j]]
+        file = open('dataRate-UE' + str(j+1) + '-binWidth' + str(binWidth*.001) + '.csv', 'w+', newline ='')
+        with file:
+            write = csv.writer(file)
+            write.writerows(temp)
+
+        #RSRP over time
+        temp = [rsrpRsrqTime[i][j]]
+        for k in range(numBS):
+            for l in range(3):
+                temp.append(rsrpData[i][j][k][l])
+        file = open('RSRP-UE' + str(j+1) + '.csv', 'w+', newline ='')
+        with file:
+            write = csv.writer(file)
+            write.writerows(temp)
+        
+        #RSRQ over time
+        temp = [rsrpRsrqTime[i][j]]
+        for k in range(numBS):
+            for l in range(3):
+                temp.append(rsrqData[i][j][k][l])
+        file = open('RSRQ-UE' + str(j+1) + '.csv', 'w+', newline ='')
+        with file:
+            write = csv.writer(file)
+            write.writerows(temp)
+
+        #cell ID over time
+        temp = [rsrpRsrqTime[i][j],currentServingCell[i][j]]
+        file = open('currentServingCell-UE' + str(j+1) + '.csv', 'w+', newline ='')
+        with file:
+            write = csv.writer(file)
+            write.writerows(temp)
+
+
+#next the averages
+scenarioFolder = "Scenario" + scenario + "-" + str(int(HystVal)) + "-" + str(int(TTT))
+os.chdir(resultsHome + scenarioFolder)
+for i in range(numUE):
+    #data rate
+    temp = [averageDataRateTime[i],averageDataRate[i],dataRateConfidenceInterval[i]]
+    file = open('AverageDataRate-UE' + str(i+1) + '-binWidth' + str(binWidth*.001) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
+    with file:
+    	write = csv.writer(file)
+    	write.writerows(temp)
+        
+    #RSRP over Time
+    temp = [averageRsrpRsrqTime[i]]
+    for j in range(numBS):
+        for k in range(3):
+            temp.append(averageRsrp[i][j][k])
+            temp.append(rsrpConfidenceInterval[i][j][k])
+    file = open('AverageRSRP-UE' + str(i+1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
+    with file:
+    	write = csv.writer(file)
+    	write.writerows(temp)
+
+    #RSRQ over Time
+    temp = [averageRsrpRsrqTime[i]]
+    for j in range(numBS):
+        for k in range(3):
+            temp.append(averageRsrq[i][j][k])
+            temp.append(rsrqConfidenceInterval[i][j][k])
+    file = open('AverageRSRQ-UE' + str(i+1) + '.csv', 'w+', newline ='') #the UE ID will need to be fixed in the future
+    with file:
+    	write = csv.writer(file)
+    	write.writerows(temp)
+
+os.chdir(home)
+
+
+print("Analysis Script Complete")
 
 
 
