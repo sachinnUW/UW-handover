@@ -190,6 +190,20 @@ NotifyHandoverEndOkEnb (std::string context,
 }
 
 void
+NotifyRecvMeasurementReport (std::string context,
+                             uint64_t imsi,
+                             uint16_t cellId,
+                             uint16_t rnti,
+                             LteRrcSap::MeasurementReport report)
+{
+  std::cout << Simulator::Now ().GetSeconds () 
+            << " UE " << imsi
+            << ": sent measReport to CellId " << cellId
+            << std::endl;
+}
+
+
+void
 TracePosition (Ptr<Node> ue, Time interval)
 {
   Vector v = ue->GetObject<MobilityModel> ()->GetPosition ();
@@ -255,34 +269,62 @@ main (int argc, char *argv[])
   
   
   // Constants that can be changed by command-line arguments
-  double enbTxPowerDbm = 46.0;
-  std::string handoverType = "A3Rsrp";
-  bool useRlcUm = false;
-  bool verbose = false;
-  bool pcap = false;
-  double hystVal = 3;
-  double timeToTrigger = 256;
+  //handover values
+  std::string handoverType = "A3Rsrp"; //valid values are: "A3Rsrp", "A2A4RsrqHandoverAlgorithm"
+  double hystVal = 3; // standards limited to: 0-15 dB (rounded to nearest .5 dB), enforced in code (values outside of range will error, values will be rounded)
+  double timeToTrigger = 256; // standards limited to: 0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280 ms
+  double a3Offset = 0; // standards limited to: -15 dB to 15 dB
+  //RLF values
+  double qOut = -5;//dB
+  double qIn = -3.9;//dB
+  uint32_t NumQoutEvalSf = 200;//subframes
+  uint32_t NumQinEvalSf = 100;//subframes
+  uint32_t T310 = 1000; //standards limited to: 0, 50, 100, 200, 500, 1000, 2000
+  uint32_t N310 = 6; //standards limited to: 1, 2, 3, 4, 6, 8, 10, 20
+  uint32_t N311 = 2; //standards limited to: 1, 2, 3, 4, 5, 6, 8, 10
+  //scenario description files
   std::string scenarioName = "0.3.1";
-  double qOutRsrp = -80;//dB
-  
-  
-  // Command line arguments
-  CommandLine cmd;
-  cmd.AddValue ("enbTxPowerDbm", "TX power (dBm) used by eNBs", enbTxPowerDbm);
-  cmd.AddValue ("useRlcUm", "Use LTE RLC UM mode", useRlcUm);
-  cmd.AddValue ("handoverType", "Handover type (A2A4 or A3Rsrp)", handoverType);
-  cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
-  cmd.AddValue ("verbose", "Enable verbose logging", verbose);
-  cmd.AddValue ("hystVal", "Hysteresis Value", hystVal);
-  cmd.AddValue ("timeToTrigger", "time to trigger (TTT)", timeToTrigger);
-  cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
-  cmd.AddValue ("qOutRsrp","threshold on RSRP for RLF events",qOutRsrp);
-  cmd.Parse (argc, argv);
   
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
-  
   std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
+  //Other Values
+  uint16_t x2HandoverDelay = 0; //subframes
+  uint16_t x2HandoverAckDelay = 0; //subframes
+  double enbTxPowerDbm = 46.0;
+  bool useRlcUm = false;
+  bool verbose = false;
+  bool pcap = false;
+  
+  std::string scenarioFilepath = "C/";
+  
+  // Command line arguments
+  CommandLine cmd;
+  cmd.AddValue ("handoverType", "Handover type (A2A4 or A3Rsrp)", handoverType);
+  cmd.AddValue ("hystVal", "Hysteresis Value", hystVal);
+  cmd.AddValue ("timeToTrigger", "time to trigger (TTT)", timeToTrigger);
+  cmd.AddValue ("a3Offset","A3 Offest",a3Offset);
+  cmd.AddValue ("qOut","Threshold on SINR for out-of-sync indications",qOut);
+  cmd.AddValue ("qIn","Threshold on SINR for in-of-sync indications",qIn);
+  cmd.AddValue ("NumQoutEvalSf","Number of Frames before out-of-sync notification sent to eNb",NumQoutEvalSf);
+  cmd.AddValue ("NumQinEvalSf","Number of Frames before in-of-sync notification sent to eNb",NumQinEvalSf);
+  cmd.AddValue ("T310","Timer after recieveing N310 consecutive out-of-sync indications before RLF",T310);
+  cmd.AddValue ("N310","the maximum number of out-of-sync notifications",N310);
+  cmd.AddValue ("N311","the maximum number of in-of-sync notifications before the UE is declared back in-sync and RLF is aborted",N311);
+  cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
+  cmd.AddValue ("configFileName","Local filepath to the scenario files",configFileName);
+  cmd.AddValue ("x2HandoverDelay","Number of subframes to delay the transmission of the handover request over the X-2 interface, simulates processing/transmission delay",x2HandoverDelay);
+  cmd.AddValue ("x2HandoverAckDelay","Number of subframes to delay the transmission of the handover request Ack over the X-2 interface, simulates processing/transmission delay",x2HandoverAckDelay);
+  cmd.AddValue ("enbTxPowerDbm", "TX power (dBm) used by eNBs", enbTxPowerDbm);
+  cmd.AddValue ("useRlcUm", "Use LTE RLC UM mode", useRlcUm);
+  cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
+  cmd.AddValue ("verbose", "Enable verbose logging", verbose);
+  cmd.Parse (argc, argv);
+  
+  //char * homedir = getenv("HOME");
+  //std::string homeDir = homedir;
+  
+  //std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
   std::map<std::string,std::vector<double>> simParameters;
   
   std::ifstream  data(configFileName);
@@ -327,11 +369,9 @@ main (int argc, char *argv[])
   
   
   
-  // Constants for this program (program is not designed to change these)
+  // Constants for this simulation
   uint16_t numberOfUes = simParameters.at("numberofUEs")[0];
   uint16_t numberOfEnbs = 3*simParameters.at("numberofBS")[0];//Each eNb has three sectors which are treated as separate eNb by NS-3
-  //std::cout << numberOfUes << std::endl;
-  //std::cout << numberOfEnbs << std::endl;
   
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
@@ -347,13 +387,17 @@ main (int argc, char *argv[])
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
-  double qOutSinr = 10*log10(pow(10,qOutRsrp/10)/pow(2.1*10,-15));
   
-  // change some default attributes so that they are reasonable for
-  // this scenario, but do this before processing command line
-  // arguments, so that the user is allowed to override these settings
+  // change some default attributes based upon command line settings
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
-  Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(qOutSinr));
+  Config::SetDefault ("ns3::LteHelper::UsePdschForCqiGeneration", BooleanValue (false));
+  Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(qOut));
+  Config::SetDefault ("ns3::LteUePhy::Qin", DoubleValue(qIn));
+  Config::SetDefault ("ns3::LteUePhy::NumQoutEvalSf", UintegerValue(NumQoutEvalSf));
+  Config::SetDefault ("ns3::LteUePhy::NumQinEvalSf", UintegerValue(NumQinEvalSf));
+  Config::SetDefault ("ns3::LteUeRrc::T310", TimeValue( MilliSeconds(T310)));
+  Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(N310));
+  Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(N311));
   //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
   double simTime = simParameters.at("Simulationduration(s)")[0]; // seconds
@@ -405,6 +449,8 @@ main (int argc, char *argv[])
                                                  DoubleValue (hystVal));
       lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
                                                  TimeValue (MilliSeconds (timeToTrigger)));
+      lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",
+                                                 DoubleValue (a3Offset));
     }
   else
     {
@@ -567,7 +613,7 @@ main (int argc, char *argv[])
     }
   
   lteHelper->EnableLogComponents();
-  //lteHelper->EnablePhyTraces ();
+  lteHelper->EnablePhyTraces ();
   //lteHelper->EnableMacTraces ();
   //lteHelper->EnableRlcTraces ();
   //lteHelper->EnablePdcpTraces ();
@@ -589,6 +635,8 @@ main (int argc, char *argv[])
                    MakeCallback (&NotifyHandoverEndOkEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
                    MakeCallback (&NotifyHandoverEndOkUe));
+  Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/RecvMeasurementReport",
+                   MakeCallback (&NotifyRecvMeasurementReport));
   // connect additional traces for more experiment tracing
   Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/ReportUeMeasurements",
                    MakeCallback (&NotifyUeMeasurements));

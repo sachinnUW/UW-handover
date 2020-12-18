@@ -42,7 +42,7 @@ LteRrcSap::ReportConfigEutra::ReportConfigEutra ()
   triggerQuantity = RSRP;
   reportQuantity = BOTH;
   maxReportCells = MaxReportCells;
-  reportInterval = MS480;
+  reportInterval = MS120;
   reportAmount = 255;
 }
 

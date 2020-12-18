@@ -2085,7 +2085,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
          */
 
         double mn; // Mn, the measurement result of the neighbouring cell
-        double ofn = measObjectEutra.offsetFreq; // Ofn, the frequency specific offset of the frequency of the
+        double ofn = measObjectEutra.offsetFreq; // Ofn, the frequency specific offset of the neighbour cell
         double ocn = 0.0; // Ocn, the cell specific offset of the neighbour cell
         double mp; // Mp, the measurement result of the PCell
         double ofp = measObjectEutra.offsetFreq; // Ofp, the frequency specific offset of the primary frequency

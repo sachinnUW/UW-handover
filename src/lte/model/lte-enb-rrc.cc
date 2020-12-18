@@ -350,6 +350,11 @@ TypeId UeManager::GetTypeId (void)
                    UintegerValue (0), // unused, read-only attribute
                    MakeUintegerAccessor (&UeManager::m_rnti),
                    MakeUintegerChecker<uint16_t> ())
+    //.AddAttribute ("x2HandoverDelay",
+    //               "Delay in sending handover request",
+    //               UintegerValue (0), // unused, read-only attribute
+    //               MakeUintegerAccessor (&UeManager::m_x2HandoverDelay),
+    //               MakeUintegerChecker<uint16_t> ())
     .AddTraceSource ("StateTransition",
                      "fired upon every UE state transition seen by the "
                      "UeManager at the eNB RRC",

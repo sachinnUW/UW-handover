@@ -603,6 +603,11 @@ private:
    * UE CONTEXT RELEASE is received.
    */
   EventId m_handoverLeavingTimeout;
+  /**
+   * Number of subframes to delay the transmission of handover request 
+   * over the X-2 interface, simulates processing/transmission delay.
+   */
+  EventId m_x2HandoverDelay;
 
   /// Define if the Carrier Aggregation was already configure for the current UE on not
   bool m_caSupportConfigured;
