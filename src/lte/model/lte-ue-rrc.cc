@@ -2138,7 +2138,12 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
             bool hasTriggered = isMeasIdInReportList
               && (measReportIt->second.cellsTriggeredList.find (cellId)
                   != measReportIt->second.cellsTriggeredList.end ());
-
+            
+            //std::cout << storedMeasIt->first << std::endl;
+            
+            off = reportConfigEutra.perCellA3Offset.at(storedMeasIt->first - 1);
+            hys = reportConfigEutra.perCellHysteresis.at(storedMeasIt->first - 1);
+            
             // Inequality A3-1 (Entering condition): Mn + Ofn + Ocn - Hys > Mp + Ofp + Ocp + Off
             bool entryCond = mn + ofn + ocn - hys > mp + ofp + ocp + off;
 
@@ -2175,7 +2180,61 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                                << " mn=" << mn << " mp=" << mp << " offset=" << off
                                << " entryCond=" << entryCond
                                << " leavingCond=" << leavingCond);
+            
+            if (eventEntryCondApplicable)
+            {
+              if (reportConfigEutra.timeToTrigger == 0)
+                {
+                  VarMeasReportListAdd (measId, concernedCellsEntry);
+                  concernedCellsEntry.pop_back(); // in event A3 trigger each cell separately
+                  eventEntryCondApplicable = false; // in event A3 trigger each cell separately
+                }
+              else
+                {
+                  PendingTrigger_t t;
+                  t.measId = measId;
+                  t.concernedCells = concernedCellsEntry;
+                  t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.perCellTimeToTrigger.at(storedMeasIt->first - 1)),
+                                                 &LteUeRrc::VarMeasReportListAdd, this,
+                                                 measId, concernedCellsEntry);
+                  concernedCellsEntry.pop_back(); // in event A3 trigger each cell separately
+                  eventEntryCondApplicable = false; // in event A3 trigger each cell separately
+                  std::map<uint8_t, std::list<PendingTrigger_t> >::iterator
+                    enteringTriggerIt = m_enteringTriggerQueue.find (measId);
+                  NS_ASSERT (enteringTriggerIt != m_enteringTriggerQueue.end ());
+                  enteringTriggerIt->second.push_back (t);
+                }
+            }
 
+          if (eventLeavingCondApplicable)
+            {
+              // reportOnLeave will only be set when eventId = eventA3
+              bool reportOnLeave = (reportConfigEutra.eventId == LteRrcSap::ReportConfigEutra::EVENT_A3)
+                && reportConfigEutra.reportOnLeave;
+
+              if (reportConfigEutra.timeToTrigger == 0)
+                {
+                  VarMeasReportListErase (measId, concernedCellsLeaving, reportOnLeave);
+                  concernedCellsLeaving.pop_back (); // in event A3 trigger each cell separately
+                  eventLeavingCondApplicable = false; // in event A3 trigger each cell separately
+                }
+              else
+                {
+                  PendingTrigger_t t;
+                  t.measId = measId;
+                  t.concernedCells = concernedCellsLeaving;
+                  t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.perCellTimeToTrigger.at(storedMeasIt->first - 1)),
+                                                 &LteUeRrc::VarMeasReportListErase, this,
+                                                 measId, concernedCellsLeaving, reportOnLeave);
+                  concernedCellsLeaving.pop_back (); // in event A3 trigger each cell separately
+                  eventLeavingCondApplicable = false; // in event A3 trigger each cell separately
+                  std::map<uint8_t, std::list<PendingTrigger_t> >::iterator
+                    leavingTriggerIt = m_leavingTriggerQueue.find (measId);
+                  NS_ASSERT (leavingTriggerIt != m_leavingTriggerQueue.end ());
+                  leavingTriggerIt->second.push_back (t);
+                }
+            }
+            
           } // end of for (storedMeasIt)
 
       } // end of case LteRrcSap::ReportConfigEutra::EVENT_A3
@@ -2557,10 +2616,11 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
       break;
 
     } // switch (event type)
-
+  
   NS_LOG_LOGIC (this << " eventEntryCondApplicable=" << eventEntryCondApplicable
                      << " eventLeavingCondApplicable=" << eventLeavingCondApplicable);
-
+  
+  //these will be triggered separately for event A3
   if (eventEntryCondApplicable)
     {
       if (reportConfigEutra.timeToTrigger == 0)
@@ -2785,7 +2845,32 @@ LteUeRrc::VarMeasReportListAdd (uint8_t measId, ConcernedCells_t enteringCells)
        *  - the time-to-trigger delay is fixed (not adaptive/dynamic); and
        *  - the first element in the list is associated with this function call.
        */
-      enteringTriggerIt->second.pop_front ();
+      //enteringTriggerIt->second.pop_front ();
+      
+      /*
+       * Collin:
+       * New assumptions at this point:
+       *  - the call to this function was delayed by time-to-trigger;
+       *  - the time-to-trigger delay is fixed (not adaptive/dynamic) but not identical across cells;
+       */
+      //This finds the value in m_enteringTriggerQueue which is actually triggering handover and erases the trigger, 
+      //rather than just removing the first trigger. we use the first value in enteringCell to maintain the old functionality
+      //for events A1/A2/A4/A5 while for event A3 a separate function call is made for each trigger, enteringCells.size() = 1 for A3.
+      //std::list<PendingTrigger_t> currentPendingTriggers = m_enteringTriggerQueue[measId];
+      
+      for (std::list<PendingTrigger_t>::const_iterator it = enteringTriggerIt->second.begin(); it != enteringTriggerIt->second.end(); ++it)
+      {
+        if ((*it).concernedCells == enteringCells) //enteringTriggerIt->second(it).concernedCell
+        {
+          enteringTriggerIt->second.erase (it);
+          break;
+        }
+      }
+      
+      
+      
+      //std::map<uint8_t, std::list<PendingTrigger_t>::iterator findIter = std::find(currentPendingTriggers.begin(), currentPendingTriggers.end(), enteringCells.front());
+      //enteringTriggerIt->second.erase (findIter);
 
       if (!enteringTriggerIt->second.empty ())
         {

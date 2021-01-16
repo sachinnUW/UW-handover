@@ -392,6 +392,15 @@ public:
 
     /// Time during which specific criteria for the event needs to be met in order to trigger a measurement report.
     uint16_t timeToTrigger;
+    
+    //Offset value for Event A3. An integer between -30 and 30. The actual value is (value * 0.5) dB. When this is used then each cell has its own A3offset.
+    std::vector<double> perCellA3Offset;
+    
+    //Parameter used within the entry and leave condition of an event triggered reporting condition. The actual value is (value * 0.5) dB. When this is used then each cell has its own A3offset.
+    std::vector<double> perCellHysteresis;
+    
+    //Time during which specific criteria for the event needs to be met in order to trigger a measurement report. When this is used then each cell has its own A3offset.
+    std::vector<double> perCellTimeToTrigger;
 
     /// the report purpose
     enum report

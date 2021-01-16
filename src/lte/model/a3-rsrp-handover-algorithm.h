@@ -119,7 +119,15 @@ private:
    * must exceed after Hysteresis has been subtracted.
    */
   double m_a3OffsetDb;
+<<<<<<< Updated upstream
 
+=======
+  
+  
+  std::string m_perCellPath;
+  
+  
+>>>>>>> Stashed changes
   /// Interface to the eNodeB RRC instance.
   LteHandoverManagementSapUser* m_handoverManagementSapUser;
   /// Receive API calls from the eNodeB RRC instance.

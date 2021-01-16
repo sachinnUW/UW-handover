@@ -39,11 +39,19 @@ trap control_c SIGINT
 #x2Distance=500
 #yDistanceForUe=1000
 useRlcUm=0
+<<<<<<< Updated upstream
 scenarioName="0.4"
 handoverType="A3Rsrp"
 HystVal=(3)
 TTT=(256)
 trials=3
+=======
+scenarioName="0.5"
+handoverType="A3Rsrp"
+HystVal=(3)
+TTT=(256)
+trials=1
+>>>>>>> Stashed changes
 
 
 dirname=lte-tcp-x2-handover
@@ -73,7 +81,11 @@ do
 			echo $ttt
 			echo $i
 			set -x
+<<<<<<< Updated upstream
 			./waf --run "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
+=======
+			./waf --run "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --trialNum=${i-1} --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
+>>>>>>> Stashed changes
 			{ set +x; } 2>/dev/null
 
 			# Move and copy files to the results directory

@@ -22,6 +22,7 @@
 #include "a3-rsrp-handover-algorithm.h"
 #include <ns3/log.h>
 #include <ns3/double.h>
+#include <ns3/string.h>
 #include <ns3/lte-common.h>
 #include <list>
 
@@ -73,6 +74,16 @@ A3RsrpHandoverAlgorithm::GetTypeId ()
                    DoubleValue (0), // 3GPP time-to-trigger median value as per Section 6.3.5 of 3GPP TS 36.331
                    MakeDoubleAccessor (&A3RsrpHandoverAlgorithm::m_a3OffsetDb),
                    MakeDoubleChecker<double> ())
+<<<<<<< Updated upstream
+=======
+    .AddAttribute ("perCellParameterPath",
+                   "Value by which the neighboring cell's RSRP "
+                   "must exceed after Hysteresis has been subtracted "
+                   "in order to trigger a handover",
+                   StringValue ("FakePath"), // path to the per-cell handover parameter config file
+                   MakeStringAccessor (&A3RsrpHandoverAlgorithm::m_perCellPath),
+                   MakeStringChecker ())
+>>>>>>> Stashed changes
   ;
   return tid;
 }
@@ -112,6 +123,37 @@ A3RsrpHandoverAlgorithm::DoInitialize ()
   reportConfig.reportOnLeave = false;
   reportConfig.triggerQuantity = LteRrcSap::ReportConfigEutra::RSRP;
   reportConfig.reportInterval = LteRrcSap::ReportConfigEutra::MS1024;
+  
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  reportConfig.perCellA3Offset.push_back(0);
+  
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  reportConfig.perCellHysteresis.push_back(3);
+  
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  reportConfig.perCellTimeToTrigger.push_back(256);
+  
   m_measId = m_handoverManagementSapUser->AddUeMeasReportConfigForHandover (reportConfig);
 
   LteHandoverAlgorithm::DoInitialize ();
