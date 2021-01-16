@@ -53,6 +53,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/point-to-point-layout-module.h"
+#include <utils/json.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -283,11 +284,12 @@ main (int argc, char *argv[])
   uint32_t N310 = 6; //standards limited to: 1, 2, 3, 4, 6, 8, 10, 20
   uint32_t N311 = 2; //standards limited to: 1, 2, 3, 4, 5, 6, 8, 10
   //scenario description files
-  std::string scenarioName = "0.3.1";
-  
+  std::string scenarioName = "0.4.1";
+  int trialNum = 0;
+  double numSectors = 3;
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
-  std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
+  std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
   //Other Values
   uint16_t x2HandoverDelay = 0; //subframes
   uint16_t x2HandoverAckDelay = 0; //subframes
@@ -312,6 +314,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("N310","the maximum number of out-of-sync notifications",N310);
   cmd.AddValue ("N311","the maximum number of in-of-sync notifications before the UE is declared back in-sync and RLF is aborted",N311);
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
+  cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
   cmd.AddValue ("configFileName","Local filepath to the scenario files",configFileName);
   cmd.AddValue ("x2HandoverDelay","Number of subframes to delay the transmission of the handover request over the X-2 interface, simulates processing/transmission delay",x2HandoverDelay);
   cmd.AddValue ("x2HandoverAckDelay","Number of subframes to delay the transmission of the handover request Ack over the X-2 interface, simulates processing/transmission delay",x2HandoverAckDelay);
@@ -323,11 +326,16 @@ main (int argc, char *argv[])
   
   //char * homedir = getenv("HOME");
   //std::string homeDir = homedir;
+  configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
+
   
   //std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
-  std::map<std::string,std::vector<double>> simParameters;
+  //std::map<std::string,std::vector<double>> simParameters;
   
-  std::ifstream  data(configFileName);
+  std::ifstream  config_file(configFileName);
+  nlohmann::json simParameters = nlohmann::json::parse(config_file);
+  
+  /*
   std::string line;
   char ch;
   std::string name;
@@ -366,13 +374,14 @@ main (int argc, char *argv[])
     simParameters.insert(std::pair<std::string,std::vector<double>>(name,valueVec));
   }
   
-  
+  */
   
   
   // Constants for this simulation
-  uint16_t numberOfUes = simParameters.at("numberofUEs")[0];
-  uint16_t numberOfEnbs = 3*simParameters.at("numberofBS")[0];//Each eNb has three sectors which are treated as separate eNb by NS-3
-  
+  //std::cout << simParameters.at("no_UE") << std::endl;
+  uint16_t numberOfUes = uint16_t(simParameters["UE"].size());
+  uint16_t numberOfEnbs = uint16_t(numSectors*simParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
+  //std::cout << * << std::endl;
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
   NodeContainer enbNodes;
@@ -400,7 +409,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(N311));
   //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
-  double simTime = simParameters.at("Simulationduration(s)")[0]; // seconds
+  double simTime = simParameters["simulation"]["simulation_duration_s"]; // seconds
   
   
   if (verbose)
@@ -434,41 +443,33 @@ main (int argc, char *argv[])
   lteHelper->SetEpcHelper (epcHelper);
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
   
-  if (handoverType == "A2A4")
-    {
-      lteHelper->SetHandoverAlgorithmType ("ns3::A2A4RsrqHandoverAlgorithm");
-      lteHelper->SetHandoverAlgorithmAttribute ("ServingCellThreshold",
-                                                UintegerValue (30));
-      lteHelper->SetHandoverAlgorithmAttribute ("NeighbourCellOffset",
-                                                UintegerValue (1));
-    }
-  else if (handoverType == "A3Rsrp")
-    {
-      lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
-      lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
-                                                 DoubleValue (hystVal));
-      lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
-                                                 TimeValue (MilliSeconds (timeToTrigger)));
-      lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",
-                                                 DoubleValue (a3Offset));
-    }
-  else
-    {
-      std::cout << "Unknown handover type: " << handoverType << std::endl;
-      exit (1);
-    }
+  std::vector<double> hystValue (numberOfEnbs);
+  for (unsigned i=0; i<hystValue.size(); ++i) hystValue[i] = hystVal;
+   
+  std::vector<double> TTT (numberOfEnbs);
+  for (unsigned i=0; i<TTT.size(); ++i) TTT[i] = timeToTrigger;
+   
+  std::vector<double> A3 (numberOfEnbs);
+  for (unsigned i=0; i<A3.size(); ++i) A3[i] = a3Offset;
+  
+  
+  lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
+  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",DoubleValue (hystVal));
+  lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",TimeValue (MilliSeconds (timeToTrigger)));
+  lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",DoubleValue (a3Offset));
+
   
   // Install Mobility Model in eNB
   Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator> ();
-  for (uint16_t i = 0; i < numberOfEnbs/3; i++)
+  for (uint16_t i = 0; i < numberOfEnbs/numSectors; i++)
   {
-    for (int j = 0; j < 3; ++j) //each of the three sectors shares a location
+    for (int j = 0; j < numSectors; ++j) //each of the three sectors shares a location
     {
-      Vector enbPosition (simParameters.at("BS" + std::to_string(i+1) + "location")[0], simParameters.at("BS" + std::to_string(i+1) + "location")[1], simParameters.at("BS" + std::to_string(i+1) + "location")[2]);
+      Vector enbPosition (simParameters["BS"][i]["location"][0], simParameters["BS"][i]["location"][1], simParameters["BS"][i]["location"][2]);
       enbPositionAlloc->Add (enbPosition);
     }
   }
-  
+    
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator (enbPositionAlloc);
@@ -481,9 +482,9 @@ main (int argc, char *argv[])
   
   for (uint16_t i = 0; i < numberOfUes; i++)
   {
-    Vector uePosition (simParameters.at("UE" + std::to_string(i+1) + "initialposition")[0], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[1], simParameters.at("UE" + std::to_string(i+1) + "initialposition")[2]);
+    Vector uePosition (simParameters["UE"][i]["initial_position"][0], simParameters["UE"][i]["initial_position"][1], simParameters["UE"][i]["initial_position"][2]);
     ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
-    Vector ueVelocity (simParameters.at("UE" + std::to_string(i+1) + "velocity")[0], simParameters.at("UE" + std::to_string(i+1) + "velocity")[1], simParameters.at("UE" + std::to_string(i+1) + "velocity")[2]);
+    Vector ueVelocity (simParameters["UE"][i]["velocity"][0], simParameters["UE"][i]["velocity"][1], simParameters["UE"][i]["velocity"][2]);
     ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
   }
   
@@ -500,15 +501,15 @@ main (int argc, char *argv[])
   Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
   Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
   // Configure tableLossModel here, by e.g. pointing it to a trace file
-  tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, simParameters.at("ResourceBlocks")[0], simTime*1000);
+  tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, simParameters["simulation"]["resource_blocks"], simTime*1000);
   
   for (int i = 0; i < numberOfUes; ++i)
   {
-  	for (int j = 0; j < numberOfEnbs/3; ++j)
+  	for (int j = 0; j < numberOfEnbs/numSectors; ++j)
   	{
-	  for (int k = 0; k < 3; ++k)
+	  for (int k = 0; k < numSectors; ++k)
   	  {
-  		  tableLossModel->LoadTrace (homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
+  		  tableLossModel->LoadTrace (homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
   }
@@ -519,7 +520,7 @@ main (int argc, char *argv[])
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
     {
-      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (simParameters.at("UE" + std::to_string(i+1) + "initialattachment")[0] - 1));
+      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(simParameters["UE"][i]["initial_attachment"]) - 1));
     }
   
   // Create a single RemoteHost
