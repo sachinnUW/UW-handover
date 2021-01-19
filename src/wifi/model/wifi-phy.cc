@@ -1156,7 +1156,7 @@ WifiPhy::ConfigureHtDeviceMcsSet (void)
       std::size_t index = m_deviceMcsSet.size () - 1;
       for (std::vector<WifiMode>::reverse_iterator rit = m_deviceMcsSet.rbegin (); rit != m_deviceMcsSet.rend (); ++rit, --index)
         {
-          if (m_deviceMcsSet[Index].GetModulationClass () == WIFI_MOD_CLASS_HT)
+          if (m_deviceMcsSet[index].GetModulationClass () == WIFI_MOD_CLASS_HT)
             {
               m_deviceMcsSet.erase (m_deviceMcsSet.begin () + index);
             }
@@ -4322,7 +4322,7 @@ WifiPhy::GetMcs (WifiModulationClass modulation, uint8_t mcs) const
   NS_ASSERT_MSG (IsMcsSupported (modulation, mcs), "Unsupported MCS");
   uint8_t index = m_mcsIndexMap.at (modulation).at (mcs);
   NS_ASSERT (index < m_deviceMcsSet.size ());
-  WifiMode mode = m_deviceMcsSet[Index];
+  WifiMode mode = m_deviceMcsSet[index];
   NS_ASSERT (mode.GetModulationClass () == modulation);
   NS_ASSERT (mode.GetMcsValue () == mcs);
   return mode;

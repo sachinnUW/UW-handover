@@ -74,8 +74,6 @@ A3RsrpHandoverAlgorithm::GetTypeId ()
                    DoubleValue (0), // 3GPP time-to-trigger median value as per Section 6.3.5 of 3GPP TS 36.331
                    MakeDoubleAccessor (&A3RsrpHandoverAlgorithm::m_a3OffsetDb),
                    MakeDoubleChecker<double> ())
-<<<<<<< Updated upstream
-=======
     .AddAttribute ("perCellParameterPath",
                    "Value by which the neighboring cell's RSRP "
                    "must exceed after Hysteresis has been subtracted "
@@ -83,7 +81,6 @@ A3RsrpHandoverAlgorithm::GetTypeId ()
                    StringValue ("FakePath"), // path to the per-cell handover parameter config file
                    MakeStringAccessor (&A3RsrpHandoverAlgorithm::m_perCellPath),
                    MakeStringChecker ())
->>>>>>> Stashed changes
   ;
   return tid;
 }

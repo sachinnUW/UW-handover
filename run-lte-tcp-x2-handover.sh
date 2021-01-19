@@ -81,11 +81,9 @@ do
 			echo $ttt
 			echo $i
 			set -x
-<<<<<<< Updated upstream
-			./waf --run "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
-=======
-			./waf --run "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --trialNum=${i-1} --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
->>>>>>> Stashed changes
+
+			./waf --run-no-build "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --trialNum=${i-1} --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
+			
 			{ set +x; } 2>/dev/null
 
 			# Move and copy files to the results directory

@@ -69,11 +69,6 @@ TableLossModel::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
 
   NS_ASSERT (a);
   NS_ASSERT (b);
-<<<<<<< Updated upstream
-
-=======
-  
->>>>>>> Stashed changes
 
   // assume a is the eNb, b is the UE, on the DL
   uint32_t enbId = a->GetObject<Node> ()->GetId();
