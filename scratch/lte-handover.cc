@@ -53,7 +53,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/point-to-point-layout-module.h"
-#include <utils/json.hpp>
+#include <../json.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -275,26 +275,18 @@ main (int argc, char *argv[])
   double hystVal = 3; // standards limited to: 0-15 dB (rounded to nearest .5 dB), enforced in code (values outside of range will error, values will be rounded)
   double timeToTrigger = 256; // standards limited to: 0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280 ms
   double a3Offset = 0; // standards limited to: -15 dB to 15 dB
-  //RLF values
-  double qOut = -5;//dB
-  double qIn = -3.9;//dB
-  uint32_t NumQoutEvalSf = 200;//subframes
-  uint32_t NumQinEvalSf = 100;//subframes
-  uint32_t T310 = 1000; //standards limited to: 0, 50, 100, 200, 500, 1000, 2000
-  uint32_t N310 = 6; //standards limited to: 1, 2, 3, 4, 6, 8, 10, 20
-  uint32_t N311 = 2; //standards limited to: 1, 2, 3, 4, 5, 6, 8, 10
   //scenario description files
   std::string scenarioName = "0.4.1";
   int trialNum = 0;
   double numSectors = 3;
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
-  std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
+  std::string rfConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
+  std::string protocolConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   //Other Values
-  uint16_t x2HandoverDelay = 0; //subframes
-  uint16_t x2HandoverAckDelay = 0; //subframes
+  //uint16_t x2HandoverDelay = 0; //milliseconds
   double enbTxPowerDbm = 46.0;
-  bool useRlcUm = false;
+  //bool useRlcUm = false;
   bool verbose = false;
   bool pcap = false;
   
@@ -302,86 +294,26 @@ main (int argc, char *argv[])
   
   // Command line arguments
   CommandLine cmd;
-  cmd.AddValue ("handoverType", "Handover type (A2A4 or A3Rsrp)", handoverType);
-  cmd.AddValue ("hystVal", "Hysteresis Value", hystVal);
-  cmd.AddValue ("timeToTrigger", "time to trigger (TTT)", timeToTrigger);
-  cmd.AddValue ("a3Offset","A3 Offest",a3Offset);
-  cmd.AddValue ("qOut","Threshold on SINR for out-of-sync indications",qOut);
-  cmd.AddValue ("qIn","Threshold on SINR for in-of-sync indications",qIn);
-  cmd.AddValue ("NumQoutEvalSf","Number of Frames before out-of-sync notification sent to eNb",NumQoutEvalSf);
-  cmd.AddValue ("NumQinEvalSf","Number of Frames before in-of-sync notification sent to eNb",NumQinEvalSf);
-  cmd.AddValue ("T310","Timer after recieveing N310 consecutive out-of-sync indications before RLF",T310);
-  cmd.AddValue ("N310","the maximum number of out-of-sync notifications",N310);
-  cmd.AddValue ("N311","the maximum number of in-of-sync notifications before the UE is declared back in-sync and RLF is aborted",N311);
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
   cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
-  cmd.AddValue ("configFileName","Local filepath to the scenario files",configFileName);
-  cmd.AddValue ("x2HandoverDelay","Number of subframes to delay the transmission of the handover request over the X-2 interface, simulates processing/transmission delay",x2HandoverDelay);
-  cmd.AddValue ("x2HandoverAckDelay","Number of subframes to delay the transmission of the handover request Ack over the X-2 interface, simulates processing/transmission delay",x2HandoverAckDelay);
-  cmd.AddValue ("enbTxPowerDbm", "TX power (dBm) used by eNBs", enbTxPowerDbm);
-  cmd.AddValue ("useRlcUm", "Use LTE RLC UM mode", useRlcUm);
+  cmd.AddValue ("rfConfigFileName","Local filepath to the scenario files",rfConfigFileName);
+  cmd.AddValue ("protocolConfigFileName","Local filepath to the scenario files",protocolConfigFileName);
   cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
   cmd.AddValue ("verbose", "Enable verbose logging", verbose);
   cmd.Parse (argc, argv);
   
-  //char * homedir = getenv("HOME");
-  //std::string homeDir = homedir;
-  configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
-
+  rfConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";
+  protocolConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   
-  //std::string configFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/simulation_config.txt";//"/home/collin/Downloads/Scenario" + scenarioName + "/simulation_config.txt"; // this filename needs to be changed to your own local path to it
-  //std::map<std::string,std::vector<double>> simParameters;
+  std::ifstream  rf_config_file(rfConfigFileName);
+  nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
   
-  std::ifstream  config_file(configFileName);
-  nlohmann::json simParameters = nlohmann::json::parse(config_file);
-  
-  /*
-  std::string line;
-  char ch;
-  std::string name;
-  std::string value;
-  std::vector<double> valueVec;
-  
-  while (std::getline(data,line))
-  {
-    std::stringstream lineStream(line);
-    bool nameFound = false;
-    name.clear();
-    value.clear();
-    valueVec.clear();
-    while (lineStream >> ch)
-    {
-      if (nameFound) // the name has been found, we now want the value
-      {
-        value.push_back(ch);
-        if(lineStream.peek() == ' ' || lineStream.peek() == '\n' || lineStream.peek() == '\r')
-        {
-            lineStream.ignore();
-            valueVec.push_back(std::stod(value));
-            value.clear();
-        }
-      } else // the name hasn't been found yet
-      {
-        name.push_back(ch);
-        if(lineStream.peek() == ':') // the colon serves as the break between the name and value
-        {
-            lineStream.ignore();
-            lineStream.ignore(); // the colon is always followed by a space, ignore that too
-            nameFound = true;
-        }
-      }
-    }
-    simParameters.insert(std::pair<std::string,std::vector<double>>(name,valueVec));
-  }
-  
-  */
-  
+  std::ifstream  protocol_config_file(protocolConfigFileName);
+  nlohmann::json protocolSimParameters = nlohmann::json::parse(protocol_config_file);
   
   // Constants for this simulation
-  //std::cout << simParameters.at("no_UE") << std::endl;
-  uint16_t numberOfUes = uint16_t(simParameters["UE"].size());
-  uint16_t numberOfEnbs = uint16_t(numSectors*simParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
-  //std::cout << * << std::endl;
+  uint16_t numberOfUes = uint16_t(rfSimParameters["UE"].size());
+  uint16_t numberOfEnbs = uint16_t(numSectors*rfSimParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
   NodeContainer enbNodes;
@@ -400,16 +332,16 @@ main (int argc, char *argv[])
   // change some default attributes based upon command line settings
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
   Config::SetDefault ("ns3::LteHelper::UsePdschForCqiGeneration", BooleanValue (false));
-  Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(qOut));
-  Config::SetDefault ("ns3::LteUePhy::Qin", DoubleValue(qIn));
-  Config::SetDefault ("ns3::LteUePhy::NumQoutEvalSf", UintegerValue(NumQoutEvalSf));
-  Config::SetDefault ("ns3::LteUePhy::NumQinEvalSf", UintegerValue(NumQinEvalSf));
-  Config::SetDefault ("ns3::LteUeRrc::T310", TimeValue( MilliSeconds(T310)));
-  Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(N310));
-  Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(N311));
+  Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(protocolSimParameters["NS3"]["qout_db"]));
+  Config::SetDefault ("ns3::LteUePhy::Qin", DoubleValue(protocolSimParameters["NS3"]["qin_db"]));
+  Config::SetDefault ("ns3::LteUePhy::NumQoutEvalSf", UintegerValue(protocolSimParameters["NS3"]["number_qout_eval_sf"]));
+  Config::SetDefault ("ns3::LteUePhy::NumQinEvalSf", UintegerValue(protocolSimParameters["NS3"]["number_qin_eval_sf"]));
+  Config::SetDefault ("ns3::LteUeRrc::T310", TimeValue( MilliSeconds(protocolSimParameters["NS3"]["t310"])));
+  Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(protocolSimParameters["NS3"]["n310"]));
+  Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(protocolSimParameters["NS3"]["n311"]));
   //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
-  double simTime = simParameters["simulation"]["simulation_duration_s"]; // seconds
+  double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
   
   
   if (verbose)
@@ -418,8 +350,8 @@ main (int argc, char *argv[])
       LogComponentEnable ("A2A4RsrqHandoverAlgorithm", logLevel);
       LogComponentEnable ("A3RsrpHandoverAlgorithm", logLevel);
     }
-  
-  if (useRlcUm == false)
+    
+  if (protocolSimParameters["NS3"]["use_rlc_um"] == 0)
     {
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
     }
@@ -440,6 +372,7 @@ main (int argc, char *argv[])
   
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
   Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper> ();
+  epcHelper->SetAttribute ("X2LinkDelay", TimeValue(MilliSeconds(protocolSimParameters["NS3"]["x2_delay_ms"])));
   lteHelper->SetEpcHelper (epcHelper);
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
   
@@ -454,9 +387,10 @@ main (int argc, char *argv[])
   
   
   lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
-  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",DoubleValue (hystVal));
-  lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",TimeValue (MilliSeconds (timeToTrigger)));
-  lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",DoubleValue (a3Offset));
+  lteHelper->SetHandoverAlgorithmAttribute ("perCellParameterPath",StringValue (protocolConfigFileName));//path ro json containing per-cell parameters
+  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",DoubleValue (hystVal));//default value to use if there are no per-cell values
+  lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",TimeValue (MilliSeconds (timeToTrigger)));//default value to use if there are no per-cell values
+  lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",DoubleValue (a3Offset));//default value to use if there are no per-cell values
 
   
   // Install Mobility Model in eNB
@@ -465,7 +399,7 @@ main (int argc, char *argv[])
   {
     for (int j = 0; j < numSectors; ++j) //each of the three sectors shares a location
     {
-      Vector enbPosition (simParameters["BS"][i]["location"][0], simParameters["BS"][i]["location"][1], simParameters["BS"][i]["location"][2]);
+      Vector enbPosition (rfSimParameters["BS"][i]["location"][0], rfSimParameters["BS"][i]["location"][1], rfSimParameters["BS"][i]["location"][2]);
       enbPositionAlloc->Add (enbPosition);
     }
   }
@@ -482,9 +416,9 @@ main (int argc, char *argv[])
   
   for (uint16_t i = 0; i < numberOfUes; i++)
   {
-    Vector uePosition (simParameters["UE"][i]["initial_position"][0], simParameters["UE"][i]["initial_position"][1], simParameters["UE"][i]["initial_position"][2]);
+    Vector uePosition (rfSimParameters["UE"][i]["initial_position"][0], rfSimParameters["UE"][i]["initial_position"][1], rfSimParameters["UE"][i]["initial_position"][2]);
     ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
-    Vector ueVelocity (simParameters["UE"][i]["velocity"][0], simParameters["UE"][i]["velocity"][1], simParameters["UE"][i]["velocity"][2]);
+    Vector ueVelocity (rfSimParameters["UE"][i]["velocity"][0], rfSimParameters["UE"][i]["velocity"][1], rfSimParameters["UE"][i]["velocity"][2]);
     ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
   }
   
@@ -501,7 +435,7 @@ main (int argc, char *argv[])
   Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
   Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
   // Configure tableLossModel here, by e.g. pointing it to a trace file
-  tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, simParameters["simulation"]["resource_blocks"], simTime*1000);
+  tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, rfSimParameters["simulation"]["resource_blocks"], simTime*1000);
   
   for (int i = 0; i < numberOfUes; ++i)
   {
@@ -520,7 +454,7 @@ main (int argc, char *argv[])
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
     {
-      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(simParameters["UE"][i]["initial_attachment"]) - 1));
+      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
     }
   
   // Create a single RemoteHost

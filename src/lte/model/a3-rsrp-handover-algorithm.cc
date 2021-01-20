@@ -24,7 +24,9 @@
 #include <ns3/double.h>
 #include <ns3/string.h>
 #include <ns3/lte-common.h>
+#include <../json.hpp>
 #include <list>
+#include <fstream>
 
 namespace ns3 {
 
@@ -121,6 +123,25 @@ A3RsrpHandoverAlgorithm::DoInitialize ()
   reportConfig.triggerQuantity = LteRrcSap::ReportConfigEutra::RSRP;
   reportConfig.reportInterval = LteRrcSap::ReportConfigEutra::MS1024;
   
+  if (m_perCellPath != "FakePath")
+  {
+    std::ifstream  protocol_config_file(m_perCellPath);
+    nlohmann::json perCellParameters = nlohmann::json::parse(protocol_config_file);
+    
+    
+    for (int i = 0; i < int(perCellParameters["BS"].size()); ++i)
+    {
+      for (int j = 0; j < int(perCellParameters["BS"][i]["number_of_sectors"]); ++j)
+      {
+        reportConfig.perCellHysteresis.push_back(perCellParameters["BS"][i]["hysteresis_db"][j]);
+        reportConfig.perCellA3Offset.push_back(perCellParameters["BS"][i]["a3_offset_db"][j]);
+        reportConfig.perCellTimeToTrigger.push_back(perCellParameters["BS"][i]["time_to_trigger_ms"][j]);
+      }
+    }
+  }
+  
+  
+  /*
   reportConfig.perCellA3Offset.push_back(0);
   reportConfig.perCellA3Offset.push_back(0);
   reportConfig.perCellA3Offset.push_back(0);
@@ -150,6 +171,7 @@ A3RsrpHandoverAlgorithm::DoInitialize ()
   reportConfig.perCellTimeToTrigger.push_back(256);
   reportConfig.perCellTimeToTrigger.push_back(256);
   reportConfig.perCellTimeToTrigger.push_back(256);
+  */
   
   m_measId = m_handoverManagementSapUser->AddUeMeasReportConfigForHandover (reportConfig);
 

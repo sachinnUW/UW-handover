@@ -34,85 +34,65 @@ control_c()
 
 trap control_c SIGINT
 
-
-#Speed=(275)
-#x2Distance=500
-#yDistanceForUe=1000
-useRlcUm=0
-<<<<<<< Updated upstream
-scenarioName="0.4"
-handoverType="A3Rsrp"
-HystVal=(3)
-TTT=(256)
-trials=3
-=======
-scenarioName="0.5"
-handoverType="A3Rsrp"
-HystVal=(3)
-TTT=(256)
+scenarioName="0.4.1"
 trials=1
->>>>>>> Stashed changes
 
 
 dirname=lte-tcp-x2-handover
 experimentDir=`pwd`
 
 
-for hystVal in "${HystVal[@]}"
+
+for (( i=1; i<=$trials; i++))
 do
-	for ttt in "${TTT[@]}"
-	do
-		for (( i=1; i<=$trials; i++))
-		do
-			resultsDir=`pwd`/results/Scenario$scenarioName-${hystVal}-${ttt}/Scenario$scenarioName-${hystVal}-${ttt}-${i}
+	resultsDir=`pwd`/results/Scenario$scenarioName-${hystVal}-${ttt}/Scenario$scenarioName-${hystVal}-${ttt}-${i}
 
-			# need this as otherwise waf won't find the executables
-			#cd ../../../../
+	# need this as otherwise waf won't find the executables
+	#cd ../../../../
 
-			# Random number generator run number
-			run=${i}
+	# Random number generator run number
+	run=${i}
 
-			mkdir -p ${resultsDir}
-			#cp ${experimentDir}/*-plot.py ${resultsDir}
+	mkdir -p ${resultsDir}
+	#cp ${experimentDir}/*-plot.py ${resultsDir}
 
 
-			#echo $speed
-			echo $hystVal
-			echo $ttt
-			echo $i
-			set -x
+	#echo $speed
+	echo $hystVal
+	echo $ttt
+	echo $i
+	set -x
 
-			./waf --run-no-build "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --trialNum=${i-1} --useRlcUm=${useRlcUm} --handoverType=${handoverType} --hystVal=${hystVal} --timeToTrigger=${ttt}"
-			
-			{ set +x; } 2>/dev/null
+	./waf --run-no-build "lte-handover.cc --scenarioName=$scenarioName --RngRun=$run --trialNum=${i-1}"
+	
+	{ set +x; } 2>/dev/null
 
-			# Move and copy files to the results directory
-			if [ -f lte-tcp-x2-handover-0-2.pcap ]; then
-			  mv lte-tcp-x2-handover*.pcap ${resultsDir}
-			fi
-			mv lte-tcp-x2-handover.*.dat ${resultsDir}
-			#mv DlMacStats.txt ${resultsDir}
-			#mv UlTxPhyStats.txt ${resultsDir}
-			#mv UlSinrStats.txt ${resultsDir}
-			#mv UlRxPhyStats.txt ${resultsDir}
-			#mv UlRlcStats.txt ${resultsDir}
-			#mv UlPdcpStats.txt ${resultsDir}
-			#mv UlMacStats.txt ${resultsDir}
-			#mv UlInterferenceStats.txt ${resultsDir}
-			#mv DlTxPhyStats.txt ${resultsDir}
-			#mv DlRxPhyStats.txt ${resultsDir}
-			#mv DlRsrpSinrStats.txt ${resultsDir}
-			#mv DlRlcStats.txt ${resultsDir}
-			#mv DlPdcpStats.txt ${resultsDir}
+	# Move and copy files to the results directory
+	if [ -f lte-tcp-x2-handover-0-2.pcap ]; then
+	  mv lte-tcp-x2-handover*.pcap ${resultsDir}
+	fi
+	mv lte-tcp-x2-handover.*.dat ${resultsDir}
+	#mv DlMacStats.txt ${resultsDir}
+	#mv UlTxPhyStats.txt ${resultsDir}
+	#mv UlSinrStats.txt ${resultsDir}
+	#mv UlRxPhyStats.txt ${resultsDir}
+	#mv UlRlcStats.txt ${resultsDir}
+	#mv UlPdcpStats.txt ${resultsDir}
+	#mv UlMacStats.txt ${resultsDir}
+	#mv UlInterferenceStats.txt ${resultsDir}
+	#mv DlTxPhyStats.txt ${resultsDir}
+	#mv DlRxPhyStats.txt ${resultsDir}
+	#mv DlRsrpSinrStats.txt ${resultsDir}
+	#mv DlRlcStats.txt ${resultsDir}
+	#mv DlPdcpStats.txt ${resultsDir}
 
-			# git show --name-only > ${resultsDir}/git-commit.txt
+	# git show --name-only > ${resultsDir}/git-commit.txt
 
-			cd ${experimentDir}
-			cp $0 ${resultsDir}
-		done
-		python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
-	done
+	cd ${experimentDir}
+	cp $0 ${resultsDir}
 done
+python3 ./Python_Analysis_Scripts/main.py $scenarioName ${hystVal} ${ttt} ${trials}
+
 #cd ${resultsDir}
 
 #echo "Creating plots"
