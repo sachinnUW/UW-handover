@@ -281,8 +281,9 @@ main (int argc, char *argv[])
   double numSectors = 3;
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
-  std::string rfConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
-  std::string protocolConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
+  std::string scenarioDir = "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios";
+  std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
+  std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   //Other Values
   //uint16_t x2HandoverDelay = 0; //milliseconds
   double enbTxPowerDbm = 46.0;
@@ -296,14 +297,13 @@ main (int argc, char *argv[])
   CommandLine cmd;
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
   cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
-  cmd.AddValue ("rfConfigFileName","Local filepath to the scenario files",rfConfigFileName);
-  cmd.AddValue ("protocolConfigFileName","Local filepath to the scenario files",protocolConfigFileName);
+  cmd.AddValue ("scenarioDir","Local filepath to the scenario files",scenarioDir);
   cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
   cmd.AddValue ("verbose", "Enable verbose logging", verbose);
   cmd.Parse (argc, argv);
   
-  rfConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/config.json";
-  protocolConfigFileName = homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
+  rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
+  protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
@@ -443,7 +443,7 @@ main (int argc, char *argv[])
   	{
 	  for (int k = 0; k < numSectors; ++k)
   	  {
-  		  tableLossModel->LoadTrace (homeDir + "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
+  		  tableLossModel->LoadTrace (homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
   }
