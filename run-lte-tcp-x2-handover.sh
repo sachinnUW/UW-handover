@@ -45,7 +45,7 @@ experimentDir=`pwd`
 
 for (( i=1; i<=$trials; i++))
 do
-	resultsDir=`pwd`/results/Scenario$scenarioName-${hystVal}-${ttt}/Scenario$scenarioName-${hystVal}-${ttt}-${i}
+	resultsDir=`pwd`/results/Scenario$scenarioName/Scenario$scenarioName-${i}
 
 	# need this as otherwise waf won't find the executables
 	#cd ../../../../
@@ -71,7 +71,7 @@ do
 	if [ -f lte-tcp-x2-handover-0-2.pcap ]; then
 	  mv lte-tcp-x2-handover*.pcap ${resultsDir}
 	fi
-	mv lte-tcp-x2-handover.*.dat ${resultsDir}
+	mv lte-tcp-x2-handover.*.csv ${resultsDir}
 	#mv DlMacStats.txt ${resultsDir}
 	#mv UlTxPhyStats.txt ${resultsDir}
 	#mv UlSinrStats.txt ${resultsDir}

@@ -208,27 +208,27 @@ void
 TracePosition (Ptr<Node> ue, Time interval)
 {
   Vector v = ue->GetObject<MobilityModel> ()->GetPosition ();
-  g_positionTrace << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << " " 
-    << v.x << " " << v.y << std::endl;
+  g_positionTrace << std::setw (1) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << "," 
+    << v.x << "," << v.y << std::endl;
   Simulator::Schedule (interval, &TracePosition, ue, interval);
 }
 
 void
 NotifyUeMeasurements (std::string context, uint16_t imsi, uint16_t cellId, double rsrpDbm, double rsrqDbm, bool servingCell, uint8_t ccId)
 {
-  g_ueMeasurements << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << " " 
-    << std::setw (3) << imsi << " "
-    << std::setw (3) << cellId << " " 
-    << std::setw (3) << (servingCell ? "1" : "0") << " " 
-    << std::setw (8) << rsrpDbm << " " 
-    << std::setw (8) << rsrqDbm << std::endl;
+  g_ueMeasurements << std::setw (1) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << "," 
+    << std::setw (1) << imsi << ","
+    << std::setw (1) << cellId << "," 
+    << std::setw (1) << (servingCell ? "1" : "0") << "," 
+    << std::setw (1) << rsrpDbm << "," 
+    << std::setw (1) << rsrqDbm << std::endl;
 }
 
 void
 NotifyPacketSinkRx (std::string context, Ptr<const Packet> packet, const Address &address, const Address &reciever)
 {
-  g_packetSinkRx << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () 
-    << " " << std::setw (5) << packet->GetSize () << std::setw (5) << " " << reciever << std::endl;
+  g_packetSinkRx << std::setw (1) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () 
+    << "," << std::setw (1) << packet->GetSize () << std::setw (1) << "," << reciever << std::endl;
 }
 
 /*
@@ -324,7 +324,7 @@ main (int argc, char *argv[])
   // Additional constants (not changeable at command line)
   LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
   std::string traceFilePrefix = "lte-tcp-x2-handover";
-  Time positionTracingInterval = Seconds (5);
+  Time positionTracingInterval = MilliSeconds (1);
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
@@ -356,16 +356,16 @@ main (int argc, char *argv[])
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
     }
   
-  g_ueMeasurements.open ((traceFilePrefix + ".ue-measurements.dat").c_str(), std::ofstream::out);
-  g_ueMeasurements << "# time   imsi   cellId   isServingCell?  RSRP(dBm)  RSRQ(dB)" << std::endl;
-  g_packetSinkRx.open ((traceFilePrefix + ".tcp-receive.dat").c_str(), std::ofstream::out);
-  g_packetSinkRx << "# time   bytesRx" << std::endl;
+  g_ueMeasurements.open ((traceFilePrefix + ".ue-measurements.csv").c_str(), std::ofstream::out);
+  g_ueMeasurements << "time,imsi,cellId,isServingCell?,RSRP(dBm),RSRQ(dB)" << std::endl;
+  g_packetSinkRx.open ((traceFilePrefix + ".tcp-receive.csv").c_str(), std::ofstream::out);
+  g_packetSinkRx << "time,bytesRx,mac_address" << std::endl;
   //g_cqiTrace.open ((traceFilePrefix + ".cqi.dat").c_str(), std::ofstream::out);
   //g_cqiTrace << "# time   nodeId   rnti  cqi" << std::endl;
-  g_tcpCongStateTrace.open ((traceFilePrefix + ".tcp-state.dat").c_str(), std::ofstream::out);
-  g_tcpCongStateTrace << "# time   congState" << std::endl;
-  g_positionTrace.open ((traceFilePrefix + ".position.dat").c_str(), std::ofstream::out);
-  g_positionTrace << "# time   congState" << std::endl;
+  //g_tcpCongStateTrace.open ((traceFilePrefix + ".tcp-state.dat").c_str(), std::ofstream::out);
+  //g_tcpCongStateTrace << "# time   congState" << std::endl;
+  g_positionTrace.open ((traceFilePrefix + ".position.csv").c_str(), std::ofstream::out);
+  g_positionTrace << "time,x,y" << std::endl;
   
   
   
@@ -604,7 +604,7 @@ main (int argc, char *argv[])
   g_ueMeasurements.close ();
   //g_cqiTrace.close ();
   g_packetSinkRx.close ();
-  g_tcpCongStateTrace.close ();
+  //g_tcpCongStateTrace.close ();
   g_positionTrace.close ();
   
   return 0;
