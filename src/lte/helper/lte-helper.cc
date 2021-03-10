@@ -922,6 +922,7 @@ LteHelper::InstallSingleUeDevice (Ptr<Node> n)
   dev->SetAttribute ("Imsi", UintegerValue (imsi));
   dev->SetCcMap (ueCcMap);
   dev->SetAttribute ("LteUeRrc", PointerValue (rrc));
+  rrc->SetLteUeNetDevice (dev);
   dev->SetAttribute ("EpcUeNas", PointerValue (nas));
   dev->SetAttribute ("LteUeComponentCarrierManager", PointerValue (ccmUe));
   // \todo The UE identifier should be dynamically set by the EPC
