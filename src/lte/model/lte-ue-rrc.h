@@ -37,8 +37,9 @@
 #include <ns3/traced-callback.h>
 #include "ns3/component-carrier-ue.h"
 #include <ns3/lte-ue-ccm-rrc-sap.h>
+#include <ns3/ptr.h>
 #include <vector>
-
+#include "MRO-env.h"
 #include <map>
 #include <set>
 
@@ -68,6 +69,7 @@ static const Time UE_MEASUREMENT_REPORT_DELAY = MicroSeconds (1);
 
 
 class LteRlc;
+class LteUeNetDevice;
 class LteMacSapProvider;
 class LteUeCmacSapUser;
 class LteUeCmacSapProvider;
@@ -138,6 +140,8 @@ public:
 private:
   virtual void DoInitialize (void);
   virtual void DoDispose (void);
+  Ptr<MROENV> m_mroEnv;
+  double m_tttAdjustment;
 public:
   /**
    * \brief Get the type ID.
@@ -402,6 +406,8 @@ public:
   typedef void (* ImsiCidRntiCountTracedCallback)
   (uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t count);
 
+  void SetLteUeNetDevice (Ptr<LteUeNetDevice> device);
+  Ptr<LteUeNetDevice>  GetLteUeNetDevice (void) const;
 
 private:
 
@@ -1261,7 +1267,13 @@ private:
    *  consecutive in-sync indications from lower layers.
    */
   uint8_t m_n311;
-
+  
+  /** 
+  *   Flag for if the experiment uses the MRO experimental settings
+  */
+  bool m_mroExp;
+  
+  
   /**
    * Time limit (given by m_t310) before the radio link is considered to have failed.
    * It is set upon detecting physical layer problems i.e. upon receiving
@@ -1335,6 +1347,8 @@ private:
    *
    */
   void ResetRlfParams ();
+
+  Ptr<LteUeNetDevice> m_lteUeNetDevice;
 
 public:
   /** 

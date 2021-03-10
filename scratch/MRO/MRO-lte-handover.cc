@@ -53,8 +53,9 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/point-to-point-layout-module.h"
+#include "ns3/config-store-module.h"
 #include <../json.hpp>
-
+#include <filesystem>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -282,6 +283,7 @@ main (int argc, char *argv[])
   char * homedir = getenv("HOME");
   std::string homeDir = homedir;
   std::string scenarioDir = "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios";
+  std::string resultDir = "/workspace/ns-3-dev-git/results";
   std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
   std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   //Other Values
@@ -290,6 +292,7 @@ main (int argc, char *argv[])
   //bool useRlcUm = false;
   bool verbose = false;
   bool pcap = false;
+  bool mroExp = true;
   
   std::string scenarioFilepath = "C/";
   
@@ -298,6 +301,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
   cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
   cmd.AddValue ("scenarioDir","Local filepath to the scenario files",scenarioDir);
+  cmd.AddValue ("resultDir","Local filepath to the top level results",resultDir);
   cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
   cmd.AddValue ("verbose", "Enable verbose logging", verbose);
   cmd.Parse (argc, argv);
@@ -321,9 +325,9 @@ main (int argc, char *argv[])
   ueNodes.Create (numberOfUes);
   
   
-  // Additional constants (not changeable at command line)
+  // Additional constants (not changeable at command line) + "/Scenario" + scenarioName + "/Scenario" + scenarioName + "-" + std::to_string(trialNum)
   LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
-  std::string traceFilePrefix = "lte-tcp-x2-handover";
+  std::string traceFilePrefix = homeDir + resultDir + "/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
   Time positionTracingInterval = MilliSeconds (1);
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
@@ -339,6 +343,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::LteUeRrc::T310", TimeValue( MilliSeconds(protocolSimParameters["NS3"]["t310"])));
   Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(protocolSimParameters["NS3"]["n310"]));
   Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(protocolSimParameters["NS3"]["n311"]));
+  Config::SetDefault ("ns3::LteUeRrc::mroExp", BooleanValue(mroExp));
   //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
   double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
@@ -356,15 +361,21 @@ main (int argc, char *argv[])
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
     }
   
-  g_ueMeasurements.open ((traceFilePrefix + ".ue-measurements.csv").c_str(), std::ofstream::out);
+  //fs::path p1 = homeDir + resultDir + "/Scenario" + scenarioName;
+  if (!(std::filesystem::exists(traceFilePrefix)))
+  {
+    std::filesystem::create_directories(traceFilePrefix);
+  }
+  
+  g_ueMeasurements.open ((traceFilePrefix + "ue-measurements.csv").c_str(), std::ofstream::out);
   g_ueMeasurements << "time,imsi,cellId,isServingCell?,RSRP(dBm),RSRQ(dB)" << std::endl;
-  g_packetSinkRx.open ((traceFilePrefix + ".tcp-receive.csv").c_str(), std::ofstream::out);
+  g_packetSinkRx.open ((traceFilePrefix + "tcp-receive.csv").c_str(), std::ofstream::out);
   g_packetSinkRx << "time,bytesRx,mac_address" << std::endl;
   //g_cqiTrace.open ((traceFilePrefix + ".cqi.dat").c_str(), std::ofstream::out);
   //g_cqiTrace << "# time   nodeId   rnti  cqi" << std::endl;
   //g_tcpCongStateTrace.open ((traceFilePrefix + ".tcp-state.dat").c_str(), std::ofstream::out);
   //g_tcpCongStateTrace << "# time   congState" << std::endl;
-  g_positionTrace.open ((traceFilePrefix + ".position.csv").c_str(), std::ofstream::out);
+  g_positionTrace.open ((traceFilePrefix + "position.csv").c_str(), std::ofstream::out);
   g_positionTrace << "time,x,y" << std::endl;
   
   
@@ -404,6 +415,7 @@ main (int argc, char *argv[])
     }
   }
     
+  std::cout << 2 << std::endl;
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator (enbPositionAlloc);
@@ -451,12 +463,8 @@ main (int argc, char *argv[])
   dlChannel->AddSpectrumPropagationLossModel (tableLossModel);
   ulChannel->AddSpectrumPropagationLossModel (tableLossModel);// we want the UL/DL channels to be reciprocal
   
-  // Attach all UEs to the first eNodeB
-  for (uint16_t i = 0; i < numberOfUes; i++)
-    {
-      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
-    }
-  
+  std::cout << 2 << std::endl;
+
   // Create a single RemoteHost
   NodeContainer remoteHostContainer;
   remoteHostContainer.Create (1);
@@ -495,6 +503,14 @@ main (int argc, char *argv[])
     ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
   }
   
+  // Attach all UEs to the first eNodeB
+  for (uint16_t i = 0; i < numberOfUes; i++)
+    {
+      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
+    }
+    
+  std::cout << 2 << std::endl;
+
   // Create the sender applications, 1 per UE, all originating from the remote node
   BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
   ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
@@ -532,6 +548,7 @@ main (int argc, char *argv[])
   dlpf.localPortStart = port;
   dlpf.localPortEnd = port;
   tft->Add (dlpf);
+  std::cout << 2 << std::endl;
   EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
   for (uint32_t i = 0; i < numberOfUes; ++i)
   {
@@ -548,7 +565,7 @@ main (int argc, char *argv[])
     }
   
   lteHelper->EnableLogComponents();
-  lteHelper->EnablePhyTraces ();
+  //lteHelper->EnablePhyTraces ();
   //lteHelper->EnableMacTraces ();
   //lteHelper->EnableRlcTraces ();
   //lteHelper->EnablePdcpTraces ();
