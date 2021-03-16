@@ -17,7 +17,7 @@ class Act(Structure):
     _fields_ = [
         ('c', c_int)
     ]
-exp = Experiment(1235, 4096, 'multi-run', '../../')
+exp = Experiment(1234, 4096, 'multi-run', '../../')
 for i in range(2):
     exp.reset()
     rl = Ns3AIRL(2333, Env, Act)
