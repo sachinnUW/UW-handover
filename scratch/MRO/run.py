@@ -33,16 +33,18 @@ for i in range(1):
             )  # 1 X 4 tensor
             xPredicted_max, _ = torch.max(xPredicted, 0)
             xPredicted = torch.div(xPredicted, xPredicted_max)
-            data.act.tttAdjutment = model.forward(xPredicted)
-            # data.act.tttAdjutment = ML_model(data.env.x,data.env.y)
-            print(
-                [
-                    data.env.time,
-                    data.env.imsi,
-                    data.env.x,
-                    data.env.y,
-                    data.act.tttAdjutment,
-                ]
-            )
+            data.act.tttAdjutment = model.forward(xPredicted).numpy()[0].item()
+            #.numpy() converts to a numpy array
+            #[0] grabs the first (only) value, at this point its type is numpy.float32
+            #.item() converts it to a regular old float
+            #print(
+            #    [
+            #        data.env.time,
+            #        data.env.imsi,
+            #        data.env.x,
+            #        data.env.y,
+            #        data.act.tttAdjutment,
+            #    ]
+            #)
     pro.wait()
 del exp

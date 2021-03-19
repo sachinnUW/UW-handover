@@ -98,7 +98,7 @@ ContextToNodeId (std::string context)
 void
 NotifyUdpReceived (std::string context, Ptr<const Packet> p, const Address &addr)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " UDP received" << std::endl;
 }
@@ -109,7 +109,7 @@ NotifyConnectionEstablishedUe (std::string context,
                                uint16_t cellid,
                                uint16_t rnti)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " UE IMSI " << imsi
             << ": connected to CellId " << cellid
@@ -124,7 +124,7 @@ NotifyHandoverStartUe (std::string context,
                        uint16_t rnti,
                        uint16_t targetCellId)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " UE IMSI " << imsi
             << ": previously connected to CellId " << cellid
@@ -139,7 +139,7 @@ NotifyHandoverEndOkUe (std::string context,
                        uint16_t cellid,
                        uint16_t rnti)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " UE IMSI " << imsi
             << ": successful handover to CellId " << cellid
@@ -153,7 +153,7 @@ NotifyConnectionEstablishedEnb (std::string context,
                                 uint16_t cellid,
                                 uint16_t rnti)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " eNB CellId " << cellid
             << ": successful connection of UE with IMSI " << imsi
@@ -168,7 +168,7 @@ NotifyHandoverStartEnb (std::string context,
                         uint16_t rnti,
                         uint16_t targetCellId)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " eNB CellId " << cellid
             << ": start handover of UE with IMSI " << imsi
@@ -183,7 +183,7 @@ NotifyHandoverEndOkEnb (std::string context,
                         uint16_t cellid,
                         uint16_t rnti)
 {
-  std::cout << Simulator::Now ().GetSeconds () << " node "
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () << " node "
             << ContextToNodeId (context)
             << " eNB CellId " << cellid
             << ": completed handover of UE with IMSI " << imsi
@@ -198,7 +198,7 @@ NotifyRecvMeasurementReport (std::string context,
                              uint16_t rnti,
                              LteRrcSap::MeasurementReport report)
 {
-  std::cout << Simulator::Now ().GetSeconds () 
+  std::cout << std::setprecision (3) << Simulator::Now ().GetSeconds () 
             << " UE " << imsi
             << ": sent measReport to CellId " << cellId
             << std::endl;
@@ -286,6 +286,7 @@ main (int argc, char *argv[])
   std::string resultDir = "/workspace/ns-3-dev-git/results";
   std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
   std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
+  std::string traceDir = homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
   //Other Values
   //uint16_t x2HandoverDelay = 0; //milliseconds
   double enbTxPowerDbm = 46.0;
@@ -302,12 +303,15 @@ main (int argc, char *argv[])
   cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
   cmd.AddValue ("scenarioDir","Local filepath to the scenario files",scenarioDir);
   cmd.AddValue ("resultDir","Local filepath to the top level results",resultDir);
+  cmd.AddValue ("rfConfigFileName","Local filepath to the rf config file",rfConfigFileName);
+  cmd.AddValue ("protocolConfigFileName","Local filepath to the protocol config file",protocolConfigFileName);
+  cmd.AddValue ("traceDir","Local filepath to the Quadriga PHY traces",traceDir);
   cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
   cmd.AddValue ("verbose", "Enable verbose logging", verbose);
   cmd.Parse (argc, argv);
   
-  rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
-  protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
+  //rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
+  //protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
@@ -415,7 +419,6 @@ main (int argc, char *argv[])
     }
   }
     
-  std::cout << 2 << std::endl;
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator (enbPositionAlloc);
@@ -455,7 +458,7 @@ main (int argc, char *argv[])
   	{
 	  for (int k = 0; k < numSectors; ++k)
   	  {
-  		  tableLossModel->LoadTrace (homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/","ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
+  		  tableLossModel->LoadTrace (traceDir,"ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
   }
@@ -463,7 +466,6 @@ main (int argc, char *argv[])
   dlChannel->AddSpectrumPropagationLossModel (tableLossModel);
   ulChannel->AddSpectrumPropagationLossModel (tableLossModel);// we want the UL/DL channels to be reciprocal
   
-  std::cout << 2 << std::endl;
 
   // Create a single RemoteHost
   NodeContainer remoteHostContainer;
@@ -509,7 +511,6 @@ main (int argc, char *argv[])
       lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
     }
     
-  std::cout << 2 << std::endl;
 
   // Create the sender applications, 1 per UE, all originating from the remote node
   BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());

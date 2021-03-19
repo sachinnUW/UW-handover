@@ -15,7 +15,7 @@ double MROENV::tableRead(double x, double y)
     SetCompleted();
     
     auto mlOutput = ActionGetterCond();
-    int ret = mlOutput->tttAdjustment;
+    double ret = mlOutput->tttAdjustment;
     GetCompleted();
     return ret;
 }
