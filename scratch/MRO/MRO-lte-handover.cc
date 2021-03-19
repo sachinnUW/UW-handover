@@ -306,6 +306,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("rfConfigFileName","Local filepath to the rf config file",rfConfigFileName);
   cmd.AddValue ("protocolConfigFileName","Local filepath to the protocol config file",protocolConfigFileName);
   cmd.AddValue ("traceDir","Local filepath to the Quadriga PHY traces",traceDir);
+  cmd.AddValue ("mroExp","flag for MRO experiments, false turns them off. Will be removed in later versions",mroExp);
   cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
   cmd.AddValue ("verbose", "Enable verbose logging", verbose);
   cmd.Parse (argc, argv);
@@ -549,7 +550,6 @@ main (int argc, char *argv[])
   dlpf.localPortStart = port;
   dlpf.localPortEnd = port;
   tft->Add (dlpf);
-  std::cout << 2 << std::endl;
   EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
   for (uint32_t i = 0; i < numberOfUes; ++i)
   {
