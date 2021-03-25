@@ -167,7 +167,7 @@ TableLossModel::LoadTrace (std::string path, std::string fileName)
           lineStream >> val;
           m_traceVals[3*(enbId-1)+(sectorId-1)][ueId-1][currentRb][currentTimeIndex] = val;
 
-          if(lineStream.peek() == ' ') lineStream.ignore();
+          if(lineStream.peek() == ',') lineStream.ignore();
 
       }
   }

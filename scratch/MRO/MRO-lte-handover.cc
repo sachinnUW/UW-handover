@@ -277,7 +277,7 @@ main (int argc, char *argv[])
   double timeToTrigger = 256; // standards limited to: 0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280 ms
   double a3Offset = 0; // standards limited to: -15 dB to 15 dB
   //scenario description files
-  std::string scenarioName = "0.4.1";
+  std::string scenarioName = "0.8";
   int trialNum = 0;
   double numSectors = 3;
   char * homedir = getenv("HOME");
@@ -313,13 +313,10 @@ main (int argc, char *argv[])
   
   //rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
   //protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
-  
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
-  
   std::ifstream  protocol_config_file(protocolConfigFileName);
   nlohmann::json protocolSimParameters = nlohmann::json::parse(protocol_config_file);
-  
   // Constants for this simulation
   uint16_t numberOfUes = uint16_t(rfSimParameters["UE"].size());
   uint16_t numberOfEnbs = uint16_t(numSectors*rfSimParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
@@ -352,7 +349,6 @@ main (int argc, char *argv[])
   //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
   
   double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
-  
   
   if (verbose)
     {
@@ -400,10 +396,10 @@ main (int argc, char *argv[])
    
   std::vector<double> A3 (numberOfEnbs);
   for (unsigned i=0; i<A3.size(); ++i) A3[i] = a3Offset;
-  
+
   
   lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
-  lteHelper->SetHandoverAlgorithmAttribute ("perCellParameterPath",StringValue (protocolConfigFileName));//path ro json containing per-cell parameters
+  lteHelper->SetHandoverAlgorithmAttribute ("perCellParameterPath",StringValue (protocolConfigFileName));//path to json containing per-cell parameters
   lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",DoubleValue (hystVal));//default value to use if there are no per-cell values
   lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",TimeValue (MilliSeconds (timeToTrigger)));//default value to use if there are no per-cell values
   lteHelper->SetHandoverAlgorithmAttribute ("a3Offset",DoubleValue (a3Offset));//default value to use if there are no per-cell values
@@ -427,17 +423,39 @@ main (int argc, char *argv[])
   
   // Install Mobility Model in UE
   MobilityHelper ueMobility;
-  ueMobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
-  ueMobility.Install (ueNodes);
-  
-  for (uint16_t i = 0; i < numberOfUes; i++)
+  if (rfSimParameters["simulation"]["mobility_type"] == "constant_velocity")
   {
-    Vector uePosition (rfSimParameters["UE"][i]["initial_position"][0], rfSimParameters["UE"][i]["initial_position"][1], rfSimParameters["UE"][i]["initial_position"][2]);
-    ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
-    Vector ueVelocity (rfSimParameters["UE"][i]["velocity"][0], rfSimParameters["UE"][i]["velocity"][1], rfSimParameters["UE"][i]["velocity"][2]);
-    ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
+    ueMobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
+    ueMobility.Install (ueNodes);
+    
+    for (uint16_t i = 0; i < numberOfUes; i++)
+    {
+      Vector uePosition (rfSimParameters["UE"][i]["initial_position"][0], rfSimParameters["UE"][i]["initial_position"][1], rfSimParameters["UE"][i]["initial_position"][2]);
+      ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
+      Vector ueVelocity (rfSimParameters["UE"][i]["velocity"][0], rfSimParameters["UE"][i]["velocity"][1], rfSimParameters["UE"][i]["velocity"][2]);
+      ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
+    }
+  } else if (rfSimParameters["simulation"]["mobility_type"] == "random_turns") 
+  {
+    ueMobility.SetMobilityModel ("ns3::WaypointMobilityModel");
+    ueMobility.Install (ueNodes);
+
+    for (uint16_t i = 0; i < numberOfUes; i++) 
+    {
+      for (uint16_t j = 0; j < rfSimParameters["UE"][i]["turn_times"].size(); j++)
+      {
+        std::string turn = "t" + std::to_string(j);
+        Waypoint ueWaypoint (Seconds(rfSimParameters["UE"][i]["turn_times"][j]), Vector (rfSimParameters["UE"][i]["turn_positions"][turn][0],rfSimParameters["UE"][i]["turn_positions"][turn][1],rfSimParameters["UE"][i]["turn_positions"][turn][2]));
+        ueNodes.Get (i)->GetObject<WaypointMobilityModel> ()-> AddWaypoint (ueWaypoint);
+      }
+      
+    }
   }
   
+  
+
+
+
   // Install LTE Devices in eNB and UEs
   Config::SetDefault ("ns3::LteEnbPhy::TxPower", DoubleValue (enbTxPowerDbm));
   NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
@@ -459,7 +477,7 @@ main (int argc, char *argv[])
   	{
 	  for (int k = 0; k < numSectors; ++k)
   	  {
-  		  tableLossModel->LoadTrace (traceDir,"ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.txt");// the filepath (first input), must be changed to your local filepath for these trace files
+  		  tableLossModel->LoadTrace (traceDir,"ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.csv");// the filepath (first input), must be changed to your local filepath for these trace files
       }
    	}
   }
@@ -505,13 +523,11 @@ main (int argc, char *argv[])
     ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get (i)->GetObject<Ipv4> ());
     ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
   }
-  
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
     {
       lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
     }
-    
 
   // Create the sender applications, 1 per UE, all originating from the remote node
   BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
@@ -610,7 +626,6 @@ main (int argc, char *argv[])
   std::cout << "Simulation time: " << simTime << " sec" << std::endl;
   
   Simulator::Schedule (reportingInterval, &ReportProgress, reportingInterval);
-  
   Simulator::Stop (Seconds (simTime));
   Simulator::Run ();
   
