@@ -125,9 +125,10 @@ A3RsrpHandoverAlgorithm::DoInitialize ()
   
   if (m_perCellPath != "FakePath")
   {
+
     std::ifstream  protocol_config_file(m_perCellPath);
     nlohmann::json perCellParameters = nlohmann::json::parse(protocol_config_file);
-    
+
     
     for (int i = 0; i < int(perCellParameters["BS"].size()); ++i)
     {

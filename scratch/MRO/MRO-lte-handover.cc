@@ -280,10 +280,9 @@ main (int argc, char *argv[])
   std::string scenarioName = "0.8";
   int trialNum = 0;
   double numSectors = 3;
-  char * homedir = getenv("HOME");
-  std::string homeDir = homedir;
+  std::string homeDir = "/home/collin";
   std::string scenarioDir = "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios";
-  std::string resultDir = "/workspace/ns-3-dev-git/results";
+  std::string resultDir = homeDir + "/workspace/ns-3-dev-git/results";
   std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
   std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   std::string traceDir = homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
@@ -329,7 +328,7 @@ main (int argc, char *argv[])
   
   // Additional constants (not changeable at command line) + "/Scenario" + scenarioName + "/Scenario" + scenarioName + "-" + std::to_string(trialNum)
   LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
-  std::string traceFilePrefix = homeDir + resultDir + "/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
+  std::string traceFilePrefix = resultDir + "/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
   Time positionTracingInterval = MilliSeconds (1);
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
