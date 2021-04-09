@@ -282,7 +282,7 @@ main (int argc, char *argv[])
   double numSectors = 3;
   std::string homeDir = "/home/collin";
   std::string scenarioDir = "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios";
-  std::string resultDir = "/workspace/ns-3-dev-git/results";
+  std::string resultDir = "/workspace/ns-3-dev-git/results/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
   std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
   std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   std::string traceDir = homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
@@ -328,7 +328,6 @@ main (int argc, char *argv[])
   
   // Additional constants (not changeable at command line) + "/Scenario" + scenarioName + "/Scenario" + scenarioName + "-" + std::to_string(trialNum)
   LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
-  std::string traceFilePrefix = resultDir + "/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
   Time positionTracingInterval = MilliSeconds (1);
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
@@ -362,20 +361,20 @@ main (int argc, char *argv[])
     }
   
   //fs::path p1 = homeDir + resultDir + "/Scenario" + scenarioName;
-  if (!(std::filesystem::exists(traceFilePrefix)))
+  if (!(std::filesystem::exists(resultDir)))
   {
-    std::filesystem::create_directories(traceFilePrefix);
+    std::filesystem::create_directories(resultDir);
   }
   
-  g_ueMeasurements.open ((traceFilePrefix + "ue-measurements.csv").c_str(), std::ofstream::out);
+  g_ueMeasurements.open ((resultDir + "ue-measurements.csv").c_str(), std::ofstream::out);
   g_ueMeasurements << "time,imsi,cellId,isServingCell?,RSRP(dBm),RSRQ(dB)" << std::endl;
-  g_packetSinkRx.open ((traceFilePrefix + "tcp-receive.csv").c_str(), std::ofstream::out);
+  g_packetSinkRx.open ((resultDir + "tcp-receive.csv").c_str(), std::ofstream::out);
   g_packetSinkRx << "time,bytesRx,mac_address" << std::endl;
-  //g_cqiTrace.open ((traceFilePrefix + ".cqi.dat").c_str(), std::ofstream::out);
+  //g_cqiTrace.open ((resultDir + ".cqi.dat").c_str(), std::ofstream::out);
   //g_cqiTrace << "# time   nodeId   rnti  cqi" << std::endl;
-  //g_tcpCongStateTrace.open ((traceFilePrefix + ".tcp-state.dat").c_str(), std::ofstream::out);
+  //g_tcpCongStateTrace.open ((resultDir + ".tcp-state.dat").c_str(), std::ofstream::out);
   //g_tcpCongStateTrace << "# time   congState" << std::endl;
-  g_positionTrace.open ((traceFilePrefix + "position.csv").c_str(), std::ofstream::out);
+  g_positionTrace.open ((resultDir + "position.csv").c_str(), std::ofstream::out);
   g_positionTrace << "time,x,y" << std::endl;
   
   

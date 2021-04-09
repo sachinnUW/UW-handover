@@ -10,6 +10,7 @@ struct mlInput
 	double y;
 	double time;
 	int imsi;
+	int cellId;
 }Packed;
 
 struct mlOutput
@@ -23,7 +24,7 @@ class MROENV : public Ns3AIRL<mlInput, mlOutput>
 		MROENV (void) = delete;
 		MROENV (uint16_t id);
 		double tableRead(double x, double y);
-		void loadIds(double time, int imsi);
+		void loadIds(double time, int imsi, int cellId);
 };
 }// namespace ns3
 

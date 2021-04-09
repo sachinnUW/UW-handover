@@ -20,11 +20,12 @@ double MROENV::tableRead(double x, double y)
     return ret;
 }
 
-void MROENV::loadIds(double time, int imsi)
+void MROENV::loadIds(double time, int imsi, int cellId)
 {
 	auto mlInput = EnvSetterCond();
 	mlInput->time = time;
 	mlInput->imsi = imsi;
+    mlInput->cellId = cellId;
 	SetCompleted();
 }
 }// namespace ns3
