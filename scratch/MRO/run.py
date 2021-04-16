@@ -31,47 +31,51 @@ class mlOutput(Structure):
     _fields_ = [("tttAdjutment", c_double)]
 
 
-
-
-
 parser = argparse.ArgumentParser()
+parser.add_argument("--resultsDir")
 parser.add_argument("--rfConfigFileName")
 parser.add_argument("--protocolConfigFileName")
+parser.add_argument("--traceDir")
+parser.add_argument("--rngSeedNum")
 args = parser.parse_args()
 
-#print(args.rfConfigFileName)
-#print(args.protocolConfigFileName)
-
-
+#parsing inputs and assigning default values if none were input. all defaults are the local filepaths on Collin Brady's computer, unlikely they will work you you.
+if type(args.resultsDir) is str:
+    resultsDir = args.resultsDir
+else:
+    resultsDir = "/home/collin/workspace/ns-3-dev-git/results/Scenario 0.8/trial 0/"
 
 if type(args.rfConfigFileName) is str:
-    with open(args.rfConfigFileName) as f:
-        rfConfig = json.load(f)
+    rfConfigFileName = args.rfConfigFileName
 else:
-    with open("/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/rf_config.json") as f:
-        rfConfig = json.load(f)
-
+    rfConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/rf_config.json"
 
 if type(args.protocolConfigFileName) is str:
-    with open(args.protocolConfigFileName) as f:
-        protocolConfig = json.load(f)
+    protocolConfigFileName = args.protocolConfigFileName
 else:
-    with open("/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/protocol_config.json") as f:
-        protocolConfig = json.load(f)
+    protocolConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/protocol_config.json"
+
+if type(args.traceDir) is str:
+    traceDir = args.traceDir
+else:
+    traceDir = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/"
+
+if type(args.rngSeedNum) is str:
+    rngSeedNum = int(args.rngSeedNum)
+else:
+    rngSeedNum = 1
+
+with open(rfConfigFileName) as f:
+    rfConfig = json.load(f)
 
 
-
-#print(rfConfig["BS"][0]["location"])
-
-
-
+ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'traceDir' : traceDir, 'rngSeedNum' : rngSeedNum}
 exp = Experiment(1234, 4096, "MRO", "../..")
-#config_params = load_config
 model = torch.jit.load("temp_NN.pt")
 for i in range(1):
     exp.reset()
     r1 = Ns3AIRL(1357, mlInput, mlOutput)
-    pro = exp.run(show_output=True)
+    pro = exp.run(setting=ns3Settings, show_output=True)
     while not r1.isFinish():
         with r1 as data:
             if data == None:

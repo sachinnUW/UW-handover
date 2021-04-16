@@ -65,7 +65,7 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("LteTcpX2Handover");
+NS_LOG_COMPONENT_DEFINE ("LteHandover");
 
 // These variables are declared outside of main() so that they may be
 // referenced in the callbacks below.  They are prefixed with "g_" to
@@ -73,8 +73,6 @@ NS_LOG_COMPONENT_DEFINE ("LteTcpX2Handover");
 
 std::ofstream g_ueMeasurements;
 std::ofstream g_packetSinkRx;
-//std::ofstream g_cqiTrace;
-std::ofstream g_tcpCongStateTrace;
 std::ofstream g_positionTrace;
 
 // Report on execution progress
@@ -206,12 +204,16 @@ NotifyRecvMeasurementReport (std::string context,
 
 
 void
-TracePosition (Ptr<Node> ue, Time interval)
+TracePosition (NodeContainer ueNodes, Time interval)
 {
-  Vector v = ue->GetObject<MobilityModel> ()->GetPosition ();
-  g_positionTrace << std::setw (1) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << "," 
-    << v.x << "," << v.y << std::endl;
-  Simulator::Schedule (interval, &TracePosition, ue, interval);
+  for (uint32_t i = 0; i < ueNodes.GetN (); ++i) {
+ 
+    // Get node and then position for each UE.
+    Vector v = ueNodes.Get (i)->GetObject<MobilityModel> ()->GetPosition ();
+    g_positionTrace  << std::setw (1) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << "," << (i+1) << "," << v.x << "," << v.y << std::endl;
+  }
+
+  Simulator::Schedule (interval, &TracePosition, ueNodes, interval);
 }
 
 void
@@ -232,29 +234,6 @@ NotifyPacketSinkRx (std::string context, Ptr<const Packet> packet, const Address
     << "," << std::setw (1) << packet->GetSize () << std::setw (1) << "," << reciever << std::endl;
 }
 
-/*
-void
-NotifyCqiReport (std::string context, uint16_t rnti, uint8_t cqi)
-{
-  g_cqiTrace << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << " "
-    << std::setw (4) << ContextToNodeId (context) << " "
-    << std::setw (4) << rnti  << " " 
-    << std::setw (3) << static_cast<uint16_t> (cqi) << std::endl;
-}
-*/
-
-void
-CongStateTrace (const TcpSocketState::TcpCongState_t oldValue, const TcpSocketState::TcpCongState_t newValue)
-{
-  g_tcpCongStateTrace << std::setw (7) << std::setprecision (3) << std::fixed << Simulator::Now ().GetSeconds () << " "
-    << std::setw (4) << TcpSocketState::TcpCongStateName[newValue] << std::endl;
-}
-
-void
-ConnectTcpTrace (void)
-{
-  Config::ConnectWithoutContext ("/NodeList/*/$ns3::TcpL4Protocol/SocketList/0/CongState", MakeCallback (&CongStateTrace));
-}
 
 /**
  * Program for an automatic X2-based handover based on the RSRQ measures.
@@ -267,9 +246,6 @@ int
 main (int argc, char *argv[])
 {
   
-  // fetching the relevant simulation parameters from the configuration file
-  
-  
   // Constants that can be changed by command-line arguments
   //handover values
   std::string handoverType = "A3Rsrp"; //valid values are: "A3Rsrp", "A2A4RsrqHandoverAlgorithm"
@@ -280,38 +256,27 @@ main (int argc, char *argv[])
   std::string scenarioName = "0.8";
   int trialNum = 0;
   double numSectors = 3;
-  std::string homeDir = "/home/collin";
-  std::string scenarioDir = "/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios";
-  std::string resultDir = homeDir + "/workspace/ns-3-dev-git/results";
-  std::string rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
-  std::string protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
-  std::string traceDir = homeDir + scenarioDir +"/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
+  std::string resultDir = "/home/collin/workspace/ns-3-dev-git/results/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
+  std::string rfConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
+  std::string protocolConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
+  std::string traceDir = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/";
   //Other Values
-  //uint16_t x2HandoverDelay = 0; //milliseconds
   double enbTxPowerDbm = 46.0;
-  //bool useRlcUm = false;
-  bool verbose = false;
-  bool pcap = false;
   bool mroExp = true;
+  int rngSeedNum = 1;
+
   
-  std::string scenarioFilepath = "C/";
   
   // Command line arguments
   CommandLine cmd;
-  cmd.AddValue ("scenarioName","the name of the scenario to run",scenarioName);
-  cmd.AddValue ("trialNum","the name of the scenario to run",trialNum);
-  cmd.AddValue ("scenarioDir","Local filepath to the scenario files",scenarioDir);
   cmd.AddValue ("resultDir","Local filepath to the top level results",resultDir);
   cmd.AddValue ("rfConfigFileName","Local filepath to the rf config file",rfConfigFileName);
   cmd.AddValue ("protocolConfigFileName","Local filepath to the protocol config file",protocolConfigFileName);
   cmd.AddValue ("traceDir","Local filepath to the Quadriga PHY traces",traceDir);
   cmd.AddValue ("mroExp","flag for MRO experiments, false turns them off. Will be removed in later versions",mroExp);
-  cmd.AddValue ("pcap", "Enable pcap tracing", pcap);
-  cmd.AddValue ("verbose", "Enable verbose logging", verbose);
+  cmd.AddValue ("rngSeedNum", "Number used for seeding the RNG seed.", rngSeedNum);
   cmd.Parse (argc, argv);
   
-  //rfConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
-  //protocolConfigFileName = homeDir + scenarioDir + "/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
   std::ifstream  protocol_config_file(protocolConfigFileName);
@@ -324,15 +289,15 @@ main (int argc, char *argv[])
   NodeContainer enbNodes;
   enbNodes.Create (numberOfEnbs);
   ueNodes.Create (numberOfUes);
-  
+  RngSeedManager::SetRun (int(rngSeedNum));
+
   
   // Additional constants (not changeable at command line) + "/Scenario" + scenarioName + "/Scenario" + scenarioName + "-" + std::to_string(trialNum)
-  LogLevel logLevel = (LogLevel)(LOG_PREFIX_ALL | LOG_LEVEL_ALL);
-  std::string traceFilePrefix = resultDir + "/Scenario" + scenarioName + "/trial" + std::to_string(trialNum) + "/";
   Time positionTracingInterval = MilliSeconds (1);
   Time reportingInterval = Seconds (10);
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
+  double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
   
   // change some default attributes based upon command line settings
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
@@ -345,40 +310,25 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(protocolSimParameters["NS3"]["n310"]));
   Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(protocolSimParameters["NS3"]["n311"]));
   Config::SetDefault ("ns3::LteUeRrc::mroExp", BooleanValue(mroExp));
-  //Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (23.0));
-  
-  double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
-  
-  if (verbose)
-    {
-      LogComponentEnable ("EpcX2", logLevel);
-      LogComponentEnable ("A2A4RsrqHandoverAlgorithm", logLevel);
-      LogComponentEnable ("A3RsrpHandoverAlgorithm", logLevel);
-    }
+  Config::SetDefault ("ns3::UdpClient::Interval",TimeValue (Seconds (0.001)));
+  Config::SetDefault ("ns3::UdpClient::MaxPackets",UintegerValue (simTime*1000+100));
     
   if (protocolSimParameters["NS3"]["use_rlc_um"] == 0)
     {
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
     }
   
-  //fs::path p1 = homeDir + resultDir + "/Scenario" + scenarioName;
-  if (!(std::filesystem::exists(traceFilePrefix)))
+  if (!(std::filesystem::exists(resultDir)))
   {
-    std::filesystem::create_directories(traceFilePrefix);
+    std::filesystem::create_directories(resultDir);
   }
   
-  g_ueMeasurements.open ((traceFilePrefix + "ue-measurements.csv").c_str(), std::ofstream::out);
+  g_ueMeasurements.open ((resultDir + "ue-measurements.csv").c_str(), std::ofstream::out);
   g_ueMeasurements << "time,imsi,cellId,isServingCell?,RSRP(dBm),RSRQ(dB)" << std::endl;
-  g_packetSinkRx.open ((traceFilePrefix + "tcp-receive.csv").c_str(), std::ofstream::out);
+  g_packetSinkRx.open ((resultDir + "packet-receive.csv").c_str(), std::ofstream::out);
   g_packetSinkRx << "time,bytesRx,mac_address" << std::endl;
-  //g_cqiTrace.open ((traceFilePrefix + ".cqi.dat").c_str(), std::ofstream::out);
-  //g_cqiTrace << "# time   nodeId   rnti  cqi" << std::endl;
-  //g_tcpCongStateTrace.open ((traceFilePrefix + ".tcp-state.dat").c_str(), std::ofstream::out);
-  //g_tcpCongStateTrace << "# time   congState" << std::endl;
-  g_positionTrace.open ((traceFilePrefix + "position.csv").c_str(), std::ofstream::out);
-  g_positionTrace << "time,x,y" << std::endl;
-  
-  
+  g_positionTrace.open ((resultDir + "position.csv").c_str(), std::ofstream::out);
+  g_positionTrace << "time,imsi,x,y" << std::endl;
   
   
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
@@ -450,10 +400,6 @@ main (int argc, char *argv[])
       
     }
   }
-  
-  
-
-
 
   // Install LTE Devices in eNB and UEs
   Config::SetDefault ("ns3::LteEnbPhy::TxPower", DoubleValue (enbTxPowerDbm));
@@ -463,7 +409,6 @@ main (int argc, char *argv[])
   // LTE Helper will, by default, install Friis loss model on UL and DL
   // Set table-based pathloss model on the downlink only
   // These steps must be done after InstallEnbDevice or InstallUeDevice above
-  
   Ptr<TableLossModel> tableLossModel = CreateObject<TableLossModel> ();
   Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
   Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
@@ -474,7 +419,7 @@ main (int argc, char *argv[])
   {
   	for (int j = 0; j < numberOfEnbs/numSectors; ++j)
   	{
-	  for (int k = 0; k < numSectors; ++k)
+	   for (int k = 0; k < numSectors; ++k)
   	  {
   		  tableLossModel->LoadTrace (traceDir,"ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.csv");// the filepath (first input), must be changed to your local filepath for these trace files
       }
@@ -529,35 +474,76 @@ main (int argc, char *argv[])
     }
 
   // Create the sender applications, 1 per UE, all originating from the remote node
-  BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
-  ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
-  
-  ApplicationContainer sourceApps;
-  
-  for (uint32_t i = 0; i < numberOfUes; ++i)
+  std::string transport_protocol = protocolSimParameters["NS3"]["transport_protocol"];
+  if (transport_protocol == "TCP")
   {
-    AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
-    ftpServer.SetAttribute ("Remote", remoteAddress);
-    sourceApps.Add (ftpServer.Install(remoteHost));
+    BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());
+    ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
+
+    ApplicationContainer sourceApps;
+    
+    for (uint32_t i = 0; i < numberOfUes; ++i)
+    {
+      AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+      ftpServer.SetAttribute ("Remote", remoteAddress);
+      sourceApps.Add (ftpServer.Install(remoteHost));
+    }
+    
+    sourceApps.Start (Seconds (1));
+    sourceApps.Stop (Seconds (simTime));
+  } 
+  else if (transport_protocol == "UDP") 
+  {
+    
+    //ftpServer.SetAttribute ("MaxBytes", UintegerValue (ftpSize));
+
+    ApplicationContainer sourceApps;
+    
+    for (uint32_t i = 0; i < numberOfUes; ++i)
+    {
+      AddressValue remoteAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+      UdpClientHelper ftpServer (ueIpIfaces.GetAddress (i),port);
+      //ftpServer.SetAttribute ("Remote", remoteAddress);
+      sourceApps.Add (ftpServer.Install(remoteHost));
+    }
+    
+    sourceApps.Start (Seconds (1));
+    sourceApps.Stop (Seconds (simTime));
   }
-  
-  sourceApps.Start (Seconds (1));
-  sourceApps.Stop (Seconds (simTime));
   
   // Create the packet sinks, 1 per UE, each at 1 UE
-  PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", Address ());
-  
-  ApplicationContainer sinkApps;
-  
-  for (uint32_t i = 0; i < numberOfUes; ++i)
+  if (transport_protocol == "TCP")
   {
-    AddressValue sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
-    sinkHelper.SetAttribute ("Local", sinkLocalAddress);
-    sinkApps.Add (sinkHelper.Install(ueNodes.Get(i)));
+    PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", Address ());
+
+    ApplicationContainer sinkApps;
+    
+    for (uint32_t i = 0; i < numberOfUes; ++i)
+    {
+      AddressValue sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+      sinkHelper.SetAttribute ("Local", sinkLocalAddress);
+      sinkApps.Add (sinkHelper.Install(ueNodes.Get(i)));
+    }
+    
+    sinkApps.Start (Seconds (1));
+    sinkApps.Stop (Seconds (simTime));
+  } 
+  else if (transport_protocol == "UDP") 
+  {
+    PacketSinkHelper sinkHelper ("ns3::UdpSocketFactory", Address ());
+
+    ApplicationContainer sinkApps;
+    
+    for (uint32_t i = 0; i < numberOfUes; ++i)
+    {
+      AddressValue sinkLocalAddress (InetSocketAddress (ueIpIfaces.GetAddress (i), port));
+      sinkHelper.SetAttribute ("Local", sinkLocalAddress);
+      sinkApps.Add (sinkHelper.Install(ueNodes.Get(i)));
+    }
+    
+    sinkApps.Start (Seconds (1));
+    sinkApps.Stop (Seconds (simTime));
   }
-  
-  sinkApps.Start (Seconds (1));
-  sinkApps.Stop (Seconds (simTime));
   
   
   Ptr<EpcTft> tft = Create<EpcTft> ();
@@ -574,21 +560,8 @@ main (int argc, char *argv[])
   // Add X2 interface
   lteHelper->AddX2Interface (enbNodes);
   
-  // Tracing
-  if (pcap)
-    {
-      p2ph.EnablePcapAll ("lte-tcp-x2-handover");
-    }
   
   lteHelper->EnableLogComponents();
-  //lteHelper->EnablePhyTraces ();
-  //lteHelper->EnableMacTraces ();
-  //lteHelper->EnableRlcTraces ();
-  //lteHelper->EnablePdcpTraces ();
-  //Ptr<RadioBearerStatsCalculator> rlcStats = lteHelper->GetRlcStats ();
-  //rlcStats->SetAttribute ("EpochDuration", TimeValue (Seconds (1.0)));
-  //Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats ();
-  //pdcpStats->SetAttribute ("EpochDuration", TimeValue (Seconds (1.0)));
   
   // connect custom trace sinks for RRC connection establishment and handover notification
   Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
@@ -610,18 +583,10 @@ main (int argc, char *argv[])
                    MakeCallback (&NotifyUeMeasurements));
   Config::Connect ("/NodeList/*/ApplicationList/*/$ns3::PacketSink/RxWithAddresses",
                    MakeCallback (&NotifyPacketSinkRx));
-  //Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteEnbNetDevice/ComponentCarrierMap/*/FfMacScheduler/$ns3::RrFfMacScheduler/WidebandCqiReport",
-  //                 MakeCallback (&NotifyCqiReport));
   
-  // Delay trace connection until TCP socket comes into existence
-  Simulator::Schedule (Seconds (1.001), &ConnectTcpTrace);
   // Initiate position tracing
-  Simulator::Schedule (Seconds (0), &TracePosition, ueNodes.Get(0), positionTracingInterval);
+  Simulator::Schedule (Seconds (0), &TracePosition, ueNodes, positionTracingInterval);
   
-  // Start to execute the program
-  //Vector vUe = ueNodes.Get (0)->GetObject<MobilityModel> ()->GetPosition ();
-  //Vector vEnb1 = enbNodes.Get (0)->GetObject<MobilityModel> ()->GetPosition ();
-  //Vector vEnb2 = enbNodes.Get (1)->GetObject<MobilityModel> ()->GetPosition ();
   std::cout << "Simulation time: " << simTime << " sec" << std::endl;
   
   Simulator::Schedule (reportingInterval, &ReportProgress, reportingInterval);
@@ -634,9 +599,7 @@ main (int argc, char *argv[])
   
   // Close any open file descriptors
   g_ueMeasurements.close ();
-  //g_cqiTrace.close ();
   g_packetSinkRx.close ();
-  //g_tcpCongStateTrace.close ();
   g_positionTrace.close ();
   
   return 0;
