@@ -20,21 +20,6 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-/*
- * Network topology:
- *
- *      |     + --------------------------------------------------------->
- *      |     UE
- *      |
- *      |               d                   d                   d
- *    y |     |-------------------x-------------------x-------------------
- *      |     |                 eNodeB              eNodeB
- *      |   d |
- *      |     |
- *      |     |                                             d = x2Distance
- *            o (0, 0, 0)                                   y = yDistanceForUe
- */
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -262,7 +247,7 @@ main (int argc, char *argv[])
   std::string traceDir = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/";
   //Other Values
   double enbTxPowerDbm = 46.0;
-  bool mroExp = true;
+  bool mroExp = false;
   int rngSeedNum = 1;
 
   
@@ -322,6 +307,9 @@ main (int argc, char *argv[])
   {
     std::filesystem::create_directories(resultDir);
   }
+
+  std::filesystem::copy_file(rfConfigFileName,(resultDir + "rf_config.json"),std::filesystem::copy_options::overwrite_existing);
+  std::filesystem::copy_file(protocolConfigFileName,(resultDir + "protocol_config.json"),std::filesystem::copy_options::overwrite_existing);
   
   g_ueMeasurements.open ((resultDir + "ue-measurements.csv").c_str(), std::ofstream::out);
   g_ueMeasurements << "time,imsi,cellId,isServingCell?,RSRP(dBm),RSRQ(dB)" << std::endl;
