@@ -67,15 +67,15 @@ else:
     rngSeedNum = 1
 
 if type(args.mroExp) is str:
-    rngSeedNum = bool(args.mroExp)
+    mroExp = bool(args.mroExp)
 else:
-    rngSeedNum = True
+    mroExp = True
 
 with open(rfConfigFileName) as f:
     rfConfig = json.load(f)
 
 
-ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'traceDir' : traceDir, 'rngSeedNum' : rngSeedNum}
+ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'traceDir' : traceDir, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
 exp = Experiment(1234, 4096, "MRO", "../..")
 model = torch.jit.load("temp_NN.pt")
 for i in range(1):
