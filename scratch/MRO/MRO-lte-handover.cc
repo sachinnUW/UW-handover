@@ -263,9 +263,11 @@ main (int argc, char *argv[])
   cmd.Parse (argc, argv);
   
   std::ifstream  rf_config_file(rfConfigFileName);
-  nlohmann::json rfSimParameters = nlohmann::json::parse(rf_config_file);
+  nlohmann::json rfSimParameters;// = nlohmann::json::parse(rf_config_file);
+  rf_config_file >> rfSimParameters;
   std::ifstream  protocol_config_file(protocolConfigFileName);
-  nlohmann::json protocolSimParameters = nlohmann::json::parse(protocol_config_file);
+  nlohmann::json protocolSimParameters;// = nlohmann::json::parse(protocol_config_file);
+  protocol_config_file >> protocolSimParameters;
   // Constants for this simulation
   uint16_t numberOfUes = uint16_t(rfSimParameters["UE"].size());
   uint16_t numberOfEnbs = uint16_t(numSectors*rfSimParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
