@@ -262,6 +262,15 @@ main (int argc, char *argv[])
   cmd.AddValue ("rngSeedNum", "Number used for seeding the RNG seed.", rngSeedNum);
   cmd.Parse (argc, argv);
   
+
+  std::cout << resultDir << std::endl;
+  std::cout << rfConfigFileName << std::endl;
+  std::cout << protocolConfigFileName << std::endl;
+  std::cout << traceDir << std::endl;
+  std::cout << mroExp << std::endl;
+  std::cout << rngSeedNum << std::endl;
+
+
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters;// = nlohmann::json::parse(rf_config_file);
   rf_config_file >> rfSimParameters;
