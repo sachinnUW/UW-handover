@@ -265,9 +265,11 @@ main (int argc, char *argv[])
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters;// = nlohmann::json::parse(rf_config_file);
   rf_config_file >> rfSimParameters;
+  std::cout << "rf config loaded" << std::endl;
   std::ifstream  protocol_config_file(protocolConfigFileName);
   nlohmann::json protocolSimParameters;// = nlohmann::json::parse(protocol_config_file);
   protocol_config_file >> protocolSimParameters;
+  std::cout << "protocol config loaded" << std::endl;
   // Constants for this simulation
   uint16_t numberOfUes = uint16_t(rfSimParameters["UE"].size());
   uint16_t numberOfEnbs = uint16_t(numSectors*rfSimParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
