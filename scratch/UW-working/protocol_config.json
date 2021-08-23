@@ -1,0 +1,51 @@
+{
+    "NS3": 
+    {
+        "use_rlc_um": 1,
+        "qout_db": -5,
+        "qin_db": -3.9,
+        "handover_type": "A3Rsrp",
+        "number_qout_eval_sf": 200,
+        "number_qin_eval_sf": 100,
+        "t310": 1000,
+        "n310": 6,
+        "n311": 2,
+        "x2_delay_ms": 0,
+        "transport_protocol": "TCP"
+    },
+    "BS": 
+    [
+        {
+            "name": "BS_1",
+            "number_of_sectors": 1,
+            "hysteresis_db": 
+            [
+                3
+            ],
+            "a3_offset_db": 
+            [
+                0
+            ],
+            "time_to_trigger_ms": 
+            [
+                100
+            ]
+        },
+        {
+            "name": "BS_2",
+            "number_of_sectors": 1,
+            "hysteresis_db": 
+            [
+                3
+            ],
+            "a3_offset_db": 
+            [
+                0
+            ],
+            "time_to_trigger_ms": 
+            [
+                100
+            ]
+        }
+    ]
+}

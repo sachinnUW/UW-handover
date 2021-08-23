@@ -238,16 +238,13 @@ main (int argc, char *argv[])
   double timeToTrigger = 256; // standards limited to: 0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280 ms
   double a3Offset = 0; // standards limited to: -15 dB to 15 dB
   //scenario description files
-  std::string scenarioName = "0.8";
   int trialNum = 0;
-  double numSectors = 3;
-  std::string resultDir = "/home/collin/workspace/ns-3-dev-git/results/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/";
-  std::string rfConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/rf_config.json";
-  std::string protocolConfigFileName = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario " + scenarioName + "/trial " + std::to_string(trialNum) + "/protocol_config.json";
-  std::string traceDir = "/home/collin/Dropbox/FBC_Maveric Academic Collaboration/NS-3_related_files/Simulation_Scenarios/Scenario 0.8/trial 0/";
-  //Other Values
+  double numSectors = 1;
+  std::string resultDir = "/home/collin/workspace/ns-3-dev-git/results/trial " + std::to_string(trialNum) + "/";
+  std::string rfConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/rf_config.json";
+  std::string protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json";//Other Values
   double enbTxPowerDbm = 46.0;
-  bool mroExp = false;
+  bool mroExp = true;
   int rngSeedNum = 1;
 
   
@@ -257,24 +254,18 @@ main (int argc, char *argv[])
   cmd.AddValue ("resultDir","Local filepath to the top level results",resultDir);
   cmd.AddValue ("rfConfigFileName","Local filepath to the rf config file",rfConfigFileName);
   cmd.AddValue ("protocolConfigFileName","Local filepath to the protocol config file",protocolConfigFileName);
-  cmd.AddValue ("traceDir","Local filepath to the Quadriga PHY traces",traceDir);
   cmd.AddValue ("mroExp","flag for MRO experiments, false turns them off. Will be removed in later versions",mroExp);
   cmd.AddValue ("rngSeedNum", "Number used for seeding the RNG seed.", rngSeedNum);
   cmd.Parse (argc, argv);
   
 
-  std::cout << resultDir << std::endl;
-  std::cout << rfConfigFileName << std::endl;
-  std::cout << protocolConfigFileName << std::endl;
-  std::cout << traceDir << std::endl;
-  std::cout << mroExp << std::endl;
-  std::cout << rngSeedNum << std::endl;
 
-
+  std::cout << "banana" << std::endl;
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters;// = nlohmann::json::parse(rf_config_file);
   rf_config_file >> rfSimParameters;
   std::cout << "rf config loaded" << std::endl;
+  std::cout << "banana" << std::endl;
   std::ifstream  protocol_config_file(protocolConfigFileName);
   nlohmann::json protocolSimParameters;// = nlohmann::json::parse(protocol_config_file);
   protocol_config_file >> protocolSimParameters;
@@ -410,25 +401,13 @@ main (int argc, char *argv[])
   // LTE Helper will, by default, install Friis loss model on UL and DL
   // Set table-based pathloss model on the downlink only
   // These steps must be done after InstallEnbDevice or InstallUeDevice above
-  Ptr<TableLossModel> tableLossModel = CreateObject<TableLossModel> ();
+  Ptr<FriisSpectrumPropagationLossModel> lossModel = CreateObject<FriisSpectrumPropagationLossModel> ();
   Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
   Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
   // Configure tableLossModel here, by e.g. pointing it to a trace file
-  tableLossModel->initializeTraceVals(numberOfEnbs, numberOfUes, rfSimParameters["simulation"]["resource_blocks"], simTime*1000);
   
-  for (int i = 0; i < numberOfUes; ++i)
-  {
-  	for (int j = 0; j < numberOfEnbs/numSectors; ++j)
-  	{
-	   for (int k = 0; k < numSectors; ++k)
-  	  {
-  		  tableLossModel->LoadTrace (traceDir,"ULDL_TX_" + std::to_string(j+1) + "_Sector_" + std::to_string(k+1) + "_UE_" + std::to_string(i+1) + "_Channel_Response.csv");// the filepath (first input), must be changed to your local filepath for these trace files
-      }
-   	}
-  }
-  
-  dlChannel->AddSpectrumPropagationLossModel (tableLossModel);
-  ulChannel->AddSpectrumPropagationLossModel (tableLossModel);// we want the UL/DL channels to be reciprocal
+  dlChannel->AddSpectrumPropagationLossModel (lossModel);
+  ulChannel->AddSpectrumPropagationLossModel (lossModel);// we want the UL/DL channels to be reciprocal
   
 
   // Create a single RemoteHost
