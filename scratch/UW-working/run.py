@@ -8,6 +8,7 @@ import ns3_util
 import torch
 import torch.nn as nn
 import json
+import os
 
 
 #def load_config(input_file)->Dict[str,Any]:
@@ -38,22 +39,23 @@ parser.add_argument("--protocolConfigFileName")
 parser.add_argument("--rngSeedNum")
 parser.add_argument("--mroExp")
 args = parser.parse_args()
-
+dirCurrent = os.getcwd()
+print(dirCurrent)
 #parsing inputs and assigning default values if none were input. all defaults are the local filepaths on Collin Brady's computer, unlikely they will work you you.
 if type(args.resultsDir) is str:
     resultsDir = args.resultsDir
 else:
-    resultsDir = "/home/collin/workspace/ns-3-dev-git/results/Scenario 0.8.1/trial 0/"
+    resultsDir = dirCurrent + "/results"
 
 if type(args.rfConfigFileName) is str:
     rfConfigFileName = args.rfConfigFileName
 else:
-    rfConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/rf_config.json"
+    rfConfigFileName = dirCurrent + "/rf_config.json"
 
 if type(args.protocolConfigFileName) is str:
     protocolConfigFileName = args.protocolConfigFileName
 else:
-    protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json"
+    protocolConfigFileName = dirCurrent + "/protocol_config.json"
 
 
 if type(args.rngSeedNum) is str:
@@ -71,7 +73,7 @@ with open(rfConfigFileName) as f:
 
 print ("starting")
 ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
-exp = Experiment(1234, 4096, "MRO", "../..")
+exp = Experiment(1234, 4096, "UW-working", "../..")
 model = torch.jit.load("temp_NN.pt")
 for i in range(1):
     exp.reset()
