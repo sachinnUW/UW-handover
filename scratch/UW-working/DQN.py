@@ -123,25 +123,22 @@ class DQN(nn.Module):
             self.model = AllLinear(self.state_size, self.n_actions)
         # self.target_model = AllLinear(self.state_size, self.n_actions).cuda()
 
-    def choose_action(self, state, action_index):
-        state = state[np.newaxis, :]
+    def choose_action(self, state):
+        # state = state[np.newaxis, :]
         self.epsilon *= self.epsilon_decay
         self.epsilon = max(self.epsilon_min, self.epsilon)
-        action_size_period = len(action_index)
         if np.random.random() < self.epsilon:
-            action_sel = np.random.choice(action_size_period)
-            return action_index[action_sel]
+            action_sel = np.random.choice(self.n_actions)
+            return action_sel
 
         state = Variable(torch.from_numpy(state.astype(float))).float()
         if torch.cuda.is_available():
             state = state.cuda()
 
         q_out = self.model(state)
-        action = action_index[0]
-        for i in range(1, action_size_period):
-            if q_out[0][action_index[i]] > q_out[0][action]:
-                action = action_index[i]
-        return action
+        action_sel = torch.argmax(q_out)
+
+        return action_sel
 
     def forward(self):
         batch_memory = self.memory
