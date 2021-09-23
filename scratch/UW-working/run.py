@@ -8,7 +8,8 @@ import ns3_util
 import torch
 import torch.nn as nn
 import json
-
+import os
+from DQN import *
 
 #def load_config(input_file)->Dict[str,Any]:
 #    try:
@@ -37,23 +38,27 @@ parser.add_argument("--rfConfigFileName")
 parser.add_argument("--protocolConfigFileName")
 parser.add_argument("--rngSeedNum")
 parser.add_argument("--mroExp")
-args = parser.parse_args()
+parser.add_argument('--pure_online', action='store_true',
+                    help='whether use rl algorithm')
 
+args = parser.parse_args()
+dirCurrent = os.getcwd()
+print(dirCurrent)
 #parsing inputs and assigning default values if none were input. all defaults are the local filepaths on Collin Brady's computer, unlikely they will work you you.
 if type(args.resultsDir) is str:
     resultsDir = args.resultsDir
 else:
-    resultsDir = "/home/collin/workspace/ns-3-dev-git/results/Scenario 0.8.1/trial 0/"
+    resultsDir = dirCurrent + "/results"
 
 if type(args.rfConfigFileName) is str:
     rfConfigFileName = args.rfConfigFileName
 else:
-    rfConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/rf_config.json"
+    rfConfigFileName = dirCurrent + "/rf_config.json"
 
 if type(args.protocolConfigFileName) is str:
     protocolConfigFileName = args.protocolConfigFileName
 else:
-    protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json"
+    protocolConfigFileName = dirCurrent + "/protocol_config.json"
 
 
 if type(args.rngSeedNum) is str:
@@ -69,19 +74,45 @@ else:
 with open(rfConfigFileName) as f:
     rfConfig = json.load(f)
 
+if args.pure_online:
+    loss_val = []
+    action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
+    dqn = DQN(state_size=2, n_actions = len(action_space),loss_val=loss_val)
+    not_first_trail = 0
+    state = []
+    
+    action = 0
 print ("starting")
 ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
-exp = Experiment(1234, 4096, "MRO", "../..")
+exp = Experiment(1234, 4096, "UW-working", "../..")
 model = torch.jit.load("temp_NN.pt")
-for i in range(1):
-    exp.reset()
-    r1 = Ns3AIRL(1357, mlInput, mlOutput)
-    pro = exp.run(setting=ns3Settings, show_output=True)
-    print ("starting")
-    while not r1.isFinish():
-        with r1 as data:
-            if data == None:
-                break
+exp.reset()
+r1 = Ns3AIRL(1357, mlInput, mlOutput)
+pro = exp.run(setting=ns3Settings, show_output=True)
+print ("Starting ns-3 simulation")
+
+while not r1.isFinish():
+    with r1 as data:
+        if data == None:
+            break
+        if args.pure_online:
+            if not_first_trail:
+                x = data.env.x
+                y = data.env.y
+                reward = 0
+                state_ = np.array([x, y])                
+                dqn.store_transition(state, action, reward, state_)
+            # print("Run with DQN")
+            x = data.env.x
+            y = data.env.y
+            state = np.array([x, y])
+            action_index = dqn.choose_action(state)
+            action = action_space[action_index]
+            data.act.tttAdjutment = action
+            not_first_trail = 1
+            # if dqn.memory_counter > 200:
+            #     dqn.learn()
+        else:
             relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][0])
             #print(relativeDistanceX)
             relativeDistanceY = abs(data.env.y - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][1])
@@ -92,17 +123,17 @@ for i in range(1):
             xPredicted_max, _ = torch.max(xPredicted, 0)
             xPredicted = torch.div(xPredicted, xPredicted_max)
             data.act.tttAdjutment = model.forward(xPredicted).numpy()[0].item()
-            #.numpy() converts to a numpy array
-            #[0] grabs the first (only) value, at this point its type is numpy.float32
-            #.item() converts it to a regular old float
-            #print(
-            #    [
-            #        data.env.time,
-            #        data.env.imsi,
-            #        data.env.x,
-            #        data.env.y,
-            #        data.act.tttAdjutment,
-            #    ]
-            #)
-    pro.wait()
+        #.numpy() converts to a numpy array
+        #[0] grabs the first (only) value, at this point its type is numpy.float32
+        #.item() converts it to a regular old float
+        #print(
+        #    [
+        #        data.env.time,
+        #        data.env.imsi,
+        #        data.env.x,
+        #        data.env.y,
+        #        data.act.tttAdjutment,
+        #    ]
+        #)
+pro.wait()
 del exp
