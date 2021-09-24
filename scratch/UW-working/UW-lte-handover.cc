@@ -243,7 +243,7 @@ main (int argc, char *argv[])
   std::string resultDir = "/home/collin/workspace/ns-3-dev-git/results/trial " + std::to_string(trialNum) + "/";
   std::string rfConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/rf_config.json";
   std::string protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json";//Other Values
-  double enbTxPowerDbm = 46.0;
+  double enbTxPowerDbm = 169.0;
   bool mroExp = true;
   int rngSeedNum = 1;
 
@@ -260,12 +260,10 @@ main (int argc, char *argv[])
   
 
 
-  std::cout << "banana" << std::endl;
   std::ifstream  rf_config_file(rfConfigFileName);
   nlohmann::json rfSimParameters;// = nlohmann::json::parse(rf_config_file);
   rf_config_file >> rfSimParameters;
   std::cout << "rf config loaded" << std::endl;
-  std::cout << "banana" << std::endl;
   std::ifstream  protocol_config_file(protocolConfigFileName);
   nlohmann::json protocolSimParameters;// = nlohmann::json::parse(protocol_config_file);
   protocol_config_file >> protocolSimParameters;
@@ -455,6 +453,7 @@ main (int argc, char *argv[])
 
   // Create the sender applications, 1 per UE, all originating from the remote node
   std::string transport_protocol = protocolSimParameters["NS3"]["transport_protocol"];
+  std::cout<<transport_protocol<<std::endl;
   if (transport_protocol == "TCP")
   {
     BulkSendHelper ftpServer ("ns3::TcpSocketFactory", Address ());

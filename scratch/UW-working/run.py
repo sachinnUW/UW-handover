@@ -24,7 +24,7 @@ from DQN import *
 
 class mlInput(Structure):
     _pack_ = 1
-    _fields_ = [("x", c_double), ("y", c_double), ("time", c_double), ("imsi", c_int), ("cellId", c_int)]
+    _fields_ = [("x", c_double), ("y", c_double), ("time", c_double), ("imsi", c_int), ("cellId", c_int), ("packetSize",c_double), ("packetReceiverId",c_int)]
 
 
 class mlOutput(Structure):
@@ -37,9 +37,10 @@ parser.add_argument("--resultsDir")
 parser.add_argument("--rfConfigFileName")
 parser.add_argument("--protocolConfigFileName")
 parser.add_argument("--rngSeedNum")
-parser.add_argument("--mroExp")
-parser.add_argument('--pure_online', action='store_true',
-                    help='whether use rl algorithm')
+#parser.add_argument("--mroExp")
+parser.add_argument("--runMode",help='select the mode to run the simulation, valid options are DQN, MRO, and no_ML')
+#parser.add_argument('--pure_online', action='store_true',help='whether use rl algorithm')
+
 
 args = parser.parse_args()
 dirCurrent = os.getcwd()
@@ -48,7 +49,7 @@ print(dirCurrent)
 if type(args.resultsDir) is str:
     resultsDir = args.resultsDir
 else:
-    resultsDir = dirCurrent + "/results"
+    resultsDir = dirCurrent + "/results/"
 
 if type(args.rfConfigFileName) is str:
     rfConfigFileName = args.rfConfigFileName
@@ -66,15 +67,20 @@ if type(args.rngSeedNum) is str:
 else:
     rngSeedNum = 1
 
-if type(args.mroExp) is str:
-    mroExp = bool(args.mroExp)
+#if type(args.mroExp) is str:
+#    mroExp = bool(args.mroExp)
+#else:
+#    mroExp = True
+
+if type(args.runMode) is str:
+    runMode = args.runMode
 else:
-    mroExp = True
+    runMode = "no_ML"
 
 with open(rfConfigFileName) as f:
     rfConfig = json.load(f)
 
-if args.pure_online:
+if runMode == "DQN":
     loss_val = []
     action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
     dqn = DQN(state_size=2, n_actions = len(action_space),loss_val=loss_val)
@@ -82,6 +88,16 @@ if args.pure_online:
     state = []
     
     action = 0
+    mroExp=True
+elif runMode == "MRO":
+    mroExp=True
+elif runMode == "no_ML":
+    mroExp=False
+else:
+    print("runMode not set correctly, valid options are DQN, MRO, and no_ML")
+    exit()
+
+
 print ("starting")
 ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
 exp = Experiment(1234, 4096, "UW-working", "../..")
@@ -95,7 +111,7 @@ while not r1.isFinish():
     with r1 as data:
         if data == None:
             break
-        if args.pure_online:
+        if runMode == "DQN":
             if not_first_trail:
                 x = data.env.x
                 y = data.env.y
@@ -112,7 +128,7 @@ while not r1.isFinish():
             not_first_trail = 1
             # if dqn.memory_counter > 200:
             #     dqn.learn()
-        else:
+        elif runMode == "MRO":
             relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][0])
             #print(relativeDistanceX)
             relativeDistanceY = abs(data.env.y - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][1])
@@ -123,6 +139,8 @@ while not r1.isFinish():
             xPredicted_max, _ = torch.max(xPredicted, 0)
             xPredicted = torch.div(xPredicted, xPredicted_max)
             data.act.tttAdjutment = model.forward(xPredicted).numpy()[0].item()
+        else:
+            pass
         #.numpy() converts to a numpy array
         #[0] grabs the first (only) value, at this point its type is numpy.float32
         #.item() converts it to a regular old float

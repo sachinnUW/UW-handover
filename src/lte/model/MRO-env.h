@@ -11,6 +11,8 @@ struct mlInput
 	double time;
 	int imsi;
 	int cellId;
+	double packetSize;
+	int packetReceiverId;
 }Packed;
 
 struct mlOutput
