@@ -9,6 +9,8 @@ import torch
 import torch.nn as nn
 import json
 import os
+import csv
+from itertools import zip_longest
 from DQN import *
 
 #def load_config(input_file)->Dict[str,Any]:
@@ -24,7 +26,7 @@ from DQN import *
 
 class mlInput(Structure):
     _pack_ = 1
-    _fields_ = [("x", c_double), ("y", c_double), ("time", c_double), ("imsi", c_int), ("cellId", c_int), ("packetSize",c_double), ("packetReceiverId",c_int)]
+    _fields_ = [("x", c_double), ("y", c_double), ("time", c_double), ("imsi", c_int), ("cellId", c_int), ("packetSize",c_double), ("packetReceiverId",c_int), ("rsrp",c_double), ("packetRxFlag",c_int)]
 
 
 class mlOutput(Structure):
@@ -75,7 +77,7 @@ else:
 if type(args.runMode) is str:
     runMode = args.runMode
 else:
-    runMode = "no_ML"
+    runMode = "DQN"
 
 with open(rfConfigFileName) as f:
     rfConfig = json.load(f)
@@ -97,6 +99,16 @@ else:
     print("runMode not set correctly, valid options are DQN, MRO, and no_ML")
     exit()
 
+#print(len(rfConfig["UE"]))
+
+#parameters for throughput calculation
+recievedPacketRecord = []
+throughputRecord = []
+for i in range(len(rfConfig["UE"])*2):
+    recievedPacketRecord.append([])
+    throughputRecord.append([])
+
+binWidth = .01#s, the width of the throughput calculation bin, moving average
 
 print ("starting")
 ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
@@ -126,12 +138,27 @@ while not r1.isFinish():
             action = action_space[action_index]
             data.act.tttAdjutment = action
             not_first_trail = 1
+            #print(data.env.packetRxFlag)
+            if data.env.packetRxFlag == 1:
+                #print("banana")
+                recievedPacketRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                recievedPacketRecord[2*(data.env.packetReceiverId-1)+1].append(data.env.packetSize)
+                throughputRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                dataReceived = 0
+                for i in range(len(recievedPacketRecord[2*(data.env.packetReceiverId-1)]) - 1, -1, -1):
+                    #print(i)
+                    if recievedPacketRecord[2*(data.env.packetReceiverId-1)][i] >= round(data.env.time,3) - binWidth:
+                        dataReceived = dataReceived + recievedPacketRecord[2*(data.env.packetReceiverId-1)+1][i]
+                    else:#if this happens then we are outside of the averaging window, stop calculation
+                        break
+                throughputRecord[2*(data.env.packetReceiverId-1)+1].append(dataReceived/binWidth)
+                data.env.packetRxFlag = 0
             # if dqn.memory_counter > 200:
             #     dqn.learn()
         elif runMode == "MRO":
-            relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][0])
+            relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1))]["location"][0])
             #print(relativeDistanceX)
-            relativeDistanceY = abs(data.env.y - rfConfig["BS"][math.floor((data.env.cellId-1)/3)]["location"][1])
+            relativeDistanceY = abs(data.env.y - rfConfig["BS"][math.floor((data.env.cellId-1))]["location"][1])
             #print(relativeDistanceY)
             xPredicted = torch.tensor(
                 ([data.env.x, data.env.y, data.env.x, data.env.y]), dtype=torch.float
@@ -155,3 +182,20 @@ while not r1.isFinish():
         #)
 pro.wait()
 del exp
+
+#print(recievedPacketRecord[0])
+export_data = zip_longest(*recievedPacketRecord, fillvalue = '')#converts the rows into columns for nicer data formatting
+file = open(resultsDir + 'packetRecieveTest.csv', 'w', newline='')
+with file:
+    write = csv.writer(file)
+    write.writerow(['time','bytesRx'])
+    write.writerows(export_data)
+
+
+export_data = zip_longest(*throughputRecord, fillvalue = '')#converts the rows into columns for nicer data formatting
+file = open(resultsDir + 'throughputTest.csv', 'w', newline='')
+with file:
+    write = csv.writer(file)
+    write.writerow(['time','throughput'])
+    write.writerows(export_data)
+

@@ -28,6 +28,7 @@
 #include "ns3/address.h"
 #include "ns3/inet-socket-address.h"
 #include "ns3/seq-ts-size-header.h"
+#include "ns3/MRO-env.h"
 #include <unordered_map>
 
 namespace ns3 {
@@ -112,6 +113,7 @@ private:
   // inherited from Application base class.
   virtual void StartApplication (void);    // Called at time specified by Start
   virtual void StopApplication (void);     // Called at time specified by Stop
+  Ptr<MROENV> m_mroEnv;
 
   /**
    * \brief Handle a packet received by the application
@@ -175,6 +177,10 @@ private:
   // listening socket is stored separately from the accepted sockets
   Ptr<Socket>     m_socket;       //!< Listening socket
   std::list<Ptr<Socket> > m_socketList; //!< the accepted sockets
+  /** 
+  *   Flag for if the experiment uses the MRO experimental settings
+  */
+  bool m_mroExp;
 
   Address         m_local;        //!< Local address to bind to
   uint64_t        m_totalRx;      //!< Total bytes received

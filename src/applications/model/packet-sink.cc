@@ -61,6 +61,11 @@ PacketSink::GetTypeId (void)
                    BooleanValue (false),
                    MakeBooleanAccessor (&PacketSink::m_enableSeqTsSizeHeader),
                    MakeBooleanChecker ())
+    .AddAttribute ("mroExp",
+                   "This specifies if the experiment is an MRO experiment. ",
+                   BooleanValue (false), 
+                   MakeBooleanAccessor (&PacketSink::m_mroExp),
+                   MakeBooleanChecker ())
     .AddTraceSource ("Rx",
                      "A packet has been received",
                      MakeTraceSourceAccessor (&PacketSink::m_rxTrace),
@@ -81,6 +86,7 @@ PacketSink::PacketSink ()
   NS_LOG_FUNCTION (this);
   m_socket = 0;
   m_totalRx = 0;
+  m_mroEnv = Create<MROENV> (1357);
 }
 
 PacketSink::~PacketSink()
@@ -207,6 +213,13 @@ void PacketSink::HandleRead (Ptr<Socket> socket)
       socket->GetSockName (localAddress);
       m_rxTrace (packet, from);
       m_rxTraceWithAddresses (packet, from, localAddress);
+      //std::cout<<int(InetSocketAddress::ConvertFrom(localAddress).GetIpv4 ().Get()) % 117440513<<std::endl;
+      if (m_mroExp)
+      {
+        //std::cout<<localAddress<<std::endl;
+        int recieverImsi = int(InetSocketAddress::ConvertFrom(localAddress).GetIpv4 ().Get()) % 117440513;//this is based on looking at the actual address as a 32 bit integer, then adding UEs and seeing the pattern
+        m_mroEnv->passPacketReception(double(Simulator::Now ().GetSeconds ()), double(packet->GetSize ()), int(recieverImsi));
+      }
 
       if (m_enableSeqTsSizeHeader)
         {

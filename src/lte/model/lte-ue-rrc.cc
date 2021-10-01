@@ -2155,7 +2155,10 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
             
             //std::cout << storedMeasIt->first << std::endl;
             
-            
+            if (m_mroEnv)
+            {
+              m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId), double(mp));
+            }
 
 
             off = reportConfigEutra.perCellA3Offset.at(storedMeasIt->first - 1);
@@ -2170,7 +2173,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                   {
                     if (m_mroExp)
                       {
-                        m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId));
+                        //m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId));
                         m_tttAdjustment = m_mroEnv->tableRead(double(uePos.x),double(uePos.y));
                         //std::cout << double(uePos.x) << double(uePos.y) << m_tttAdjustment << std::endl;
                       }

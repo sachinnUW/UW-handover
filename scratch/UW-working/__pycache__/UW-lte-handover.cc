@@ -243,7 +243,7 @@ main (int argc, char *argv[])
   std::string resultDir = "/home/collin/workspace/ns-3-dev-git/results/trial " + std::to_string(trialNum) + "/";
   std::string rfConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/rf_config.json";
   std::string protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json";//Other Values
-  double enbTxPowerDbm = 23.0;
+  double enbTxPowerDbm = 169.0;
   bool mroExp = true;
   int rngSeedNum = 1;
 
@@ -297,7 +297,6 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::LteUeRrc::N310", UintegerValue(protocolSimParameters["NS3"]["n310"]));
   Config::SetDefault ("ns3::LteUeRrc::N311", UintegerValue(protocolSimParameters["NS3"]["n311"]));
   Config::SetDefault ("ns3::LteUeRrc::mroExp", BooleanValue(mroExp));
-  Config::SetDefault ("ns3::PacketSink::mroExp", BooleanValue(mroExp));
   Config::SetDefault ("ns3::UdpClient::Interval",TimeValue (Seconds (0.001)));
   Config::SetDefault ("ns3::UdpClient::MaxPackets",UintegerValue (simTime*1000+100));
     
@@ -394,20 +393,19 @@ main (int argc, char *argv[])
 
   // Install LTE Devices in eNB and UEs
   Config::SetDefault ("ns3::LteEnbPhy::TxPower", DoubleValue (enbTxPowerDbm));
-  Config::SetDefault ("ns3::LteUePhy::TxPower", DoubleValue (15));
   NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
   NetDeviceContainer ueLteDevs = lteHelper->InstallUeDevice (ueNodes);
   
   // LTE Helper will, by default, install Friis loss model on UL and DL
   // Set table-based pathloss model on the downlink only
   // These steps must be done after InstallEnbDevice or InstallUeDevice above
-  //Ptr<FriisSpectrumPropagationLossModel> lossModel = CreateObject<FriisSpectrumPropagationLossModel> ();
-  //Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
-  //Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
+  Ptr<FriisSpectrumPropagationLossModel> lossModel = CreateObject<FriisSpectrumPropagationLossModel> ();
+  Ptr<SpectrumChannel> dlChannel = lteHelper->GetDownlinkSpectrumChannel ();
+  Ptr<SpectrumChannel> ulChannel = lteHelper->GetUplinkSpectrumChannel ();
   // Configure tableLossModel here, by e.g. pointing it to a trace file
   
-  //dlChannel->AddSpectrumPropagationLossModel (lossModel);
-  //ulChannel->AddSpectrumPropagationLossModel (lossModel);// we want the UL/DL channels to be reciprocal
+  dlChannel->AddSpectrumPropagationLossModel (lossModel);
+  ulChannel->AddSpectrumPropagationLossModel (lossModel);// we want the UL/DL channels to be reciprocal
   
 
   // Create a single RemoteHost

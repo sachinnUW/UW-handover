@@ -20,14 +20,31 @@ double MROENV::tableRead(double x, double y)
     return ret;
 }
 
-void MROENV::loadIds(double time, int imsi, int cellId)
+void MROENV::loadIds(double time, int imsi, int cellId, double rsrp)
 {
 	auto mlInput = EnvSetterCond();
 	mlInput->time = time;
 	mlInput->imsi = imsi;
-    mlInput->cellId = cellId;
+  mlInput->cellId = cellId;
+  mlInput->rsrp = rsrp;
 	SetCompleted();
 }
+
+
+void MROENV::passPacketReception(double time, double packetSize, int packetReceiverId)
+{
+  auto mlInput = EnvSetterCond();
+  mlInput->time = time;
+  mlInput->packetSize = packetSize;
+  mlInput->packetReceiverId = packetReceiverId;
+  mlInput->packetRxFlag = 1;
+  SetCompleted();
+}
+
+
+
+
+
 }// namespace ns3
 
 
