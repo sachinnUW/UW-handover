@@ -23,8 +23,8 @@ def train(model,
         print("batchsize:{}".format(batch_size))
 
     loss_fc = nn.MSELoss()
-    if torch.cuda.is_available():
-        loss_fc = nn.MSELoss().cuda()
+    # if torch.cuda.is_available():
+    #     loss_fc = nn.MSELoss().cuda()
     
     optimizer = torch.optim.Adam(model.parameters(), lr=learningRate)
 
@@ -117,10 +117,10 @@ class DQN(nn.Module):
 
         # self.model = ResNet(self.state_size, self.n_actions).cuda()
         # self.target_model = ResNet(self.state_size, self.n_actions).cuda()
-        if torch.cuda.is_available():
-            self.model = AllLinear(self.state_size, self.n_actions).cuda()
-        else:
-            self.model = AllLinear(self.state_size, self.n_actions)
+        # if torch.cuda.is_available():
+        #     self.model = AllLinear(self.state_size, self.n_actions).cuda()
+        # else:
+        self.model = AllLinear(self.state_size, self.n_actions)
         # self.target_model = AllLinear(self.state_size, self.n_actions).cuda()
 
     def choose_action(self, state):
@@ -132,8 +132,8 @@ class DQN(nn.Module):
             return action_sel
 
         state = Variable(torch.from_numpy(state.astype(float))).float()
-        if torch.cuda.is_available():
-            state = state.cuda()
+        # if torch.cuda.is_available():
+        #     state = state.cuda()
 
         q_out = self.model(state)
         action_sel = torch.argmax(q_out)
@@ -203,13 +203,13 @@ class DQN(nn.Module):
         reward = batch_memory[:, self.state_size + 1]
         next_state = batch_memory[:, -self.state_size:]
 
-        if torch.cuda.is_available():
-            state = Variable(torch.from_numpy(state.astype(int))).float().cuda()
-            next_state = Variable(torch.from_numpy(
-                next_state.astype(int))).float().cuda()
-        else:
-            state = Variable(torch.from_numpy(state.astype(int))).float()
-            next_state = Variable(torch.from_numpy(
+        # if torch.cuda.is_available():
+        #     state = Variable(torch.from_numpy(state.astype(int))).float().cuda()
+        #     next_state = Variable(torch.from_numpy(
+        #         next_state.astype(int))).float().cuda()
+        # else:
+        state = Variable(torch.from_numpy(state.astype(int))).float()
+        next_state = Variable(torch.from_numpy(
                 next_state.astype(int))).float()
 
         q_eval = self.model(state)  # state
@@ -218,11 +218,12 @@ class DQN(nn.Module):
         q_target = q_eval.clone()
 
         batch_index = np.arange(self.batch_size, dtype=np.int32)
-        if torch.cuda.is_available():
-            q_target[batch_index, action] = torch.from_numpy(reward).float()\
-                .cuda() + self.gamma * torch.max(q_next, axis=1)[0].float()
-        else:
-            q_target[batch_index, action] = torch.from_numpy(reward).float()\
+        # if torch.cuda.is_available():
+        #     q_target[batch_index, action] = torch.from_numpy(reward).float()\
+        #         .cuda() + self.gamma * torch.max(q_next, axis=1)[0].float()
+        # else:
+        # print(batch_index, action, q_target)
+        q_target[batch_index, action] = torch.from_numpy(reward).float()\
                 + self.gamma * torch.max(q_next, axis=1)[0].float()
 
         train(self.model,

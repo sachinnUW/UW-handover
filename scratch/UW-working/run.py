@@ -85,11 +85,15 @@ with open(rfConfigFileName) as f:
 if runMode == "DQN":
     loss_val = []
     action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
-    dqn = DQN(state_size=2, n_actions = len(action_space),loss_val=loss_val)
+    dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
     not_first_trail = 0
     state = []
-    
+    state_ = []
+    reward = 0
+    count = 0
+    action_index = 0
     action = 0
+    
     mroExp=True
 elif runMode == "MRO":
     mroExp=True
@@ -104,9 +108,11 @@ else:
 #parameters for throughput calculation
 recievedPacketRecord = []
 throughputRecord = []
+each_act = []
 for i in range(len(rfConfig["UE"])*2):
     recievedPacketRecord.append([])
     throughputRecord.append([])
+    each_act.append([])
 
 binWidth = .01#s, the width of the throughput calculation bin, moving average
 
@@ -127,17 +133,26 @@ while not r1.isFinish():
             if not_first_trail:
                 x = data.env.x
                 y = data.env.y
-                reward = 0
-                state_ = np.array([x, y])                
-                dqn.store_transition(state, action, reward, state_)
+                pkt_size = data.env.packetSize
+                rsrp = data.env.rsrp
+                # reward = 0
+                state_ = np.array([x, y, pkt_size, rsrp])                
+                dqn.store_transition(state, action_index, reward, state_)
+                count += 1
+            
             # print("Run with DQN")
             x = data.env.x
             y = data.env.y
-            state = np.array([x, y])
+            pkt_size = data.env.packetSize
+            rsrp = data.env.rsrp
+            state = np.array([x, y, pkt_size, rsrp])
             action_index = dqn.choose_action(state)
             action = action_space[action_index]
+            
             data.act.tttAdjutment = action
             not_first_trail = 1
+
+
             #print(data.env.packetRxFlag)
             if data.env.packetRxFlag == 1:
                 #print("banana")
@@ -153,8 +168,11 @@ while not r1.isFinish():
                         break
                 throughputRecord[2*(data.env.packetReceiverId-1)+1].append(dataReceived/binWidth)
                 data.env.packetRxFlag = 0
-            # if dqn.memory_counter > 200:
-            #     dqn.learn()
+                reward = dataReceived/binWidth
+                each_act[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                each_act[2*(data.env.packetReceiverId-1)+1].append(action)
+            if count > 200 and count % 20 == 0:
+                 dqn.learn()
         elif runMode == "MRO":
             relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1))]["location"][0])
             #print(relativeDistanceX)
@@ -182,7 +200,8 @@ while not r1.isFinish():
         #)
 pro.wait()
 del exp
-
+if runMode == "DQN":
+    dqn.save_model('dqn.pt')
 #print(recievedPacketRecord[0])
 export_data = zip_longest(*recievedPacketRecord, fillvalue = '')#converts the rows into columns for nicer data formatting
 file = open(resultsDir + 'packetRecieveTest.csv', 'w', newline='')
@@ -199,3 +218,10 @@ with file:
     write.writerow(['time','throughput'])
     write.writerows(export_data)
 
+
+export_data = zip_longest(*each_act, fillvalue = '')#converts the rows into columns for nicer data formatting
+file = open(resultsDir + 'actions.csv', 'w', newline='')
+with file:
+    write = csv.writer(file)
+    write.writerow(['time','action'])
+    write.writerows(export_data)
