@@ -2886,7 +2886,7 @@ LteUeRrc::VarMeasReportListAdd (uint8_t measId, ConcernedCells_t enteringCells)
        * Collin:
        * New assumptions at this point:
        *  - the call to this function was delayed by time-to-trigger;
-       *  - the time-to-trigger delay is fixed (not adaptive/dynamic) but not identical across cells;
+       *  - the time-to-trigger delay is not fixed or identical across cells;
        */
       //This finds the value in m_enteringTriggerQueue which is actually triggering handover and erases the trigger, 
       //rather than just removing the first trigger. we use the first value in enteringCell to maintain the old functionality

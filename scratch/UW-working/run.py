@@ -133,7 +133,7 @@ while not r1.isFinish():
             if not_first_trail:
                 x = data.env.x
                 y = data.env.y
-                pkt_size = data.env.packetSize
+                pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
                 rsrp = data.env.rsrp
                 # reward = 0
                 state_ = np.array([x, y, pkt_size, rsrp])                
@@ -143,7 +143,7 @@ while not r1.isFinish():
             # print("Run with DQN")
             x = data.env.x
             y = data.env.y
-            pkt_size = data.env.packetSize
+            pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
             rsrp = data.env.rsrp
             state = np.array([x, y, pkt_size, rsrp])
             action_index = dqn.choose_action(state)
@@ -157,7 +157,7 @@ while not r1.isFinish():
             if data.env.packetRxFlag == 1:
                 #print("banana")
                 recievedPacketRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                recievedPacketRecord[2*(data.env.packetReceiverId-1)+1].append(data.env.packetSize)
+                recievedPacketRecord[2*(data.env.packetReceiverId-1)+1].append(536)#(data.env.packetSize)#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
                 throughputRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
                 dataReceived = 0
                 for i in range(len(recievedPacketRecord[2*(data.env.packetReceiverId-1)]) - 1, -1, -1):
