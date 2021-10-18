@@ -47,6 +47,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <math.h>
+#include <random>
 
 using namespace ns3;
 
@@ -269,7 +270,7 @@ main (int argc, char *argv[])
   protocol_config_file >> protocolSimParameters;
   std::cout << "protocol config loaded" << std::endl;
   // Constants for this simulation
-  uint16_t numberOfUes = uint16_t(rfSimParameters["UE"].size());
+  uint16_t numberOfUes = uint16_t(rfSimParameters["simulation"]["number_of_UE"]);
   uint16_t numberOfEnbs = uint16_t(numSectors*rfSimParameters["BS"].size());//Each eNb has three sectors which are treated as separate eNb by NS-3
   // eNb/UE have to be made first to ensure that eNbID = (0,...,numeNb-1) and UEID = (numeNb,...,numeNb+numUe-1)
   NodeContainer ueNodes;
@@ -285,9 +286,9 @@ main (int argc, char *argv[])
   uint64_t ftpSize = 8*pow(10,12); // 2 TB
   uint16_t port = 4000;  // port number
   double simTime = rfSimParameters["simulation"]["simulation_duration_s"]; // seconds
-  
+
   // change some default attributes based upon command line settings
-  Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
+  Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (false));
   Config::SetDefault ("ns3::LteHelper::UsePdschForCqiGeneration", BooleanValue (false));
   Config::SetDefault ("ns3::LteUePhy::Qout", DoubleValue(protocolSimParameters["NS3"]["qout_db"]));
   Config::SetDefault ("ns3::LteUePhy::Qin", DoubleValue(protocolSimParameters["NS3"]["qin_db"]));
@@ -300,7 +301,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::PacketSink::mroExp", BooleanValue(mroExp));
   Config::SetDefault ("ns3::UdpClient::Interval",TimeValue (Seconds (0.001)));
   Config::SetDefault ("ns3::UdpClient::MaxPackets",UintegerValue (simTime*1000+100));
-    
+
   if (protocolSimParameters["NS3"]["use_rlc_um"] == 0)
     {
       Config::SetDefault ("ns3::LteEnbRrc::EpsBearerToRlcMapping", EnumValue (LteEnbRrc::RLC_AM_ALWAYS));
@@ -320,7 +321,7 @@ main (int argc, char *argv[])
   g_packetSinkRx << "time,bytesRx,mac_address" << std::endl;
   g_positionTrace.open ((resultDir + "position.csv").c_str(), std::ofstream::out);
   g_positionTrace << "time,imsi,x,y" << std::endl;
-  
+
   
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
   Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper> ();
@@ -356,41 +357,94 @@ main (int argc, char *argv[])
     }
   }
     
+  
+  
+  // Install Mobility Model in eNB
+  //Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator> ();
+  //double x = 0;
+  //double y = 0;
+  //while (x < double(rfSimParameters["simulation"]["field_edges"][1]) || y < double(rfSimParameters["simulation"]["field_edges"][3]))
+  //{
+  //  Vector enbPosition (x, y, 25);
+  //  std::cout<<x<<","<<y<<std::endl;
+  //  enbPositionAlloc->Add (enbPosition);
+  //  if (x >= double(rfSimParameters["simulation"]["field_edges"][1]))
+  //  {
+  //    y = y + sqrt(2)*double(rfSimParameters["simulation"]["inter_BS_distance"])/2;
+  //    x = x - double(rfSimParameters["simulation"]["field_edges"][1]) - double(rfSimParameters["simulation"]["inter_BS_distance"])/2;
+  //  } else
+  //  {
+  //    x = x + double(rfSimParameters["simulation"]["inter_BS_distance"]);
+  //  }
+  //  if (!(x < double(rfSimParameters["simulation"]["field_edges"][1]) || y < double(rfSimParameters["simulation"]["field_edges"][3])))// perform one last assignment
+  //  {
+  //    Vector enbPosition (x, y, 25);
+  //    std::cout<<x<<","<<y<<std::endl;
+  //    enbPositionAlloc->Add (enbPosition);
+  //  }
+  //}
+
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator (enbPositionAlloc);
   enbMobility.Install (enbNodes);
-  
-  // Install Mobility Model in UE
-  MobilityHelper ueMobility;
-  if (rfSimParameters["simulation"]["mobility_type"] == "constant_velocity")
-  {
-    ueMobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
-    ueMobility.Install (ueNodes);
-    
-    for (uint16_t i = 0; i < numberOfUes; i++)
-    {
-      Vector uePosition (rfSimParameters["UE"][i]["initial_position"][0], rfSimParameters["UE"][i]["initial_position"][1], rfSimParameters["UE"][i]["initial_position"][2]);
-      ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
-      Vector ueVelocity (rfSimParameters["UE"][i]["velocity"][0], rfSimParameters["UE"][i]["velocity"][1], rfSimParameters["UE"][i]["velocity"][2]);
-      ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
-    }
-  } else if (rfSimParameters["simulation"]["mobility_type"] == "random_turns") 
-  {
-    ueMobility.SetMobilityModel ("ns3::WaypointMobilityModel");
-    ueMobility.Install (ueNodes);
 
-    for (uint16_t i = 0; i < numberOfUes; i++) 
-    {
-      for (uint16_t j = 0; j < rfSimParameters["UE"][i]["turn_times"].size(); j++)
-      {
-        std::string turn = "t" + std::to_string(j);
-        Waypoint ueWaypoint (Seconds(rfSimParameters["UE"][i]["turn_times"][j]), Vector (rfSimParameters["UE"][i]["turn_positions"][turn][0],rfSimParameters["UE"][i]["turn_positions"][turn][1],rfSimParameters["UE"][i]["turn_positions"][turn][2]));
-        ueNodes.Get (i)->GetObject<WaypointMobilityModel> ()-> AddWaypoint (ueWaypoint);
-      }
-      
-    }
+
+  // Install Mobility Model in UE
+  //MobilityHelper ueMobility;
+  //if (rfSimParameters["simulation"]["mobility_type"] == "constant_velocity")
+  //{
+  //  ueMobility.SetMobilityModel ("ns3::ConstantVelocityMobilityModel");
+  //  ueMobility.Install (ueNodes);
+    
+  //  for (uint16_t i = 0; i < numberOfUes; i++)
+  //  {
+  //    Vector uePosition (rfSimParameters["UE"][i]["initial_position"][0], rfSimParameters["UE"][i]["initial_position"][1], rfSimParameters["UE"][i]["initial_position"][2]);
+  //    ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
+  //    Vector ueVelocity (rfSimParameters["UE"][i]["velocity"][0], rfSimParameters["UE"][i]["velocity"][1], rfSimParameters["UE"][i]["velocity"][2]);
+  //    ueNodes.Get (i)->GetObject<ConstantVelocityMobilityModel> ()->SetVelocity (ueVelocity);
+  //  }
+  //} else if (rfSimParameters["simulation"]["mobility_type"] == "random_turns") 
+  //{
+  //  ueMobility.SetMobilityModel ("ns3::WaypointMobilityModel");
+  //  ueMobility.Install (ueNodes);
+
+  //  for (uint16_t i = 0; i < numberOfUes; i++) 
+  //  {
+  //    for (uint16_t j = 0; j < rfSimParameters["UE"][i]["turn_times"].size(); j++)
+  //    {
+  //      std::string turn = "t" + std::to_string(j);
+  //      Waypoint ueWaypoint (Seconds(rfSimParameters["UE"][i]["turn_times"][j]), Vector (rfSimParameters["UE"][i]["turn_positions"][turn][0],rfSimParameters["UE"][i]["turn_positions"][turn][1],rfSimParameters["UE"][i]["turn_positions"][turn][2]));
+  //      ueNodes.Get (i)->GetObject<WaypointMobilityModel> ()-> AddWaypoint (ueWaypoint);
+  //    }
+  //    
+  //  }
+  //}
+
+  MobilityHelper ueMobility;
+  ueMobility.SetMobilityModel ("ns3::RandomWalk2dMobilityModel",
+                             "Mode", StringValue ("Time"),
+                             "Time", StringValue (std::to_string(double(rfSimParameters["simulation"]["simulation_duration_s"]))),
+                             "Speed", StringValue ("ns3::UniformRandomVariable[Min=" + std::to_string(double(rfSimParameters["simulation"]["average_UE_speed"]) - double(rfSimParameters["simulation"]["UE_speed_bound"])) + "|Max=" + std::to_string(double(rfSimParameters["simulation"]["average_UE_speed"]) + double(rfSimParameters["simulation"]["UE_speed_bound"])) + "]"),
+                             "Bounds", StringValue (std::to_string(double(rfSimParameters["simulation"]["field_edges"][0])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][1])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][2])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][3]))));
+  ueMobility.Install (ueNodes);
+  //std::cout<<"ns3::UniformRandomVariable[Min=" + std::to_string(double(rfSimParameters["simulation"]["average_UE_speed"]) - double(rfSimParameters["simulation"]["UE_speed_bound"])) + "|Max=" + std::to_string(double(rfSimParameters["simulation"]["average_UE_speed"]) - double(rfSimParameters["simulation"]["UE_speed_bound"])) + "]"<<std::endl;
+  //std::cout<<std::to_string(double(rfSimParameters["simulation"]["field_edges"][0])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][1])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][2])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][3]))<<std::endl;
+  //std::random_device rd;
+  //std::default_random_engine eng(rd());
+  //std::uniform_real_distribution<float> distrx(int(rfSimParameters["simulation"]["field_edges"][0]), int(rfSimParameters["simulation"]["field_edges"][1]));
+  //std::uniform_real_distribution<float> distry(int(rfSimParameters["simulation"]["field_edges"][2]), int(rfSimParameters["simulation"]["field_edges"][3]));
+
+  for (uint16_t i = 0; i < numberOfUes; i++)
+  {
+    double uex = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][1])-double(rfSimParameters["simulation"]["field_edges"][0]))));
+    double uey = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][3])-double(rfSimParameters["simulation"]["field_edges"][2]))));
+    Vector uePosition (uex, uey, 1.5);
+    ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
   }
+
+
+
 
   // Install LTE Devices in eNB and UEs
   Config::SetDefault ("ns3::LteEnbPhy::TxPower", DoubleValue (enbTxPowerDbm));
@@ -450,7 +504,7 @@ main (int argc, char *argv[])
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
     {
-      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (int(rfSimParameters["UE"][i]["initial_attachment"]) - 1));
+      lteHelper->Attach (ueLteDevs.Get (i), enbLteDevs.Get (0));
     }
 
   // Create the sender applications, 1 per UE, all originating from the remote node
