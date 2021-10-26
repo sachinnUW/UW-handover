@@ -734,6 +734,16 @@ LteUeRrc::DoNotifyRandomAccessFailed ()
          *       send an RRC Connection Re-establishment and switch to
          *       CONNECTED_REESTABLISHING state.
          */
+        if (!m_leaveConnectedMode)
+          {
+            m_leaveConnectedMode = true;
+            SwitchToState (CONNECTED_PHY_PROBLEM);
+            m_rrcSapUser->SendIdealUeContextRemoveRequest (m_rnti);
+            //we should have called NotifyConnectionFailed
+            //but that method would immediately ask you UE to
+            //connect rather than doing cell selection again.
+            m_asSapUser->NotifyConnectionReleased ();
+          }
       }
       break;
 
@@ -1202,6 +1212,16 @@ LteUeRrc::DoRecvRrcConnectionRelease (LteRrcSap::RrcConnectionRelease msg)
 {
   NS_LOG_FUNCTION (this << " RNTI " << m_rnti);
   /// \todo Currently not implemented, see Section 5.3.8 of 3GPP TS 36.331.
+
+  m_lastRrcTransactionIdentifier = msg.rrcTransactionIdentifier;
+  //release resources at UE
+  if (!m_leaveConnectedMode)
+    {
+      m_leaveConnectedMode = true;
+      SwitchToState (CONNECTED_PHY_PROBLEM);
+      m_rrcSapUser->SendIdealUeContextRemoveRequest (m_rnti);
+      m_asSapUser->NotifyConnectionReleased ();
+    }
 }
 
 void 

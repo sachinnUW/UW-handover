@@ -382,6 +382,23 @@ public:
   void CancelPendingEvents ();
 
   /**
+   *  \brief This function acts as an interface to trigger the connection
+   *  release towards eNB, EPC and UE.
+   *
+   */
+  void SendRrcConnectionRelease ();
+
+  /**
+   * \brief build handover preparation failure message
+   */
+  EpcX2Sap::HandoverPreparationFailureParams BuildHoPrepFailMsg ();
+
+  /**
+   * \brief build handover cancel message
+   */
+  EpcX2Sap::HandoverCancelParams BuildHoCancelMsg ();
+
+  /**
    * TracedCallback signature for state transition events.
    *
    * \param [in] imsi
@@ -603,11 +620,6 @@ private:
    * UE CONTEXT RELEASE is received.
    */
   EventId m_handoverLeavingTimeout;
-  /**
-   * Number of subframes to delay the transmission of handover request 
-   * over the X-2 interface, simulates processing/transmission delay.
-   */
-  EventId m_x2HandoverDelay;
 
   /// Define if the Carrier Aggregation was already configure for the current UE on not
   bool m_caSupportConfigured;
@@ -1039,6 +1051,14 @@ public:
   void DoSendReleaseDataRadioBearer (uint64_t imsi, uint16_t rnti, uint8_t bearerId);
 
   /**
+   *  \brief Send RRC connection release function
+   *
+   *  This function acts as an interface to trigger the connection
+   *  release towards eNB, EPC and UE.
+   */
+  void SendRrcConnectionRelease ();
+
+  /**
    * Identifies how EPS Bearer parameters are mapped to different RLC types
    * 
    */
@@ -1104,6 +1124,17 @@ public:
       (const uint64_t imsi, const uint16_t rnti, const uint16_t cellId,
        const std::string cause);
 
+
+  /**
+   * TracedCallback signature for handover failure events.
+   *
+   * \param [in] imsi
+   * \param [in] rnti
+   * \param [in] cellId
+   * \param [in] cause
+   */
+  typedef void (*HandoverFailureTracedCallback)
+      (const uint64_t imsi, const uint16_t rnti, const uint16_t cellId, const std::string cause);
 
 private:
 
@@ -1691,6 +1722,12 @@ private:
    * which expired.
    */
   TracedCallback<uint64_t, uint16_t, uint16_t, std::string> m_rrcTimeoutTrace;
+  /**
+   * The 'HandoverFailure' Trace source. Fired when handover fails due to max preambles
+   * reached.
+   *
+   */
+ TracedCallback<uint64_t, uint16_t, uint16_t, std::string> m_handoverFailureTrace;
 
   uint16_t m_numberOfComponentCarriers; ///< number of component carriers
 

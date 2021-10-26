@@ -26,7 +26,7 @@
             0,
             1000
         ],
-        "number_of_UE": 10,
+        "number_of_UE": 20,
         "inter_BS_distance": 500,
         "average_UE_speed": 200,
         "UE_speed_bound": 50
