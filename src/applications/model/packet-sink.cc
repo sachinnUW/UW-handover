@@ -218,6 +218,7 @@ void PacketSink::HandleRead (Ptr<Socket> socket)
       {
         //std::cout<<localAddress<<std::endl;
         int recieverImsi = int(InetSocketAddress::ConvertFrom(localAddress).GetIpv4 ().Get()) % 117440513;//this is based on looking at the actual address as a 32 bit integer, then adding UEs and seeing the pattern
+        //std::cout<< recieverImsi << std::endl;
         m_mroEnv->passPacketReception(double(Simulator::Now ().GetSeconds ()), double(packet->GetSize ()), int(recieverImsi));
       }
 

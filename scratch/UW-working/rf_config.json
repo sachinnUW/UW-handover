@@ -19,7 +19,7 @@
         "mobility_type": "constant_velocity",
         "resource_blocks": 50,
         "simulation_duration_s": 40,
-        "seed": 1,
+        "seed": 2,
         "field_edges": [
             0,
             1000,
@@ -28,8 +28,8 @@
         ],
         "number_of_UE": 20,
         "inter_BS_distance": 500,
-        "average_UE_speed": 200,
-        "UE_speed_bound": 50
+        "average_UE_speed": 20,
+        "UE_speed_bound": 5
     },
     "BS": [
         {

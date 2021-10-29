@@ -2412,7 +2412,7 @@ LteEnbRrc::HandoverJoiningTimeout (uint16_t rnti)
                  "HandoverJoiningTimeout in unexpected state " << ToString (GetUeManager (rnti)->GetState ()));
   m_rrcTimeoutTrace (GetUeManager (rnti)->GetImsi (), rnti,
                      ComponentCarrierToCellId (GetUeManager (rnti)->GetComponentCarrierId ()), "HandoverJoiningTimeout");
-
+  std::cout<<"LteEnbRrc::HandoverJoiningTimeout called"<<std::endl;
   /**
    * When the handover joining timer expires at the target cell,
    * then notify the source cell to release the RRC connection and

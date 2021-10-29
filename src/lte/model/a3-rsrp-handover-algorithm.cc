@@ -77,12 +77,15 @@ A3RsrpHandoverAlgorithm::GetTypeId ()
                    MakeDoubleAccessor (&A3RsrpHandoverAlgorithm::m_a3OffsetDb),
                    MakeDoubleChecker<double> ())
     .AddAttribute ("perCellParameterPath",
-                   "Value by which the neighboring cell's RSRP "
-                   "must exceed after Hysteresis has been subtracted "
-                   "in order to trigger a handover",
+                   "Path to the json containing the per cell handover parameters",
                    StringValue ("FakePath"), // path to the per-cell handover parameter config file
                    MakeStringAccessor (&A3RsrpHandoverAlgorithm::m_perCellPath),
                    MakeStringChecker ())
+    .AddAttribute ("numBs",
+                   "the number of eNb in the simulation, required if perCellParameterPath is not set",
+                   DoubleValue (2), // path to the per-cell handover parameter config file
+                   MakeDoubleAccessor (&A3RsrpHandoverAlgorithm::m_numBs),
+                   MakeDoubleChecker<double> ())
   ;
   return tid;
 }
@@ -137,6 +140,18 @@ A3RsrpHandoverAlgorithm::DoInitialize ()
         reportConfig.perCellHysteresis.push_back(perCellParameters["BS"][i]["hysteresis_db"][j]);
         reportConfig.perCellA3Offset.push_back(perCellParameters["BS"][i]["a3_offset_db"][j]);
         reportConfig.perCellTimeToTrigger.push_back(perCellParameters["BS"][i]["time_to_trigger_ms"][j]);
+      }
+    }
+  }
+  else
+  {
+    for (int i = 0; i < int(m_numBs); ++i)
+    {
+      for (int j = 0; j < int(1); ++j)
+      {
+        reportConfig.perCellHysteresis.push_back(hysteresisIeValue);
+        reportConfig.perCellA3Offset.push_back(m_a3OffsetDb);
+        reportConfig.perCellTimeToTrigger.push_back(m_timeToTrigger.GetMilliSeconds ());
       }
     }
   }

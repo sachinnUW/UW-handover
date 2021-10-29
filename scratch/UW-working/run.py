@@ -31,14 +31,13 @@ class mlInput(Structure):
 
 class mlOutput(Structure):
     _pack_ = 1
-    _fields_ = [("tttAdjutment", c_double)]
+    _fields_ = [("tttAdjustment", c_double)]
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--resultsDir")
 parser.add_argument("--rfConfigFileName")
 parser.add_argument("--protocolConfigFileName")
-parser.add_argument("--rngSeedNum")
 #parser.add_argument("--mroExp")
 parser.add_argument("--runMode",help='select the mode to run the simulation, valid options are DQN, MRO, and no_ML')
 #parser.add_argument('--pure_online', action='store_true',help='whether use rl algorithm')
@@ -84,7 +83,8 @@ with open(rfConfigFileName) as f:
 
 if runMode == "DQN":
     loss_val = []
-    action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
+    #action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
+    action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480]
     dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
     not_first_trail = 0
     state = []
@@ -117,7 +117,7 @@ for i in range(rfConfig["simulation"]["number_of_UE"]*2):
 binWidth = .01#s, the width of the throughput calculation bin, moving average
 
 print ("starting")
-ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'rngSeedNum' : rngSeedNum,'mroExp' : mroExp}
+ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'mroExp' : mroExp}
 exp = Experiment(1234, 4096, "UW-working", "../..")
 model = torch.jit.load("temp_NN.pt")
 exp.reset()
@@ -148,8 +148,9 @@ while not r1.isFinish():
             state = np.array([x, y, pkt_size, rsrp])
             action_index = dqn.choose_action(state)
             action = action_space[action_index]
-            
-            data.act.tttAdjutment = action
+
+            #print(data.env.imsi,action)
+            data.act.tttAdjustment = action
             not_first_trail = 1
 
 
@@ -183,7 +184,7 @@ while not r1.isFinish():
             )  # 1 X 4 tensor
             xPredicted_max, _ = torch.max(xPredicted, 0)
             xPredicted = torch.div(xPredicted, xPredicted_max)
-            data.act.tttAdjutment = model.forward(xPredicted).numpy()[0].item()
+            data.act.tttAdjustment = model.forward(xPredicted).numpy()[0].item()
         else:
             pass
         #.numpy() converts to a numpy array

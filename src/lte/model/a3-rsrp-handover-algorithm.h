@@ -121,6 +121,7 @@ private:
   double m_a3OffsetDb;
   
   std::string m_perCellPath;
+  double m_numBs;
   
   /// Interface to the eNodeB RRC instance.
   LteHandoverManagementSapUser* m_handoverManagementSapUser;

@@ -2145,7 +2145,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
             NS_FATAL_ERROR ("unsupported triggerQuantity");
             break;
           }
-
+          
         for (std::map<uint16_t, MeasValues>::iterator storedMeasIt = m_storedMeasValues.begin ();
              storedMeasIt != m_storedMeasValues.end ();
              ++storedMeasIt)
@@ -2173,17 +2173,17 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
               && (measReportIt->second.cellsTriggeredList.find (cellId)
                   != measReportIt->second.cellsTriggeredList.end ());
             
-            //std::cout << storedMeasIt->first << std::endl;
             
-            if (m_mroEnv)
+            
+            if (m_mroExp)
             {
               m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId), double(mp));
             }
-
+            
 
             off = reportConfigEutra.perCellA3Offset.at(storedMeasIt->first - 1);
             hys = reportConfigEutra.perCellHysteresis.at(storedMeasIt->first - 1);
-            
+            //std::cout<<off<<','<<hys<<std::endl;
             // Inequality A3-1 (Entering condition): Mn + Ofn + Ocn - Hys > Mp + Ofp + Ocp + Off
             bool entryCond = mn + ofn + ocn - hys > mp + ofp + ocp + off;
 
@@ -2205,7 +2205,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
               {
                 CancelEnteringTrigger (measId, cellId);
               }
-
+              
             // Inequality A3-2 (Leaving condition): Mn + Ofn + Ocn + Hys < Mp + Ofp + Ocp + Off
             bool leavingCond = mn + ofn + ocn + hys < mp + ofp + ocp + off;
 
@@ -2240,9 +2240,13 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                   PendingTrigger_t t;
                   t.measId = measId;
                   t.concernedCells = concernedCellsEntry;
+                  //std::cout<<double(Simulator::Now ().GetSeconds ())<<","<<int(cellId)<<std::endl;
                   if (m_mroExp)
                     {
-                      t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.perCellTimeToTrigger.at(storedMeasIt->first - 1) + round(100*m_tttAdjustment)),
+                      //t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.perCellTimeToTrigger.at(storedMeasIt->first - 1) + round(100*m_tttAdjustment)),
+                      //                           &LteUeRrc::VarMeasReportListAdd, this,
+                      //                           measId, concernedCellsEntry);
+                      t.timer = Simulator::Schedule (MilliSeconds (round(100*m_tttAdjustment)),
                                                  &LteUeRrc::VarMeasReportListAdd, this,
                                                  measId, concernedCellsEntry);
                     } 
@@ -2260,13 +2264,13 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                   enteringTriggerIt->second.push_back (t);
                 }
             }
-
+            
           if (eventLeavingCondApplicable)
             {
               // reportOnLeave will only be set when eventId = eventA3
               bool reportOnLeave = (reportConfigEutra.eventId == LteRrcSap::ReportConfigEutra::EVENT_A3)
                 && reportConfigEutra.reportOnLeave;
-
+                
               if (reportConfigEutra.timeToTrigger == 0)
                 {
                   VarMeasReportListErase (measId, concernedCellsLeaving, reportOnLeave);

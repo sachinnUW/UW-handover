@@ -244,7 +244,6 @@ main (int argc, char *argv[])
   std::string protocolConfigFileName = "/home/collin/workspace/ns-3-dev-git/scratch/UW-working/protocol_config.json";//Other Values
   double enbTxPowerDbm = 40.0;
   bool mroExp = true;
-  int rngSeedNum = 1;
   //double frequency = 2125.0e6; // operating frequency in Hz (corresponds to EARFCN 2100)
   
   // Command line arguments
@@ -253,7 +252,6 @@ main (int argc, char *argv[])
   cmd.AddValue ("rfConfigFileName","Local filepath to the rf config file",rfConfigFileName);
   cmd.AddValue ("protocolConfigFileName","Local filepath to the protocol config file",protocolConfigFileName);
   cmd.AddValue ("mroExp","flag for MRO experiments, false turns them off. Will be removed in later versions",mroExp);
-  cmd.AddValue ("rngSeedNum", "Number used for seeding the RNG seed.", rngSeedNum);
   cmd.Parse (argc, argv);
 
   std::ifstream  rf_config_file(rfConfigFileName);
@@ -272,7 +270,8 @@ main (int argc, char *argv[])
   NodeContainer enbNodes;
   enbNodes.Create (numberOfEnbs);
   ueNodes.Create (numberOfUes);
-  RngSeedManager::SetRun (int(rngSeedNum));
+  RngSeedManager::SetSeed (int(rfSimParameters["simulation"]["seed"]));
+  RngSeedManager::SetRun (int(rfSimParameters["simulation"]["seed"]));
 
   
   // Additional constants (not changeable at command line) + "/Scenario" + scenarioName + "/Scenario" + scenarioName + "-" + std::to_string(trialNum)
@@ -365,13 +364,34 @@ main (int argc, char *argv[])
                              "Bounds", StringValue (std::to_string(double(rfSimParameters["simulation"]["field_edges"][0])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][1])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][2])) + "|" + std::to_string(double(rfSimParameters["simulation"]["field_edges"][3]))));
   ueMobility.Install (ueNodes);
 
+
+  Ptr<UniformRandomVariable> x = CreateObject<UniformRandomVariable> ();
+  Ptr<UniformRandomVariable> y = CreateObject<UniformRandomVariable> ();
+  x->SetAttribute ("Min", DoubleValue (rfSimParameters["simulation"]["field_edges"][0]));
+  x->SetAttribute ("Max", DoubleValue (rfSimParameters["simulation"]["field_edges"][1]));
+  y->SetAttribute ("Min", DoubleValue (rfSimParameters["simulation"]["field_edges"][2]));
+  y->SetAttribute ("Max", DoubleValue (rfSimParameters["simulation"]["field_edges"][3]));
   for (uint16_t i = 0; i < numberOfUes; i++)
   {
-    double uex = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][1])-double(rfSimParameters["simulation"]["field_edges"][0]))));
-    double uey = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][3])-double(rfSimParameters["simulation"]["field_edges"][2]))));
+    double uex = x->GetValue ();
+    double uey = y->GetValue ();
     Vector uePosition (uex, uey, 1.5);
+    std::cout<<uex<<','<<uey<<std::endl;
     ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
   }
+
+
+  //MobilityHelper ueMobility;
+  //ueMobility.SetPositionAllocator("ns3::RandomBoxPositionAllocator","X",StringValue ("ns3::UniformRandomVariable[Min=0|Max=1000]"),"Y",StringValue ("ns3::UniformRandomVariable[Min=0|Max=1000]"),"Z",StringValue ("ns3::UniformRandomVariable[Min=0|Max=1000]"));
+  //ueMobility.SetMobilityModel ("ns3::RandomWaypointMobilityModel","Speed",StringValue ("ns3::UniformRandomVariable[Min=15|Max=25]"),"Pause",StringValue ("ns3::UniformRandomVariable[Min=1|Max=2]"));
+  //ueMobility.Install (ueNodes);
+  //for (uint16_t i = 0; i < numberOfUes; i++)
+  //{
+  //  double uex = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][1])-double(rfSimParameters["simulation"]["field_edges"][0]))));
+  //  double uey = double(rand())/(double(RAND_MAX/(double(rfSimParameters["simulation"]["field_edges"][3])-double(rfSimParameters["simulation"]["field_edges"][2]))));
+  //  Vector uePosition (uex, uey, 1.5);
+  //  ueNodes.Get (i)->GetObject<MobilityModel> ()->SetPosition (uePosition);
+  //}
 
 
 
