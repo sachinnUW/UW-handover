@@ -4,6 +4,7 @@ import sys
 import time
 import argparse
 import math
+import random
 import ns3_util
 import torch
 import torch.nn as nn
@@ -11,6 +12,7 @@ import json
 import os
 import csv
 from itertools import zip_longest
+import numpy as np
 from DQN import *
 
 #def load_config(input_file)->Dict[str,Any]:
@@ -21,8 +23,12 @@ from DQN import *
 #    except Exception:
 #        logging.error(f"{input_file} doesn't exist")
 #        return None
-
-
+seed = 1234
+torch.manual_seed(seed)
+np.random.seed(seed)
+random.seed(seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 class mlInput(Structure):
     _pack_ = 1
@@ -63,10 +69,10 @@ else:
     protocolConfigFileName = dirCurrent + "/protocol_config.json"
 
 
-if type(args.rngSeedNum) is str:
-    rngSeedNum = int(args.rngSeedNum)
-else:
-    rngSeedNum = 1
+# if type(args.rngSeedNum) is str:
+#     rngSeedNum = int(args.rngSeedNum)
+# else:
+#     rngSeedNum = 1
 
 #if type(args.mroExp) is str:
 #    mroExp = bool(args.mroExp)
@@ -102,7 +108,7 @@ elif runMode == "no_ML":
 else:
     print("runMode not set correctly, valid options are DQN, MRO, and no_ML")
     exit()
-
+print("Running with: " + runMode)
 #print(len(rfConfig["UE"]))
 
 #parameters for throughput calculation
