@@ -91,14 +91,15 @@ if runMode == "DQN":
     loss_val = []
     #action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480, 512, 640, 1024, 1280]
     action_space = [0, 40, 64, 80, 100, 128, 160, 256, 320, 480]
-    dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
-    not_first_trail = 0
-    state = []
-    state_ = []
-    reward = 0
-    count = 0
-    action_index = 0
-    action = 0
+    
+    all_dqn = {}
+    # not_first_trail = 0
+    # state = []
+    # state_ = []
+    # reward = 0
+    # count = 0
+    # action_index = 0
+    # action = 0
     
     mroExp=True
 elif runMode == "MRO":
@@ -120,7 +121,7 @@ for i in range(rfConfig["simulation"]["number_of_UE"]*2):
     throughputRecord.append([])
     each_act.append([])
 
-binWidth = .01#s, the width of the throughput calculation bin, moving average
+binWidth = .01 #s, the width of the throughput calculation bin, moving average
 
 print ("starting")
 ns3Settings = {'resultDir' : resultsDir, 'rfConfigFileName' : rfConfigFileName, 'protocolConfigFileName' : protocolConfigFileName, 'mroExp' : mroExp}
@@ -136,28 +137,35 @@ while not r1.isFinish():
         if data == None:
             break
         if runMode == "DQN":
-            if not_first_trail:
+            imsi = data.env.imsi
+            if imsi not in all_dqn:
+                dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
+                all_dqn[imsi] = dqn
+            else:
+                dqn = all_dqn[imsi]
+            if dqn.not_first_trail:
                 x = data.env.x
                 y = data.env.y
                 pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
                 rsrp = data.env.rsrp
                 # reward = 0
-                state_ = np.array([x, y, pkt_size, rsrp])                
-                dqn.store_transition(state, action_index, reward, state_)
-                count += 1
+                dqn.state_ = np.array([x, y, pkt_size, rsrp])                
+                dqn.store_transition(dqn.state, dqn.action_index, dqn.reward, dqn.state_)
+                dqn.count += 1
             
             # print("Run with DQN")
             x = data.env.x
             y = data.env.y
             pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
             rsrp = data.env.rsrp
-            state = np.array([x, y, pkt_size, rsrp])
-            action_index = dqn.choose_action(state)
-            action = action_space[action_index]
+            dqn.state = np.array([x, y, pkt_size, rsrp])
+            dqn.action_index = dqn.choose_action(dqn.state)
+            action = action_space[dqn.action_index]
+            
 
             #print(data.env.imsi,action)
             data.act.tttAdjustment = action
-            not_first_trail = 1
+            dqn.not_first_trail = 1
 
 
             #print(data.env.packetRxFlag)
@@ -175,10 +183,10 @@ while not r1.isFinish():
                         break
                 throughputRecord[2*(data.env.packetReceiverId-1)+1].append(dataReceived/binWidth)
                 data.env.packetRxFlag = 0
-                reward = dataReceived/binWidth
+                dqn.reward = dataReceived/binWidth
                 each_act[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
                 each_act[2*(data.env.packetReceiverId-1)+1].append(action)
-            if count > 200 and count % 20 == 0:
+            if dqn.count > 200 and dqn.count % 20 == 0:
                  dqn.learn()
         elif runMode == "MRO":
             relativeDistanceX = abs(data.env.x - rfConfig["BS"][math.floor((data.env.cellId-1))]["location"][0])
