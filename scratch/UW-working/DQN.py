@@ -114,6 +114,12 @@ class DQN(nn.Module):
         self.memory = np.zeros((self.memory_size, self.state_size * 2 + 2))
         self.learn_step_counter = 0
         self.memory_couter = 0
+        self.state = []
+        self.state_ = []
+        self.count = 0
+        self.action_index = 0
+        self.reward = 0
+        self.not_first_trail = 0
 
         # self.model = ResNet(self.state_size, self.n_actions).cuda()
         # self.target_model = ResNet(self.state_size, self.n_actions).cuda()
