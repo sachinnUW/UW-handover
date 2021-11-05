@@ -63,10 +63,10 @@ else:
     protocolConfigFileName = dirCurrent + "/protocol_config.json"
 
 
-if type(args.rngSeedNum) is str:
-    rngSeedNum = int(args.rngSeedNum)
-else:
-    rngSeedNum = 1
+#if type(args.rngSeedNum) is str:
+#    rngSeedNum = int(args.rngSeedNum)
+#else:
+#    rngSeedNum = 1
 
 #if type(args.mroExp) is str:
 #    mroExp = bool(args.mroExp)
