@@ -2533,10 +2533,12 @@ LteEnbRrc::DoRecvIdealUeContextRemoveRequest (uint16_t rnti)
       EpcX2Sap::HandoverPreparationFailureParams msg = ueManager->BuildHoPrepFailMsg ();
       m_x2SapProvider->SendHandoverPreparationFailure (msg);
     }
-
-  GetUeManager (rnti)->RecvIdealUeContextRemoveRequest (rnti);
-  //delete the UE context at the eNB
-  RemoveUe (rnti);
+  if (HasUeManager(rnti))
+    {
+      GetUeManager (rnti)->RecvIdealUeContextRemoveRequest (rnti);
+    //delete the UE context at the eNB
+    RemoveUe (rnti);
+    }
 }
 
 void
