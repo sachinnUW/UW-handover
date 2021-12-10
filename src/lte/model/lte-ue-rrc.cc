@@ -2195,7 +2195,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                       {
                         //m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId));
                         m_tttAdjustment = m_mroEnv->tableRead(double(uePos.x),double(uePos.y));
-                        //std::cout << double(uePos.x) << double(uePos.y) << m_tttAdjustment << std::endl;
+                        //std::cout << m_tttAdjustment << std::endl;
                       }
                     concernedCellsEntry.push_back (cellId);
                     eventEntryCondApplicable = true;
@@ -2237,16 +2237,18 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
                 }
               else
                 {
+
                   PendingTrigger_t t;
                   t.measId = measId;
                   t.concernedCells = concernedCellsEntry;
                   //std::cout<<double(Simulator::Now ().GetSeconds ())<<","<<int(cellId)<<std::endl;
                   if (m_mroExp)
                     {
+                      
                       //t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.perCellTimeToTrigger.at(storedMeasIt->first - 1) + round(100*m_tttAdjustment)),
                       //                           &LteUeRrc::VarMeasReportListAdd, this,
                       //                           measId, concernedCellsEntry);
-                      t.timer = Simulator::Schedule (MilliSeconds (round(100*m_tttAdjustment)),
+                      t.timer = Simulator::Schedule (MilliSeconds (round(m_tttAdjustment)),
                                                  &LteUeRrc::VarMeasReportListAdd, this,
                                                  measId, concernedCellsEntry);
                     } 
