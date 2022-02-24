@@ -1,0 +1,1916 @@
+Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
+Waf: Leaving directory `/home/sachin/repos/ns-3-dev-git/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (0.379s)
+rf config loaded
+protocol config loaded
+239.596,969.292
+73.966,363.505
+867.686,897.774
+590.343,385.134
+232.449,25.3661
+254.342,322.318
+744.451,754.497
+608.353,718.098
+480.267,737.475
+87.7465,279.693
+824.165,515.409
+245.125,331.104
+291.645,394.563
+524.118,581.66
+531.778,675.929
+170.139,529.464
+TCP
+Simulation time: 40 sec
+0.0202 node 15 UE IMSI 2: connected to CellId 1 with RNTI 4
+0.0202 node 18 UE IMSI 5: connected to CellId 1 with RNTI 2
+0.0202 node 23 UE IMSI 10: connected to CellId 1 with RNTI 3
+0.0202 node 27 UE IMSI 14: connected to CellId 1 with RNTI 1
+0.0202 node 0 eNB CellId 1: successful connection of UE with IMSI 2 RNTI 4
+0.0202 node 0 eNB CellId 1: successful connection of UE with IMSI 5 RNTI 2
+0.0202 node 0 eNB CellId 1: successful connection of UE with IMSI 10 RNTI 3
+0.0202 node 0 eNB CellId 1: successful connection of UE with IMSI 14 RNTI 1
+0.105 node 16 UE IMSI 3: connected to CellId 1 with RNTI 10
+0.105 node 0 eNB CellId 1: successful connection of UE with IMSI 3 RNTI 10
+0.111 node 17 UE IMSI 4: connected to CellId 1 with RNTI 12
+0.111 node 0 eNB CellId 1: successful connection of UE with IMSI 4 RNTI 12
+0.165 node 19 UE IMSI 6: connected to CellId 1 with RNTI 30
+0.165 node 0 eNB CellId 1: successful connection of UE with IMSI 6 RNTI 30
+0.177 node 24 UE IMSI 11: connected to CellId 1 with RNTI 33
+0.177 node 0 eNB CellId 1: successful connection of UE with IMSI 11 RNTI 33
+0.2 UE 2: sent measReport to CellId 1
+0.2 UE 3: sent measReport to CellId 1
+0.2 UE 4: sent measReport to CellId 1
+0.2 UE 5: sent measReport to CellId 1
+0.2 UE 6: sent measReport to CellId 1
+0.2 UE 10: sent measReport to CellId 1
+0.2 UE 11: sent measReport to CellId 1
+0.2 UE 14: sent measReport to CellId 1
+0.2 UE 3: sent measReport to CellId 1
+0.2 UE 4: sent measReport to CellId 1
+0.2 UE 11: sent measReport to CellId 1
+0.2 UE 14: sent measReport to CellId 1
+0.2 node 0 eNB CellId 1: start handover of UE with IMSI 3 RNTI 10 to CellId 14
+0.2 node 0 eNB CellId 1: start handover of UE with IMSI 4 RNTI 12 to CellId 2
+0.2 node 0 eNB CellId 1: start handover of UE with IMSI 11 RNTI 33 to CellId 9
+0.2 node 0 eNB CellId 1: start handover of UE with IMSI 14 RNTI 1 to CellId 6
+0.2 node 16 UE IMSI 3: previously connected to CellId 1 with RNTI 10, doing handover to CellId 14
+0.2 node 17 UE IMSI 4: previously connected to CellId 1 with RNTI 12, doing handover to CellId 2
+0.2 node 24 UE IMSI 11: previously connected to CellId 1 with RNTI 33, doing handover to CellId 9
+0.2 node 27 UE IMSI 14: previously connected to CellId 1 with RNTI 1, doing handover to CellId 6
+0.201 UE 3: sent measReport to CellId 1
+0.203 UE 6: sent measReport to CellId 1
+0.203 node 0 eNB CellId 1: start handover of UE with IMSI 6 RNTI 30 to CellId 5
+0.203 node 19 UE IMSI 6: previously connected to CellId 1 with RNTI 30, doing handover to CellId 5
+0.204 UE 6: sent measReport to CellId 1
+0.204 node 27 UE IMSI 14: successful handover to CellId 6 with RNTI 1
+0.204 node 5 eNB CellId 6: completed handover of UE with IMSI 14 RNTI 1
+0.206 UE 3: sent measReport to CellId 1
+0.206 UE 4: sent measReport to CellId 1
+0.206 UE 11: sent measReport to CellId 1
+0.206 UE 14: sent measReport to CellId 6
+0.207 node 19 UE IMSI 6: successful handover to CellId 5 with RNTI 1
+0.207 node 4 eNB CellId 5: completed handover of UE with IMSI 6 RNTI 1
+0.208 UE 6: sent measReport to CellId 5
+0.208 UE 4: sent measReport to CellId 1
+0.213 UE 11: sent measReport to CellId 1
+0.216 node 17 UE IMSI 4: successful handover to CellId 2 with RNTI 1
+0.216 node 1 eNB CellId 2: completed handover of UE with IMSI 4 RNTI 1
+0.217 UE 4: sent measReport to CellId 2
+0.228 node 24 UE IMSI 11: successful handover to CellId 9 with RNTI 1
+0.228 node 8 eNB CellId 9: completed handover of UE with IMSI 11 RNTI 1
+0.229 UE 11: sent measReport to CellId 9
+0.238 UE 4: sent measReport to CellId 2
+0.238 node 1 eNB CellId 2: start handover of UE with IMSI 4 RNTI 1 to CellId 6
+0.238 node 17 UE IMSI 4: previously connected to CellId 2 with RNTI 1, doing handover to CellId 6
+0.239 UE 4: sent measReport to CellId 2
+0.242 node 17 UE IMSI 4: successful handover to CellId 6 with RNTI 2
+0.242 node 5 eNB CellId 6: completed handover of UE with IMSI 4 RNTI 2
+0.243 UE 4: sent measReport to CellId 6
+0.246 UE 11: sent measReport to CellId 9
+0.246 node 8 eNB CellId 9: start handover of UE with IMSI 11 RNTI 1 to CellId 6
+0.246 node 24 UE IMSI 11: previously connected to CellId 9 with RNTI 1, doing handover to CellId 6
+0.247 UE 11: sent measReport to CellId 9
+0.25 node 24 UE IMSI 11: successful handover to CellId 6 with RNTI 3
+0.25 node 5 eNB CellId 6: completed handover of UE with IMSI 11 RNTI 3
+0.251 UE 11: sent measReport to CellId 6
+0.259 UE 2: sent measReport to CellId 1
+0.259 node 0 eNB CellId 1: start handover of UE with IMSI 2 RNTI 4 to CellId 5
+0.259 node 15 UE IMSI 2: previously connected to CellId 1 with RNTI 4, doing handover to CellId 5
+0.26 UE 2: sent measReport to CellId 1
+0.263 node 15 UE IMSI 2: successful handover to CellId 5 with RNTI 2
+0.263 node 4 eNB CellId 5: completed handover of UE with IMSI 2 RNTI 2
+0.264 UE 2: sent measReport to CellId 5
+0.275 node 14 UE IMSI 1: connected to CellId 1 with RNTI 72
+0.275 node 0 eNB CellId 1: successful connection of UE with IMSI 1 RNTI 72
+0.276 UE 1: sent measReport to CellId 1
+0.276 node 16 UE IMSI 3: successful handover to CellId 14 with RNTI 1
+0.276 node 13 eNB CellId 14: completed handover of UE with IMSI 3 RNTI 1
+0.277 UE 3: sent measReport to CellId 14
+0.277 UE 1: sent measReport to CellId 1
+0.277 node 0 eNB CellId 1: start handover of UE with IMSI 1 RNTI 72 to CellId 12
+0.277 node 14 UE IMSI 1: previously connected to CellId 1 with RNTI 72, doing handover to CellId 12
+0.278 UE 1: sent measReport to CellId 1
+0.28 UE 6: sent measReport to CellId 5
+0.287 node 14 UE IMSI 1: successful handover to CellId 12 with RNTI 1
+0.287 node 11 eNB CellId 12: completed handover of UE with IMSI 1 RNTI 1
+0.288 UE 1: sent measReport to CellId 12
+0.293 UE 11: sent measReport to CellId 6
+0.295 node 20 UE IMSI 7: connected to CellId 1 with RNTI 84
+0.295 node 0 eNB CellId 1: successful connection of UE with IMSI 7 RNTI 84
+0.296 UE 7: sent measReport to CellId 1
+0.296 UE 7: sent measReport to CellId 1
+0.296 node 0 eNB CellId 1: start handover of UE with IMSI 7 RNTI 84 to CellId 5
+0.296 node 20 UE IMSI 7: previously connected to CellId 1 with RNTI 84, doing handover to CellId 5
+0.297 UE 7: sent measReport to CellId 1
+0.299 UE 7: sent measReport to CellId 1
+0.299 node 21 UE IMSI 8: connected to CellId 1 with RNTI 85
+0.299 node 0 eNB CellId 1: successful connection of UE with IMSI 8 RNTI 85
+0.3 UE 2: sent measReport to CellId 5
+0.3 UE 8: sent measReport to CellId 1
+0.3 UE 8: sent measReport to CellId 1
+0.3 node 0 eNB CellId 1: start handover of UE with IMSI 8 RNTI 85 to CellId 8
+0.3 node 21 UE IMSI 8: previously connected to CellId 1 with RNTI 85, doing handover to CellId 8
+0.303 UE 8: sent measReport to CellId 1
+0.306 UE 8: sent measReport to CellId 1
+0.312 node 20 UE IMSI 7: successful handover to CellId 5 with RNTI 3
+0.312 node 4 eNB CellId 5: completed handover of UE with IMSI 7 RNTI 3
+0.313 UE 7: sent measReport to CellId 5
+0.313 UE 7: sent measReport to CellId 5
+0.313 node 4 eNB CellId 5: start handover of UE with IMSI 7 RNTI 3 to CellId 6
+0.313 node 20 UE IMSI 7: previously connected to CellId 5 with RNTI 3, doing handover to CellId 6
+0.314 UE 7: sent measReport to CellId 5
+0.322 node 21 UE IMSI 8: successful handover to CellId 8 with RNTI 1
+0.322 node 7 eNB CellId 8: completed handover of UE with IMSI 8 RNTI 1
+0.323 UE 8: sent measReport to CellId 8
+0.323 node 20 UE IMSI 7: successful handover to CellId 6 with RNTI 4
+0.323 node 5 eNB CellId 6: completed handover of UE with IMSI 7 RNTI 4
+0.324 UE 7: sent measReport to CellId 6
+0.327 UE 8: sent measReport to CellId 8
+0.327 node 7 eNB CellId 8: start handover of UE with IMSI 8 RNTI 1 to CellId 10
+0.327 node 21 UE IMSI 8: previously connected to CellId 8 with RNTI 1, doing handover to CellId 10
+0.328 UE 8: sent measReport to CellId 8
+0.338 UE 3: sent measReport to CellId 14
+0.338 UE 8: sent measReport to CellId 8
+0.338 node 13 eNB CellId 14: start handover of UE with IMSI 3 RNTI 1 to CellId 10
+0.338 node 16 UE IMSI 3: previously connected to CellId 14 with RNTI 1, doing handover to CellId 10
+0.339 UE 3: sent measReport to CellId 14
+0.342 node 16 UE IMSI 3: successful handover to CellId 10 with RNTI 2
+0.342 node 9 eNB CellId 10: completed handover of UE with IMSI 3 RNTI 2
+0.343 UE 3: sent measReport to CellId 10
+0.356 UE 1: sent measReport to CellId 12
+0.379 node 21 UE IMSI 8: successful handover to CellId 10 with RNTI 1
+0.379 node 9 eNB CellId 10: completed handover of UE with IMSI 8 RNTI 1
+0.38 UE 8: sent measReport to CellId 10
+0.382 UE 8: sent measReport to CellId 10
+0.382 node 9 eNB CellId 10: start handover of UE with IMSI 8 RNTI 1 to CellId 9
+0.382 node 21 UE IMSI 8: previously connected to CellId 10 with RNTI 1, doing handover to CellId 9
+0.383 UE 8: sent measReport to CellId 10
+0.386 node 21 UE IMSI 8: successful handover to CellId 9 with RNTI 2
+0.386 node 8 eNB CellId 9: completed handover of UE with IMSI 8 RNTI 2
+0.387 UE 8: sent measReport to CellId 9
+0.397 UE 7: sent measReport to CellId 6
+0.397 node 5 eNB CellId 6: start handover of UE with IMSI 7 RNTI 4 to CellId 9
+0.397 node 20 UE IMSI 7: previously connected to CellId 6 with RNTI 4, doing handover to CellId 9
+0.398 UE 7: sent measReport to CellId 6
+0.401 UE 8: sent measReport to CellId 9
+0.401 node 8 eNB CellId 9: start handover of UE with IMSI 8 RNTI 2 to CellId 6
+0.401 node 21 UE IMSI 8: previously connected to CellId 9 with RNTI 2, doing handover to CellId 6
+0.401 node 20 UE IMSI 7: successful handover to CellId 9 with RNTI 3
+0.401 node 8 eNB CellId 9: completed handover of UE with IMSI 7 RNTI 3
+0.402 UE 7: sent measReport to CellId 9
+0.402 UE 8: sent measReport to CellId 9
+0.403 node 29 UE IMSI 16: connected to CellId 1 with RNTI 114
+0.403 node 0 eNB CellId 1: successful connection of UE with IMSI 16 RNTI 114
+0.404 UE 16: sent measReport to CellId 1
+0.404 UE 16: sent measReport to CellId 1
+0.404 node 0 eNB CellId 1: start handover of UE with IMSI 16 RNTI 114 to CellId 5
+0.404 node 29 UE IMSI 16: previously connected to CellId 1 with RNTI 114, doing handover to CellId 5
+0.405 UE 3: sent measReport to CellId 10
+0.405 UE 16: sent measReport to CellId 1
+0.405 node 9 eNB CellId 10: start handover of UE with IMSI 3 RNTI 2 to CellId 9
+0.405 node 16 UE IMSI 3: previously connected to CellId 10 with RNTI 2, doing handover to CellId 9
+0.405 node 21 UE IMSI 8: successful handover to CellId 6 with RNTI 5
+0.405 node 5 eNB CellId 6: completed handover of UE with IMSI 8 RNTI 5
+0.406 UE 8: sent measReport to CellId 6
+0.408 node 29 UE IMSI 16: successful handover to CellId 5 with RNTI 4
+0.408 node 4 eNB CellId 5: completed handover of UE with IMSI 16 RNTI 4
+0.409 UE 16: sent measReport to CellId 5
+0.41 UE 8: sent measReport to CellId 6
+0.41 node 5 eNB CellId 6: start handover of UE with IMSI 8 RNTI 5 to CellId 9
+0.41 node 21 UE IMSI 8: previously connected to CellId 6 with RNTI 5, doing handover to CellId 9
+0.411 UE 3: sent measReport to CellId 10
+0.411 node 26 UE IMSI 13: connected to CellId 1 with RNTI 116
+0.411 node 0 eNB CellId 1: successful connection of UE with IMSI 13 RNTI 116
+0.412 UE 13: sent measReport to CellId 1
+0.412 UE 13: sent measReport to CellId 1
+0.412 node 0 eNB CellId 1: start handover of UE with IMSI 13 RNTI 116 to CellId 5
+0.412 node 26 UE IMSI 13: previously connected to CellId 1 with RNTI 116, doing handover to CellId 5
+0.414 node 21 UE IMSI 8: successful handover to CellId 9 with RNTI 5
+0.414 node 8 eNB CellId 9: completed handover of UE with IMSI 8 RNTI 5
+0.416 UE 8: sent measReport to CellId 9
+0.416 UE 3: sent measReport to CellId 10
+0.416 node 26 UE IMSI 13: successful handover to CellId 5 with RNTI 5
+0.416 node 4 eNB CellId 5: completed handover of UE with IMSI 13 RNTI 5
+0.425 UE 7: sent measReport to CellId 9
+0.425 node 8 eNB CellId 9: start handover of UE with IMSI 7 RNTI 3 to CellId 10
+0.425 node 20 UE IMSI 7: previously connected to CellId 9 with RNTI 3, doing handover to CellId 10
+0.429 UE 8: sent measReport to CellId 9
+0.429 node 8 eNB CellId 9: start handover of UE with IMSI 8 RNTI 5 to CellId 10
+0.429 node 21 UE IMSI 8: previously connected to CellId 9 with RNTI 5, doing handover to CellId 10
+0.429 node 20 UE IMSI 7: successful handover to CellId 10 with RNTI 3
+0.429 node 9 eNB CellId 10: completed handover of UE with IMSI 7 RNTI 3
+0.43 UE 8: sent measReport to CellId 9
+0.431 UE 7: sent measReport to CellId 10
+0.442 UE 8: sent measReport to CellId 9
+0.451 node 21 UE IMSI 8: successful handover to CellId 10 with RNTI 4
+0.451 node 9 eNB CellId 10: completed handover of UE with IMSI 8 RNTI 4
+0.452 UE 8: sent measReport to CellId 10
+0.462 UE 8: sent measReport to CellId 10
+0.462 node 9 eNB CellId 10: start handover of UE with IMSI 8 RNTI 4 to CellId 9
+0.462 node 21 UE IMSI 8: previously connected to CellId 10 with RNTI 4, doing handover to CellId 9
+0.463 UE 8: sent measReport to CellId 10
+0.463 node 16 UE IMSI 3: successful handover to CellId 9 with RNTI 4
+0.463 node 8 eNB CellId 9: completed handover of UE with IMSI 3 RNTI 4
+0.464 UE 3: sent measReport to CellId 9
+0.466 node 21 UE IMSI 8: successful handover to CellId 9 with RNTI 6
+0.466 node 8 eNB CellId 9: completed handover of UE with IMSI 8 RNTI 6
+0.467 UE 8: sent measReport to CellId 9
+0.468 UE 3: sent measReport to CellId 9
+0.468 node 8 eNB CellId 9: start handover of UE with IMSI 3 RNTI 4 to CellId 10
+0.468 node 16 UE IMSI 3: previously connected to CellId 9 with RNTI 4, doing handover to CellId 10
+0.469 UE 3: sent measReport to CellId 9
+0.472 node 16 UE IMSI 3: successful handover to CellId 10 with RNTI 5
+0.472 node 9 eNB CellId 10: completed handover of UE with IMSI 3 RNTI 5
+0.473 UE 4: sent measReport to CellId 6
+0.473 UE 3: sent measReport to CellId 10
+0.483 UE 8: sent measReport to CellId 9
+0.483 node 8 eNB CellId 9: start handover of UE with IMSI 8 RNTI 6 to CellId 10
+0.483 node 21 UE IMSI 8: previously connected to CellId 9 with RNTI 6, doing handover to CellId 10
+0.484 UE 8: sent measReport to CellId 9
+0.484 UE 8: sent measReport to CellId 9
+0.506 UE 3: sent measReport to CellId 10
+0.523 node 21 UE IMSI 8: successful handover to CellId 10 with RNTI 6
+0.523 node 9 eNB CellId 10: completed handover of UE with IMSI 8 RNTI 6
+0.524 UE 8: sent measReport to CellId 10
+0.524 UE 8: sent measReport to CellId 10
+0.524 node 9 eNB CellId 10: start handover of UE with IMSI 8 RNTI 6 to CellId 9
+0.524 node 21 UE IMSI 8: previously connected to CellId 10 with RNTI 6, doing handover to CellId 9
+0.525 UE 8: sent measReport to CellId 10
+0.528 node 21 UE IMSI 8: successful handover to CellId 9 with RNTI 7
+0.528 node 8 eNB CellId 9: completed handover of UE with IMSI 8 RNTI 7
+0.529 UE 8: sent measReport to CellId 9
+0.557 node 25 UE IMSI 12: connected to CellId 1 with RNTI 164
+0.557 node 0 eNB CellId 1: successful connection of UE with IMSI 12 RNTI 164
+0.558 UE 12: sent measReport to CellId 1
+0.569 node 28 UE IMSI 15: connected to CellId 1 with RNTI 166
+0.569 node 0 eNB CellId 1: successful connection of UE with IMSI 15 RNTI 166
+0.57 UE 15: sent measReport to CellId 1
+0.57 UE 15: sent measReport to CellId 1
+0.57 node 0 eNB CellId 1: start handover of UE with IMSI 15 RNTI 166 to CellId 5
+0.57 node 28 UE IMSI 15: previously connected to CellId 1 with RNTI 166, doing handover to CellId 5
+0.572 UE 15: sent measReport to CellId 1
+0.576 UE 15: sent measReport to CellId 1
+0.58 node 28 UE IMSI 15: successful handover to CellId 5 with RNTI 6
+0.58 node 4 eNB CellId 5: completed handover of UE with IMSI 15 RNTI 6
+0.581 UE 15: sent measReport to CellId 5
+0.587 UE 12: sent measReport to CellId 1
+0.587 node 0 eNB CellId 1: start handover of UE with IMSI 12 RNTI 164 to CellId 5
+0.587 node 25 UE IMSI 12: previously connected to CellId 1 with RNTI 164, doing handover to CellId 5
+0.588 UE 12: sent measReport to CellId 1
+0.589 UE 15: sent measReport to CellId 5
+0.589 node 4 eNB CellId 5: start handover of UE with IMSI 15 RNTI 6 to CellId 9
+0.589 node 28 UE IMSI 15: previously connected to CellId 5 with RNTI 6, doing handover to CellId 9
+0.59 UE 15: sent measReport to CellId 5
+0.591 node 25 UE IMSI 12: successful handover to CellId 5 with RNTI 7
+0.591 node 4 eNB CellId 5: completed handover of UE with IMSI 12 RNTI 7
+0.592 UE 12: sent measReport to CellId 5
+0.593 node 28 UE IMSI 15: successful handover to CellId 9 with RNTI 8
+0.593 node 8 eNB CellId 9: completed handover of UE with IMSI 15 RNTI 8
+0.594 UE 15: sent measReport to CellId 9
+0.597 node 22 UE IMSI 9: connected to CellId 1 with RNTI 170
+0.597 node 0 eNB CellId 1: successful connection of UE with IMSI 9 RNTI 170
+0.598 UE 9: sent measReport to CellId 1
+0.599 UE 9: sent measReport to CellId 1
+0.599 node 0 eNB CellId 1: start handover of UE with IMSI 9 RNTI 170 to CellId 9
+0.599 node 22 UE IMSI 9: previously connected to CellId 1 with RNTI 170, doing handover to CellId 9
+0.6 UE 9: sent measReport to CellId 1
+0.603 node 22 UE IMSI 9: successful handover to CellId 9 with RNTI 9
+0.603 node 8 eNB CellId 9: completed handover of UE with IMSI 9 RNTI 9
+0.604 UE 9: sent measReport to CellId 9
+0.636 UE 8: sent measReport to CellId 9
+0.645 UE 15: sent measReport to CellId 9
+0.678 UE 9: sent measReport to CellId 9
+0.68 UE 5: sent measReport to CellId 1
+0.68 UE 10: sent measReport to CellId 1
+0.686 UE 14: sent measReport to CellId 6
+0.688 UE 6: sent measReport to CellId 5
+0.723 UE 4: sent measReport to CellId 6
+0.731 UE 11: sent measReport to CellId 6
+0.744 UE 2: sent measReport to CellId 5
+0.768 UE 1: sent measReport to CellId 12
+0.878 UE 12: sent measReport to CellId 5
+0.889 UE 16: sent measReport to CellId 5
+0.911 UE 7: sent measReport to CellId 10
+0.953 UE 3: sent measReport to CellId 10
+1.01 UE 8: sent measReport to CellId 9
+1.07 UE 12: sent measReport to CellId 5
+1.07 UE 15: sent measReport to CellId 9
+1.08 UE 9: sent measReport to CellId 9
+1.16 UE 5: sent measReport to CellId 1
+1.16 UE 10: sent measReport to CellId 1
+1.17 UE 14: sent measReport to CellId 6
+1.17 UE 6: sent measReport to CellId 5
+1.2 UE 4: sent measReport to CellId 6
+1.21 UE 11: sent measReport to CellId 6
+1.22 UE 2: sent measReport to CellId 5
+1.25 UE 1: sent measReport to CellId 12
+1.3 UE 6: sent measReport to CellId 5
+1.32 UE 11: sent measReport to CellId 6
+1.32 UE 2: sent measReport to CellId 5
+1.37 UE 16: sent measReport to CellId 5
+1.38 UE 1: sent measReport to CellId 12
+1.38 node 11 eNB CellId 12: start handover of UE with IMSI 1 RNTI 1 to CellId 8
+1.38 node 14 UE IMSI 1: previously connected to CellId 12 with RNTI 1, doing handover to CellId 8
+1.38 node 14 UE IMSI 1: successful handover to CellId 8 with RNTI 2
+1.38 node 7 eNB CellId 8: completed handover of UE with IMSI 1 RNTI 2
+1.39 UE 1: sent measReport to CellId 8
+1.39 UE 7: sent measReport to CellId 10
+1.43 UE 3: sent measReport to CellId 10
+1.49 UE 8: sent measReport to CellId 9
+1.5 UE 4: sent measReport to CellId 6
+1.52 UE 10: sent measReport to CellId 1
+1.52 node 0 eNB CellId 1: start handover of UE with IMSI 10 RNTI 3 to CellId 5
+1.52 node 23 UE IMSI 10: previously connected to CellId 1 with RNTI 3, doing handover to CellId 5
+1.52 UE 10: sent measReport to CellId 1
+1.52 node 23 UE IMSI 10: successful handover to CellId 5 with RNTI 8
+1.52 node 4 eNB CellId 5: completed handover of UE with IMSI 10 RNTI 8
+1.52 UE 10: sent measReport to CellId 5
+1.53 UE 3: sent measReport to CellId 10
+1.55 UE 10: sent measReport to CellId 5
+1.55 UE 12: sent measReport to CellId 5
+1.55 UE 15: sent measReport to CellId 9
+1.56 UE 9: sent measReport to CellId 9
+1.64 UE 5: sent measReport to CellId 1
+1.65 UE 14: sent measReport to CellId 6
+1.65 UE 6: sent measReport to CellId 5
+1.66 UE 8: sent measReport to CellId 9
+1.67 UE 15: sent measReport to CellId 9
+1.68 UE 4: sent measReport to CellId 6
+1.69 UE 11: sent measReport to CellId 6
+1.7 UE 9: sent measReport to CellId 9
+1.7 UE 2: sent measReport to CellId 5
+1.85 UE 16: sent measReport to CellId 5
+1.87 UE 1: sent measReport to CellId 8
+1.87 UE 7: sent measReport to CellId 10
+1.9 UE 12: sent measReport to CellId 5
+1.91 UE 3: sent measReport to CellId 10
+1.97 UE 8: sent measReport to CellId 9
+2 UE 10: sent measReport to CellId 5
+2.03 UE 12: sent measReport to CellId 5
+2.03 UE 15: sent measReport to CellId 9
+2.04 UE 9: sent measReport to CellId 9
+2.12 UE 5: sent measReport to CellId 1
+2.13 UE 14: sent measReport to CellId 6
+2.13 UE 6: sent measReport to CellId 5
+2.16 UE 4: sent measReport to CellId 6
+2.17 UE 11: sent measReport to CellId 6
+2.18 UE 2: sent measReport to CellId 5
+2.33 UE 6: sent measReport to CellId 5
+2.33 UE 16: sent measReport to CellId 5
+2.34 UE 11: sent measReport to CellId 6
+2.35 UE 1: sent measReport to CellId 8
+2.35 UE 2: sent measReport to CellId 5
+2.35 UE 7: sent measReport to CellId 10
+2.39 UE 13: sent measReport to CellId 5
+2.39 UE 3: sent measReport to CellId 10
+2.45 UE 8: sent measReport to CellId 9
+2.48 UE 10: sent measReport to CellId 5
+2.5 node 27 UE IMSI 14: connected to CellId 9 with RNTI 10
+2.5 node 8 eNB CellId 9: successful connection of UE with IMSI 14 RNTI 10
+2.5 UE 14: sent measReport to CellId 9
+2.51 UE 12: sent measReport to CellId 5
+2.51 UE 15: sent measReport to CellId 9
+2.52 UE 4: sent measReport to CellId 6
+2.52 UE 9: sent measReport to CellId 9
+2.55 UE 3: sent measReport to CellId 10
+2.57 UE 10: sent measReport to CellId 5
+2.6 UE 5: sent measReport to CellId 1
+2.61 UE 6: sent measReport to CellId 5
+2.64 UE 4: sent measReport to CellId 6
+2.65 UE 11: sent measReport to CellId 6
+2.66 UE 2: sent measReport to CellId 5
+2.68 UE 8: sent measReport to CellId 9
+2.69 UE 15: sent measReport to CellId 9
+2.73 UE 9: sent measReport to CellId 9
+2.81 UE 16: sent measReport to CellId 5
+2.83 UE 1: sent measReport to CellId 8
+2.83 UE 7: sent measReport to CellId 10
+2.87 UE 13: sent measReport to CellId 5
+2.87 UE 3: sent measReport to CellId 10
+2.93 UE 12: sent measReport to CellId 5
+2.93 UE 8: sent measReport to CellId 9
+2.96 UE 10: sent measReport to CellId 5
+2.98 UE 14: sent measReport to CellId 9
+2.99 UE 12: sent measReport to CellId 5
+2.99 UE 15: sent measReport to CellId 9
+3 UE 9: sent measReport to CellId 9
+3.08 UE 5: sent measReport to CellId 1
+3.09 UE 6: sent measReport to CellId 5
+3.12 UE 4: sent measReport to CellId 6
+3.14 UE 2: sent measReport to CellId 5
+3.29 UE 16: sent measReport to CellId 5
+3.31 UE 1: sent measReport to CellId 8
+3.31 UE 7: sent measReport to CellId 10
+3.35 UE 13: sent measReport to CellId 5
+3.35 UE 6: sent measReport to CellId 5
+3.35 UE 3: sent measReport to CellId 10
+3.37 UE 11: sent measReport to CellId 6
+3.37 UE 2: sent measReport to CellId 5
+3.41 UE 8: sent measReport to CellId 9
+3.44 UE 10: sent measReport to CellId 5
+3.46 UE 14: sent measReport to CellId 9
+3.47 UE 12: sent measReport to CellId 5
+3.47 UE 15: sent measReport to CellId 9
+3.48 UE 9: sent measReport to CellId 9
+3.55 UE 4: sent measReport to CellId 6
+3.56 UE 5: sent measReport to CellId 1
+3.57 UE 6: sent measReport to CellId 5
+3.58 UE 3: sent measReport to CellId 10
+3.6 UE 10: sent measReport to CellId 5
+3.6 UE 4: sent measReport to CellId 6
+3.62 UE 2: sent measReport to CellId 5
+3.71 UE 8: sent measReport to CellId 9
+3.72 UE 15: sent measReport to CellId 9
+3.75 UE 9: sent measReport to CellId 9
+3.77 UE 16: sent measReport to CellId 5
+3.79 UE 1: sent measReport to CellId 8
+3.79 UE 7: sent measReport to CellId 10
+3.83 UE 13: sent measReport to CellId 5
+3.83 UE 3: sent measReport to CellId 10
+3.89 UE 8: sent measReport to CellId 9
+3.92 UE 10: sent measReport to CellId 5
+3.94 UE 14: sent measReport to CellId 9
+3.95 UE 12: sent measReport to CellId 5
+3.95 UE 12: sent measReport to CellId 5
+3.95 UE 15: sent measReport to CellId 9
+3.96 UE 9: sent measReport to CellId 9
+4.04 UE 5: sent measReport to CellId 1
+4.05 UE 6: sent measReport to CellId 5
+4.08 UE 4: sent measReport to CellId 6
+4.1 UE 2: sent measReport to CellId 5
+4.25 UE 16: sent measReport to CellId 5
+4.27 UE 1: sent measReport to CellId 8
+4.27 UE 7: sent measReport to CellId 10
+4.31 UE 13: sent measReport to CellId 5
+4.31 UE 3: sent measReport to CellId 10
+4.37 UE 8: sent measReport to CellId 9
+4.38 UE 6: sent measReport to CellId 5
+4.39 UE 11: sent measReport to CellId 6
+4.4 UE 2: sent measReport to CellId 5
+4.4 UE 10: sent measReport to CellId 5
+4.42 UE 14: sent measReport to CellId 9
+4.43 UE 12: sent measReport to CellId 5
+4.43 UE 15: sent measReport to CellId 9
+4.44 UE 9: sent measReport to CellId 9
+4.52 UE 5: sent measReport to CellId 1
+4.53 UE 6: sent measReport to CellId 5
+4.56 UE 4: sent measReport to CellId 6
+4.57 UE 4: sent measReport to CellId 6
+4.58 UE 2: sent measReport to CellId 5
+4.6 UE 3: sent measReport to CellId 10
+4.62 UE 10: sent measReport to CellId 5
+4.73 UE 16: sent measReport to CellId 5
+4.73 UE 8: sent measReport to CellId 9
+4.74 UE 15: sent measReport to CellId 9
+4.75 UE 1: sent measReport to CellId 8
+4.75 UE 7: sent measReport to CellId 10
+4.77 UE 9: sent measReport to CellId 9
+4.79 UE 13: sent measReport to CellId 5
+4.79 UE 3: sent measReport to CellId 10
+4.85 UE 8: sent measReport to CellId 9
+4.88 UE 10: sent measReport to CellId 5
+4.9 UE 14: sent measReport to CellId 9
+4.91 UE 12: sent measReport to CellId 5
+4.91 UE 15: sent measReport to CellId 9
+4.92 UE 9: sent measReport to CellId 9
+4.97 UE 12: sent measReport to CellId 5
+5 UE 5: sent measReport to CellId 1
+5.01 UE 6: sent measReport to CellId 5
+5.04 UE 4: sent measReport to CellId 6
+5.06 UE 2: sent measReport to CellId 5
+5.21 UE 16: sent measReport to CellId 5
+5.23 UE 1: sent measReport to CellId 8
+5.23 UE 7: sent measReport to CellId 10
+5.27 UE 13: sent measReport to CellId 5
+5.27 UE 3: sent measReport to CellId 10
+5.33 UE 8: sent measReport to CellId 9
+5.36 UE 10: sent measReport to CellId 5
+5.38 UE 14: sent measReport to CellId 9
+5.39 UE 12: sent measReport to CellId 5
+5.39 UE 15: sent measReport to CellId 9
+5.4 UE 6: sent measReport to CellId 5
+5.4 UE 9: sent measReport to CellId 9
+5.41 UE 11: sent measReport to CellId 6
+5.42 UE 2: sent measReport to CellId 5
+5.48 UE 5: sent measReport to CellId 1
+5.49 UE 6: sent measReport to CellId 5
+5.52 UE 4: sent measReport to CellId 6
+5.54 UE 2: sent measReport to CellId 5
+5.57 UE 11: sent measReport to CellId 6
+5.59 UE 4: sent measReport to CellId 6
+5.63 UE 3: sent measReport to CellId 10
+5.65 UE 10: sent measReport to CellId 5
+5.69 UE 16: sent measReport to CellId 5
+5.71 UE 1: sent measReport to CellId 8
+5.71 UE 7: sent measReport to CellId 10
+5.75 UE 13: sent measReport to CellId 5
+5.75 UE 3: sent measReport to CellId 10
+5.76 UE 8: sent measReport to CellId 9
+5.78 node 28 UE IMSI 15: connected to CellId 6 with RNTI 6
+5.78 node 5 eNB CellId 6: successful connection of UE with IMSI 15 RNTI 6
+5.78 UE 15: sent measReport to CellId 6
+5.8 UE 9: sent measReport to CellId 9
+5.81 UE 8: sent measReport to CellId 9
+5.84 UE 10: sent measReport to CellId 5
+5.86 UE 14: sent measReport to CellId 9
+5.87 UE 12: sent measReport to CellId 5
+5.88 UE 9: sent measReport to CellId 9
+5.96 UE 5: sent measReport to CellId 1
+5.97 UE 6: sent measReport to CellId 5
+6 UE 12: sent measReport to CellId 5
+6 UE 4: sent measReport to CellId 6
+6.02 UE 2: sent measReport to CellId 5
+6.05 UE 11: sent measReport to CellId 6
+6.17 UE 16: sent measReport to CellId 5
+6.19 UE 1: sent measReport to CellId 8
+6.19 UE 7: sent measReport to CellId 10
+6.23 UE 13: sent measReport to CellId 5
+6.23 UE 3: sent measReport to CellId 10
+6.26 UE 15: sent measReport to CellId 6
+6.29 UE 8: sent measReport to CellId 9
+6.32 UE 10: sent measReport to CellId 5
+6.34 UE 14: sent measReport to CellId 9
+6.35 UE 12: sent measReport to CellId 5
+6.36 UE 9: sent measReport to CellId 9
+6.42 UE 6: sent measReport to CellId 5
+6.44 UE 11: sent measReport to CellId 6
+6.44 UE 5: sent measReport to CellId 1
+6.44 UE 2: sent measReport to CellId 5
+6.45 UE 6: sent measReport to CellId 5
+6.48 UE 4: sent measReport to CellId 6
+6.5 UE 2: sent measReport to CellId 5
+6.53 UE 11: sent measReport to CellId 6
+6.62 UE 4: sent measReport to CellId 6
+6.65 UE 16: sent measReport to CellId 5
+6.65 UE 3: sent measReport to CellId 10
+6.67 UE 1: sent measReport to CellId 8
+6.67 UE 10: sent measReport to CellId 5
+6.67 UE 7: sent measReport to CellId 10
+6.71 UE 13: sent measReport to CellId 5
+6.71 UE 3: sent measReport to CellId 10
+6.74 UE 15: sent measReport to CellId 6
+6.77 UE 8: sent measReport to CellId 9
+6.78 UE 8: sent measReport to CellId 9
+6.8 UE 10: sent measReport to CellId 5
+6.82 UE 14: sent measReport to CellId 9
+6.82 UE 9: sent measReport to CellId 9
+6.83 UE 12: sent measReport to CellId 5
+6.84 UE 9: sent measReport to CellId 9
+6.92 UE 5: sent measReport to CellId 1
+6.93 UE 6: sent measReport to CellId 5
+6.96 UE 4: sent measReport to CellId 6
+6.98 UE 2: sent measReport to CellId 5
+7.01 UE 11: sent measReport to CellId 6
+7.02 UE 12: sent measReport to CellId 5
+7.13 UE 16: sent measReport to CellId 5
+7.15 UE 1: sent measReport to CellId 8
+7.15 UE 7: sent measReport to CellId 10
+7.19 UE 13: sent measReport to CellId 5
+7.19 UE 3: sent measReport to CellId 10
+7.22 UE 15: sent measReport to CellId 6
+7.25 UE 8: sent measReport to CellId 9
+7.28 UE 10: sent measReport to CellId 5
+7.3 UE 14: sent measReport to CellId 9
+7.31 UE 12: sent measReport to CellId 5
+7.32 UE 9: sent measReport to CellId 9
+7.4 UE 5: sent measReport to CellId 1
+7.41 UE 6: sent measReport to CellId 5
+7.44 UE 4: sent measReport to CellId 6
+7.45 UE 6: sent measReport to CellId 5
+7.46 UE 11: sent measReport to CellId 6
+7.46 UE 2: sent measReport to CellId 5
+7.47 UE 2: sent measReport to CellId 5
+7.49 UE 11: sent measReport to CellId 6
+7.61 UE 16: sent measReport to CellId 5
+7.63 UE 1: sent measReport to CellId 8
+7.63 UE 7: sent measReport to CellId 10
+7.64 UE 4: sent measReport to CellId 6
+7.67 UE 13: sent measReport to CellId 5
+7.67 UE 3: sent measReport to CellId 10
+7.67 UE 3: sent measReport to CellId 10
+7.69 UE 10: sent measReport to CellId 5
+7.7 UE 15: sent measReport to CellId 6
+7.76 UE 10: sent measReport to CellId 5
+7.78 UE 14: sent measReport to CellId 9
+7.79 UE 12: sent measReport to CellId 5
+7.8 UE 8: sent measReport to CellId 9
+7.8 UE 9: sent measReport to CellId 9
+7.85 UE 9: sent measReport to CellId 9
+7.88 UE 5: sent measReport to CellId 1
+7.89 UE 6: sent measReport to CellId 5
+7.92 UE 4: sent measReport to CellId 6
+7.97 UE 11: sent measReport to CellId 6
+8.05 UE 12: sent measReport to CellId 5
+8.09 UE 16: sent measReport to CellId 5
+8.11 UE 1: sent measReport to CellId 8
+8.11 UE 7: sent measReport to CellId 10
+8.15 UE 13: sent measReport to CellId 5
+8.15 UE 3: sent measReport to CellId 10
+8.18 UE 15: sent measReport to CellId 6
+8.24 UE 10: sent measReport to CellId 5
+8.26 UE 14: sent measReport to CellId 9
+8.27 UE 12: sent measReport to CellId 5
+8.28 UE 9: sent measReport to CellId 9
+8.36 UE 5: sent measReport to CellId 1
+8.37 UE 6: sent measReport to CellId 5
+8.4 UE 4: sent measReport to CellId 6
+8.45 UE 11: sent measReport to CellId 6
+8.47 UE 6: sent measReport to CellId 5
+8.49 UE 11: sent measReport to CellId 6
+8.49 UE 2: sent measReport to CellId 5
+8.53 UE 5: sent measReport to CellId 1
+8.53 node 0 eNB CellId 1: start handover of UE with IMSI 5 RNTI 2 to CellId 5
+8.53 node 18 UE IMSI 5: previously connected to CellId 1 with RNTI 2, doing handover to CellId 5
+8.53 UE 5: sent measReport to CellId 1
+8.53 node 18 UE IMSI 5: successful handover to CellId 5 with RNTI 9
+8.53 node 4 eNB CellId 5: completed handover of UE with IMSI 5 RNTI 9
+8.53 UE 5: sent measReport to CellId 5
+8.57 UE 16: sent measReport to CellId 5
+8.59 UE 1: sent measReport to CellId 8
+8.59 UE 7: sent measReport to CellId 10
+8.63 UE 13: sent measReport to CellId 5
+8.63 UE 3: sent measReport to CellId 10
+8.64 UE 5: sent measReport to CellId 5
+8.66 UE 15: sent measReport to CellId 6
+8.67 UE 4: sent measReport to CellId 6
+8.7 UE 3: sent measReport to CellId 10
+8.72 UE 10: sent measReport to CellId 5
+8.72 UE 10: sent measReport to CellId 5
+8.74 UE 14: sent measReport to CellId 9
+8.75 UE 12: sent measReport to CellId 5
+8.76 UE 9: sent measReport to CellId 9
+8.83 UE 8: sent measReport to CellId 9
+8.85 UE 6: sent measReport to CellId 5
+8.87 UE 9: sent measReport to CellId 9
+8.88 UE 4: sent measReport to CellId 6
+8.93 UE 11: sent measReport to CellId 6
+9.01 UE 5: sent measReport to CellId 5
+9.05 UE 16: sent measReport to CellId 5
+9.07 UE 1: sent measReport to CellId 8
+9.07 UE 12: sent measReport to CellId 5
+9.07 UE 7: sent measReport to CellId 10
+9.11 UE 13: sent measReport to CellId 5
+9.11 UE 3: sent measReport to CellId 10
+9.14 UE 15: sent measReport to CellId 6
+9.2 UE 10: sent measReport to CellId 5
+9.22 UE 14: sent measReport to CellId 9
+9.23 UE 12: sent measReport to CellId 5
+9.24 UE 9: sent measReport to CellId 9
+9.33 UE 6: sent measReport to CellId 5
+9.36 UE 4: sent measReport to CellId 6
+9.41 UE 11: sent measReport to CellId 6
+9.49 UE 5: sent measReport to CellId 5
+9.5 UE 6: sent measReport to CellId 5
+9.51 UE 11: sent measReport to CellId 6
+9.52 UE 2: sent measReport to CellId 5
+9.53 UE 16: sent measReport to CellId 5
+9.55 UE 1: sent measReport to CellId 8
+9.55 UE 7: sent measReport to CellId 10
+9.59 UE 13: sent measReport to CellId 5
+9.59 UE 3: sent measReport to CellId 10
+9.62 UE 15: sent measReport to CellId 6
+9.67 UE 5: sent measReport to CellId 5
+9.68 UE 10: sent measReport to CellId 5
+9.69 UE 4: sent measReport to CellId 6
+9.7 UE 14: sent measReport to CellId 9
+9.71 UE 12: sent measReport to CellId 5
+9.72 UE 3: sent measReport to CellId 10
+9.72 UE 9: sent measReport to CellId 9
+9.74 UE 10: sent measReport to CellId 5
+9.77 UE 2: sent measReport to CellId 5
+9.81 UE 6: sent measReport to CellId 5
+9.84 UE 4: sent measReport to CellId 6
+9.85 UE 8: sent measReport to CellId 9
+9.89 UE 11: sent measReport to CellId 6
+9.89 UE 9: sent measReport to CellId 9
+9.97 UE 5: sent measReport to CellId 5
+*** Simulation time: 10.0s
+10.009 UE 16: sent measReport to CellId 5
+10.026 UE 1: sent measReport to CellId 8
+10.031 UE 7: sent measReport to CellId 10
+10.071 UE 13: sent measReport to CellId 5
+10.073 UE 3: sent measReport to CellId 10
+10.094 UE 12: sent measReport to CellId 5
+10.101 UE 15: sent measReport to CellId 6
+10.163 UE 10: sent measReport to CellId 5
+10.181 UE 14: sent measReport to CellId 9
+10.192 UE 12: sent measReport to CellId 5
+10.204 UE 9: sent measReport to CellId 9
+10.246 UE 2: sent measReport to CellId 5
+10.288 UE 6: sent measReport to CellId 5
+10.323 UE 4: sent measReport to CellId 6
+10.371 UE 11: sent measReport to CellId 6
+10.451 UE 5: sent measReport to CellId 5
+10.489 UE 16: sent measReport to CellId 5
+10.506 UE 1: sent measReport to CellId 8
+10.511 UE 7: sent measReport to CellId 10
+10.520 UE 6: sent measReport to CellId 5
+10.533 UE 11: sent measReport to CellId 6
+10.540 UE 2: sent measReport to CellId 5
+10.551 UE 13: sent measReport to CellId 5
+10.553 UE 3: sent measReport to CellId 10
+10.581 UE 15: sent measReport to CellId 6
+10.643 UE 10: sent measReport to CellId 5
+10.661 UE 14: sent measReport to CellId 9
+10.672 UE 12: sent measReport to CellId 5
+10.684 UE 9: sent measReport to CellId 9
+10.692 UE 5: sent measReport to CellId 5
+10.713 UE 4: sent measReport to CellId 6
+10.726 UE 2: sent measReport to CellId 5
+10.746 UE 3: sent measReport to CellId 10
+10.766 UE 10: sent measReport to CellId 5
+10.768 UE 6: sent measReport to CellId 5
+10.803 UE 4: sent measReport to CellId 6
+10.851 UE 11: sent measReport to CellId 6
+10.876 UE 8: sent measReport to CellId 9
+10.918 UE 9: sent measReport to CellId 9
+10.931 UE 5: sent measReport to CellId 5
+10.969 UE 16: sent measReport to CellId 5
+10.986 UE 1: sent measReport to CellId 8
+10.991 UE 7: sent measReport to CellId 10
+11.031 UE 13: sent measReport to CellId 5
+11.033 UE 3: sent measReport to CellId 10
+11.061 UE 15: sent measReport to CellId 6
+11.118 UE 12: sent measReport to CellId 5
+11.123 UE 10: sent measReport to CellId 5
+11.141 UE 14: sent measReport to CellId 9
+11.152 UE 12: sent measReport to CellId 5
+11.164 UE 9: sent measReport to CellId 9
+11.206 UE 2: sent measReport to CellId 5
+11.248 UE 6: sent measReport to CellId 5
+11.283 UE 4: sent measReport to CellId 6
+11.331 UE 11: sent measReport to CellId 6
+11.411 UE 5: sent measReport to CellId 5
+11.449 UE 16: sent measReport to CellId 5
+11.466 UE 1: sent measReport to CellId 8
+11.471 UE 7: sent measReport to CellId 10
+11.511 UE 13: sent measReport to CellId 5
+11.513 UE 3: sent measReport to CellId 10
+11.540 node 22 UE IMSI 9: connected to CellId 6 with RNTI 7
+11.540 node 5 eNB CellId 6: successful connection of UE with IMSI 9 RNTI 7
+11.541 UE 15: sent measReport to CellId 6
+11.541 UE 9: sent measReport to CellId 6
+11.544 UE 6: sent measReport to CellId 5
+11.557 UE 11: sent measReport to CellId 6
+11.564 UE 2: sent measReport to CellId 5
+11.603 UE 10: sent measReport to CellId 5
+11.621 UE 14: sent measReport to CellId 9
+11.632 UE 12: sent measReport to CellId 5
+11.686 UE 2: sent measReport to CellId 5
+11.716 UE 5: sent measReport to CellId 5
+11.728 UE 6: sent measReport to CellId 5
+11.737 UE 4: sent measReport to CellId 6
+11.763 UE 4: sent measReport to CellId 6
+11.770 UE 3: sent measReport to CellId 10
+11.790 UE 10: sent measReport to CellId 5
+11.811 UE 11: sent measReport to CellId 6
+11.891 UE 5: sent measReport to CellId 5
+11.900 UE 8: sent measReport to CellId 9
+11.929 UE 16: sent measReport to CellId 5
+11.946 UE 1: sent measReport to CellId 8
+11.951 UE 7: sent measReport to CellId 10
+11.991 UE 13: sent measReport to CellId 5
+11.993 UE 3: sent measReport to CellId 10
+12.020 node 25 UE IMSI 12: connected to CellId 2 with RNTI 2
+12.020 node 1 eNB CellId 2: successful connection of UE with IMSI 12 RNTI 2
+12.021 UE 15: sent measReport to CellId 6
+12.021 UE 9: sent measReport to CellId 6
+12.021 UE 12: sent measReport to CellId 2
+12.083 UE 10: sent measReport to CellId 5
+12.101 UE 14: sent measReport to CellId 9
+12.166 UE 2: sent measReport to CellId 5
+12.208 UE 6: sent measReport to CellId 5
+12.243 UE 4: sent measReport to CellId 6
+12.291 UE 11: sent measReport to CellId 6
+12.371 UE 5: sent measReport to CellId 5
+12.409 UE 16: sent measReport to CellId 5
+12.426 UE 1: sent measReport to CellId 8
+12.431 UE 7: sent measReport to CellId 10
+12.471 UE 13: sent measReport to CellId 5
+12.473 UE 3: sent measReport to CellId 10
+12.501 UE 15: sent measReport to CellId 6
+12.501 UE 9: sent measReport to CellId 6
+12.501 UE 12: sent measReport to CellId 2
+12.563 UE 10: sent measReport to CellId 5
+12.568 UE 6: sent measReport to CellId 5
+12.581 UE 11: sent measReport to CellId 6
+12.581 UE 14: sent measReport to CellId 9
+12.588 UE 2: sent measReport to CellId 5
+12.646 UE 2: sent measReport to CellId 5
+12.688 UE 6: sent measReport to CellId 5
+12.723 UE 4: sent measReport to CellId 6
+12.740 UE 5: sent measReport to CellId 5
+12.761 UE 4: sent measReport to CellId 6
+12.771 UE 11: sent measReport to CellId 6
+12.791 UE 8: sent measReport to CellId 9
+12.794 UE 3: sent measReport to CellId 10
+12.814 UE 10: sent measReport to CellId 5
+12.851 UE 5: sent measReport to CellId 5
+12.889 UE 16: sent measReport to CellId 5
+12.906 UE 1: sent measReport to CellId 8
+12.911 UE 7: sent measReport to CellId 10
+12.924 UE 8: sent measReport to CellId 9
+12.951 UE 13: sent measReport to CellId 5
+12.953 UE 3: sent measReport to CellId 10
+12.981 UE 15: sent measReport to CellId 6
+12.981 UE 9: sent measReport to CellId 6
+12.981 UE 12: sent measReport to CellId 2
+13.043 UE 10: sent measReport to CellId 5
+13.061 UE 14: sent measReport to CellId 9
+13.126 UE 2: sent measReport to CellId 5
+13.168 UE 6: sent measReport to CellId 5
+13.203 UE 4: sent measReport to CellId 6
+13.251 UE 11: sent measReport to CellId 6
+13.271 UE 8: sent measReport to CellId 9
+13.331 UE 5: sent measReport to CellId 5
+13.369 UE 16: sent measReport to CellId 5
+13.386 UE 1: sent measReport to CellId 8
+13.391 UE 7: sent measReport to CellId 10
+13.431 UE 13: sent measReport to CellId 5
+13.433 UE 3: sent measReport to CellId 10
+13.461 UE 15: sent measReport to CellId 6
+13.461 UE 9: sent measReport to CellId 6
+13.461 UE 12: sent measReport to CellId 2
+13.523 UE 10: sent measReport to CellId 5
+13.541 UE 14: sent measReport to CellId 9
+13.592 UE 6: sent measReport to CellId 5
+13.605 UE 11: sent measReport to CellId 6
+13.606 UE 2: sent measReport to CellId 5
+13.612 UE 2: sent measReport to CellId 5
+13.648 UE 6: sent measReport to CellId 5
+13.683 UE 4: sent measReport to CellId 6
+13.731 UE 11: sent measReport to CellId 6
+13.751 UE 8: sent measReport to CellId 9
+13.764 UE 5: sent measReport to CellId 5
+13.785 UE 4: sent measReport to CellId 6
+13.811 UE 5: sent measReport to CellId 5
+13.818 UE 3: sent measReport to CellId 10
+13.838 UE 10: sent measReport to CellId 5
+13.849 UE 16: sent measReport to CellId 5
+13.866 UE 1: sent measReport to CellId 8
+13.871 UE 7: sent measReport to CellId 10
+13.911 UE 13: sent measReport to CellId 5
+13.913 UE 3: sent measReport to CellId 10
+13.941 UE 15: sent measReport to CellId 6
+13.941 UE 9: sent measReport to CellId 6
+13.941 UE 12: sent measReport to CellId 2
+13.948 UE 8: sent measReport to CellId 9
+14.003 UE 10: sent measReport to CellId 5
+14.021 UE 14: sent measReport to CellId 9
+14.086 UE 2: sent measReport to CellId 5
+14.128 UE 6: sent measReport to CellId 5
+14.163 UE 4: sent measReport to CellId 6
+14.211 UE 11: sent measReport to CellId 6
+14.231 UE 8: sent measReport to CellId 9
+14.291 UE 5: sent measReport to CellId 5
+14.329 UE 16: sent measReport to CellId 5
+14.346 UE 1: sent measReport to CellId 8
+14.351 UE 7: sent measReport to CellId 10
+14.391 UE 13: sent measReport to CellId 5
+14.393 UE 3: sent measReport to CellId 10
+14.421 UE 15: sent measReport to CellId 6
+14.421 UE 9: sent measReport to CellId 6
+14.421 UE 12: sent measReport to CellId 2
+14.483 UE 10: sent measReport to CellId 5
+14.501 UE 14: sent measReport to CellId 9
+14.566 UE 2: sent measReport to CellId 5
+14.608 UE 6: sent measReport to CellId 5
+14.616 UE 6: sent measReport to CellId 5
+14.629 UE 11: sent measReport to CellId 6
+14.636 UE 2: sent measReport to CellId 5
+14.643 UE 4: sent measReport to CellId 6
+14.691 UE 11: sent measReport to CellId 6
+14.711 UE 8: sent measReport to CellId 9
+14.771 UE 5: sent measReport to CellId 5
+14.788 UE 5: sent measReport to CellId 5
+14.809 UE 4: sent measReport to CellId 6
+14.809 UE 16: sent measReport to CellId 5
+14.826 UE 1: sent measReport to CellId 8
+14.831 UE 7: sent measReport to CellId 10
+14.842 UE 3: sent measReport to CellId 10
+14.862 UE 10: sent measReport to CellId 5
+14.871 UE 13: sent measReport to CellId 5
+14.873 UE 3: sent measReport to CellId 10
+14.901 UE 15: sent measReport to CellId 6
+14.901 UE 9: sent measReport to CellId 6
+14.901 UE 12: sent measReport to CellId 2
+14.963 UE 10: sent measReport to CellId 5
+14.972 UE 8: sent measReport to CellId 9
+14.981 UE 14: sent measReport to CellId 9
+15.046 UE 2: sent measReport to CellId 5
+15.088 UE 6: sent measReport to CellId 5
+15.123 UE 4: sent measReport to CellId 6
+15.171 UE 11: sent measReport to CellId 6
+15.191 UE 8: sent measReport to CellId 9
+15.251 UE 5: sent measReport to CellId 5
+15.289 UE 16: sent measReport to CellId 5
+15.306 UE 1: sent measReport to CellId 8
+15.311 UE 7: sent measReport to CellId 10
+15.351 UE 13: sent measReport to CellId 5
+15.353 UE 3: sent measReport to CellId 10
+15.381 UE 15: sent measReport to CellId 6
+15.381 UE 9: sent measReport to CellId 6
+15.381 UE 12: sent measReport to CellId 2
+15.443 UE 10: sent measReport to CellId 5
+15.461 UE 14: sent measReport to CellId 9
+15.526 UE 2: sent measReport to CellId 5
+15.568 UE 6: sent measReport to CellId 5
+15.603 UE 4: sent measReport to CellId 6
+15.640 UE 6: sent measReport to CellId 5
+15.651 UE 11: sent measReport to CellId 6
+15.653 UE 11: sent measReport to CellId 6
+15.660 UE 2: sent measReport to CellId 5
+15.671 UE 8: sent measReport to CellId 9
+15.731 UE 5: sent measReport to CellId 5
+15.769 UE 16: sent measReport to CellId 5
+15.786 UE 1: sent measReport to CellId 8
+15.791 UE 7: sent measReport to CellId 10
+15.812 UE 5: sent measReport to CellId 5
+15.831 UE 13: sent measReport to CellId 5
+15.833 UE 4: sent measReport to CellId 6
+15.833 UE 3: sent measReport to CellId 10
+15.861 UE 15: sent measReport to CellId 6
+15.861 UE 9: sent measReport to CellId 6
+15.861 UE 12: sent measReport to CellId 2
+15.866 UE 3: sent measReport to CellId 10
+15.886 UE 10: sent measReport to CellId 5
+15.923 UE 10: sent measReport to CellId 5
+15.941 UE 14: sent measReport to CellId 9
+15.996 UE 8: sent measReport to CellId 9
+16.006 UE 2: sent measReport to CellId 5
+16.048 UE 6: sent measReport to CellId 5
+16.083 UE 4: sent measReport to CellId 6
+16.131 UE 11: sent measReport to CellId 6
+16.151 UE 8: sent measReport to CellId 9
+16.180 node 27 UE IMSI 14: connected to CellId 8 with RNTI 3
+16.180 node 7 eNB CellId 8: successful connection of UE with IMSI 14 RNTI 3
+16.181 UE 14: sent measReport to CellId 8
+16.211 UE 5: sent measReport to CellId 5
+16.249 UE 16: sent measReport to CellId 5
+16.260 node 17 UE IMSI 4: connected to CellId 10 with RNTI 7
+16.260 node 9 eNB CellId 10: successful connection of UE with IMSI 4 RNTI 7
+16.261 UE 4: sent measReport to CellId 10
+16.266 UE 1: sent measReport to CellId 8
+16.271 UE 7: sent measReport to CellId 10
+16.311 UE 13: sent measReport to CellId 5
+16.313 UE 3: sent measReport to CellId 10
+16.341 UE 15: sent measReport to CellId 6
+16.341 UE 9: sent measReport to CellId 6
+16.341 UE 12: sent measReport to CellId 2
+16.403 UE 10: sent measReport to CellId 5
+16.486 UE 2: sent measReport to CellId 5
+16.528 UE 6: sent measReport to CellId 5
+16.611 UE 11: sent measReport to CellId 6
+16.631 UE 8: sent measReport to CellId 9
+16.661 UE 14: sent measReport to CellId 8
+16.664 UE 6: sent measReport to CellId 5
+16.677 UE 11: sent measReport to CellId 6
+16.684 UE 2: sent measReport to CellId 5
+16.691 UE 5: sent measReport to CellId 5
+16.729 UE 16: sent measReport to CellId 5
+16.741 UE 4: sent measReport to CellId 10
+16.746 UE 1: sent measReport to CellId 8
+16.751 UE 7: sent measReport to CellId 10
+16.791 UE 13: sent measReport to CellId 5
+16.793 UE 3: sent measReport to CellId 10
+16.821 UE 15: sent measReport to CellId 6
+16.821 UE 9: sent measReport to CellId 6
+16.821 UE 12: sent measReport to CellId 2
+16.836 UE 5: sent measReport to CellId 5
+16.883 UE 10: sent measReport to CellId 5
+16.890 UE 3: sent measReport to CellId 10
+16.910 UE 10: sent measReport to CellId 5
+16.966 UE 2: sent measReport to CellId 5
+17.008 UE 6: sent measReport to CellId 5
+17.020 UE 8: sent measReport to CellId 9
+17.091 UE 11: sent measReport to CellId 6
+17.111 UE 8: sent measReport to CellId 9
+17.141 UE 14: sent measReport to CellId 8
+17.171 UE 5: sent measReport to CellId 5
+17.209 UE 16: sent measReport to CellId 5
+17.221 UE 4: sent measReport to CellId 10
+17.226 UE 1: sent measReport to CellId 8
+17.231 UE 7: sent measReport to CellId 10
+17.271 UE 13: sent measReport to CellId 5
+17.273 UE 3: sent measReport to CellId 10
+17.301 UE 15: sent measReport to CellId 6
+17.301 UE 9: sent measReport to CellId 6
+17.301 UE 12: sent measReport to CellId 2
+17.363 UE 10: sent measReport to CellId 5
+17.446 UE 2: sent measReport to CellId 5
+17.488 UE 6: sent measReport to CellId 5
+17.571 UE 11: sent measReport to CellId 6
+17.591 UE 8: sent measReport to CellId 9
+17.621 UE 14: sent measReport to CellId 8
+17.651 UE 5: sent measReport to CellId 5
+17.688 UE 6: sent measReport to CellId 5
+17.689 UE 16: sent measReport to CellId 5
+17.701 UE 4: sent measReport to CellId 10
+17.706 UE 1: sent measReport to CellId 8
+17.708 UE 2: sent measReport to CellId 5
+17.711 UE 7: sent measReport to CellId 10
+17.751 UE 13: sent measReport to CellId 5
+17.753 UE 3: sent measReport to CellId 10
+17.780 node 24 UE IMSI 11: connected to CellId 5 with RNTI 10
+17.780 node 4 eNB CellId 5: successful connection of UE with IMSI 11 RNTI 10
+17.781 UE 15: sent measReport to CellId 6
+17.781 UE 9: sent measReport to CellId 6
+17.781 UE 12: sent measReport to CellId 2
+17.781 UE 11: sent measReport to CellId 5
+17.843 UE 10: sent measReport to CellId 5
+17.860 UE 5: sent measReport to CellId 5
+17.914 UE 3: sent measReport to CellId 10
+17.926 UE 2: sent measReport to CellId 5
+17.934 UE 10: sent measReport to CellId 5
+17.968 UE 6: sent measReport to CellId 5
+18.044 UE 8: sent measReport to CellId 9
+18.071 UE 8: sent measReport to CellId 9
+18.101 UE 14: sent measReport to CellId 8
+18.131 UE 5: sent measReport to CellId 5
+18.169 UE 16: sent measReport to CellId 5
+18.181 UE 4: sent measReport to CellId 10
+18.186 UE 1: sent measReport to CellId 8
+18.191 UE 7: sent measReport to CellId 10
+18.231 UE 13: sent measReport to CellId 5
+18.233 UE 3: sent measReport to CellId 10
+18.261 UE 15: sent measReport to CellId 6
+18.261 UE 9: sent measReport to CellId 6
+18.261 UE 12: sent measReport to CellId 2
+18.261 UE 11: sent measReport to CellId 5
+18.323 UE 10: sent measReport to CellId 5
+18.406 UE 2: sent measReport to CellId 5
+18.448 UE 6: sent measReport to CellId 5
+18.551 UE 8: sent measReport to CellId 9
+18.581 UE 14: sent measReport to CellId 8
+18.611 UE 5: sent measReport to CellId 5
+18.649 UE 16: sent measReport to CellId 5
+18.661 UE 4: sent measReport to CellId 10
+18.666 UE 1: sent measReport to CellId 8
+18.671 UE 7: sent measReport to CellId 10
+18.711 UE 13: sent measReport to CellId 5
+18.712 UE 6: sent measReport to CellId 5
+18.713 UE 3: sent measReport to CellId 10
+18.732 UE 2: sent measReport to CellId 5
+18.741 UE 15: sent measReport to CellId 6
+18.741 UE 9: sent measReport to CellId 6
+18.741 UE 12: sent measReport to CellId 2
+18.741 UE 11: sent measReport to CellId 5
+18.803 UE 10: sent measReport to CellId 5
+18.884 UE 5: sent measReport to CellId 5
+18.886 UE 2: sent measReport to CellId 5
+18.928 UE 6: sent measReport to CellId 5
+18.938 UE 3: sent measReport to CellId 10
+18.958 UE 10: sent measReport to CellId 5
+19.031 UE 8: sent measReport to CellId 9
+19.061 UE 14: sent measReport to CellId 8
+19.068 UE 8: sent measReport to CellId 9
+19.091 UE 5: sent measReport to CellId 5
+19.129 UE 16: sent measReport to CellId 5
+19.141 UE 4: sent measReport to CellId 10
+19.146 UE 1: sent measReport to CellId 8
+19.151 UE 7: sent measReport to CellId 10
+19.191 UE 13: sent measReport to CellId 5
+19.193 UE 3: sent measReport to CellId 10
+19.221 UE 15: sent measReport to CellId 6
+19.221 UE 9: sent measReport to CellId 6
+19.221 UE 12: sent measReport to CellId 2
+19.221 UE 11: sent measReport to CellId 5
+19.283 UE 10: sent measReport to CellId 5
+19.366 UE 2: sent measReport to CellId 5
+19.408 UE 6: sent measReport to CellId 5
+19.431 UE 7: sent measReport to CellId 10
+19.431 node 9 eNB CellId 10: start handover of UE with IMSI 7 RNTI 3 to CellId 6
+19.431 node 20 UE IMSI 7: previously connected to CellId 10 with RNTI 3, doing handover to CellId 6
+19.432 UE 7: sent measReport to CellId 10
+19.435 node 20 UE IMSI 7: successful handover to CellId 6 with RNTI 8
+19.435 node 5 eNB CellId 6: completed handover of UE with IMSI 7 RNTI 8
+19.436 UE 7: sent measReport to CellId 6
+19.511 UE 8: sent measReport to CellId 9
+19.541 UE 14: sent measReport to CellId 8
+19.571 UE 5: sent measReport to CellId 5
+19.609 UE 16: sent measReport to CellId 5
+19.621 UE 4: sent measReport to CellId 10
+19.626 UE 1: sent measReport to CellId 8
+19.671 UE 13: sent measReport to CellId 5
+19.673 UE 3: sent measReport to CellId 10
+19.701 UE 15: sent measReport to CellId 6
+19.701 UE 9: sent measReport to CellId 6
+19.701 UE 12: sent measReport to CellId 2
+19.701 UE 11: sent measReport to CellId 5
+19.706 UE 7: sent measReport to CellId 6
+19.736 UE 6: sent measReport to CellId 5
+19.756 UE 2: sent measReport to CellId 5
+19.763 UE 10: sent measReport to CellId 5
+19.846 UE 2: sent measReport to CellId 5
+19.888 UE 6: sent measReport to CellId 5
+19.908 UE 5: sent measReport to CellId 5
+19.916 UE 7: sent measReport to CellId 6
+19.962 UE 3: sent measReport to CellId 10
+19.982 UE 10: sent measReport to CellId 5
+19.991 UE 8: sent measReport to CellId 9
+*** Simulation time: 20.0s
+20.021 UE 14: sent measReport to CellId 8
+20.051 UE 5: sent measReport to CellId 5
+20.089 UE 16: sent measReport to CellId 5
+20.092 UE 8: sent measReport to CellId 9
+20.101 UE 4: sent measReport to CellId 10
+20.106 UE 1: sent measReport to CellId 8
+20.151 UE 13: sent measReport to CellId 5
+20.153 UE 3: sent measReport to CellId 10
+20.181 UE 15: sent measReport to CellId 6
+20.181 UE 9: sent measReport to CellId 6
+20.181 UE 12: sent measReport to CellId 2
+20.181 UE 11: sent measReport to CellId 5
+20.243 UE 10: sent measReport to CellId 5
+20.326 UE 2: sent measReport to CellId 5
+20.368 UE 6: sent measReport to CellId 5
+20.396 UE 7: sent measReport to CellId 6
+20.471 UE 8: sent measReport to CellId 9
+20.501 UE 14: sent measReport to CellId 8
+20.531 UE 5: sent measReport to CellId 5
+20.569 UE 16: sent measReport to CellId 5
+20.581 UE 4: sent measReport to CellId 10
+20.586 UE 1: sent measReport to CellId 8
+20.631 UE 13: sent measReport to CellId 5
+20.633 UE 3: sent measReport to CellId 10
+20.661 UE 15: sent measReport to CellId 6
+20.661 UE 9: sent measReport to CellId 6
+20.661 UE 12: sent measReport to CellId 2
+20.661 UE 11: sent measReport to CellId 5
+20.723 UE 10: sent measReport to CellId 5
+20.730 UE 7: sent measReport to CellId 6
+20.760 UE 6: sent measReport to CellId 5
+20.780 UE 2: sent measReport to CellId 5
+20.806 UE 2: sent measReport to CellId 5
+20.848 UE 6: sent measReport to CellId 5
+20.876 UE 7: sent measReport to CellId 6
+20.932 UE 5: sent measReport to CellId 5
+20.951 UE 8: sent measReport to CellId 9
+20.981 UE 14: sent measReport to CellId 8
+20.986 UE 3: sent measReport to CellId 10
+21.006 UE 10: sent measReport to CellId 5
+21.011 UE 5: sent measReport to CellId 5
+21.049 UE 16: sent measReport to CellId 5
+21.061 UE 4: sent measReport to CellId 10
+21.066 UE 1: sent measReport to CellId 8
+21.111 UE 13: sent measReport to CellId 5
+21.113 UE 3: sent measReport to CellId 10
+21.116 UE 8: sent measReport to CellId 9
+21.141 UE 15: sent measReport to CellId 6
+21.141 UE 9: sent measReport to CellId 6
+21.141 UE 12: sent measReport to CellId 2
+21.141 UE 11: sent measReport to CellId 5
+21.203 UE 10: sent measReport to CellId 5
+21.286 UE 2: sent measReport to CellId 5
+21.300 node 19 UE IMSI 6: connected to CellId 8 with RNTI 4
+21.300 node 7 eNB CellId 8: successful connection of UE with IMSI 6 RNTI 4
+21.301 UE 6: sent measReport to CellId 8
+21.356 UE 7: sent measReport to CellId 6
+21.431 UE 8: sent measReport to CellId 9
+21.461 UE 14: sent measReport to CellId 8
+21.491 UE 5: sent measReport to CellId 5
+21.529 UE 16: sent measReport to CellId 5
+21.541 UE 4: sent measReport to CellId 10
+21.546 UE 1: sent measReport to CellId 8
+21.591 UE 13: sent measReport to CellId 5
+21.593 UE 3: sent measReport to CellId 10
+21.621 UE 15: sent measReport to CellId 6
+21.621 UE 9: sent measReport to CellId 6
+21.621 UE 12: sent measReport to CellId 2
+21.621 UE 11: sent measReport to CellId 5
+21.683 UE 10: sent measReport to CellId 5
+21.754 UE 7: sent measReport to CellId 6
+21.766 UE 2: sent measReport to CellId 5
+21.781 UE 6: sent measReport to CellId 8
+21.804 UE 2: sent measReport to CellId 5
+21.836 UE 7: sent measReport to CellId 6
+21.911 UE 8: sent measReport to CellId 9
+21.941 UE 14: sent measReport to CellId 8
+21.956 UE 5: sent measReport to CellId 5
+21.971 UE 5: sent measReport to CellId 5
+22.009 UE 16: sent measReport to CellId 5
+22.010 UE 3: sent measReport to CellId 10
+22.021 UE 4: sent measReport to CellId 10
+22.026 UE 1: sent measReport to CellId 8
+22.030 UE 10: sent measReport to CellId 5
+22.071 UE 13: sent measReport to CellId 5
+22.073 UE 3: sent measReport to CellId 10
+22.101 UE 15: sent measReport to CellId 6
+22.101 UE 9: sent measReport to CellId 6
+22.101 UE 12: sent measReport to CellId 2
+22.101 UE 11: sent measReport to CellId 5
+22.140 UE 8: sent measReport to CellId 9
+22.163 UE 10: sent measReport to CellId 5
+22.246 UE 2: sent measReport to CellId 5
+22.261 UE 6: sent measReport to CellId 8
+22.316 UE 7: sent measReport to CellId 6
+22.391 UE 8: sent measReport to CellId 9
+22.421 UE 14: sent measReport to CellId 8
+22.451 UE 5: sent measReport to CellId 5
+22.489 UE 16: sent measReport to CellId 5
+22.501 UE 4: sent measReport to CellId 10
+22.506 UE 1: sent measReport to CellId 8
+22.551 UE 13: sent measReport to CellId 5
+22.553 UE 3: sent measReport to CellId 10
+22.581 UE 15: sent measReport to CellId 6
+22.581 UE 9: sent measReport to CellId 6
+22.581 UE 12: sent measReport to CellId 2
+22.581 UE 11: sent measReport to CellId 5
+22.643 UE 10: sent measReport to CellId 5
+22.726 UE 2: sent measReport to CellId 5
+22.741 UE 6: sent measReport to CellId 8
+22.778 UE 7: sent measReport to CellId 6
+22.796 UE 7: sent measReport to CellId 6
+22.828 UE 2: sent measReport to CellId 5
+22.828 node 4 eNB CellId 5: start handover of UE with IMSI 2 RNTI 2 to CellId 6
+22.828 node 15 UE IMSI 2: previously connected to CellId 5 with RNTI 2, doing handover to CellId 6
+22.829 UE 2: sent measReport to CellId 5
+22.832 node 15 UE IMSI 2: successful handover to CellId 6 with RNTI 9
+22.832 node 5 eNB CellId 6: completed handover of UE with IMSI 2 RNTI 9
+22.833 UE 2: sent measReport to CellId 6
+22.871 UE 8: sent measReport to CellId 9
+22.891 UE 2: sent measReport to CellId 6
+22.901 UE 14: sent measReport to CellId 8
+22.931 UE 5: sent measReport to CellId 5
+22.969 UE 16: sent measReport to CellId 5
+22.980 UE 5: sent measReport to CellId 5
+22.981 UE 4: sent measReport to CellId 10
+22.986 UE 1: sent measReport to CellId 8
+23.031 UE 13: sent measReport to CellId 5
+23.033 UE 3: sent measReport to CellId 10
+23.034 UE 3: sent measReport to CellId 10
+23.054 UE 10: sent measReport to CellId 5
+23.061 UE 15: sent measReport to CellId 6
+23.061 UE 9: sent measReport to CellId 6
+23.061 UE 12: sent measReport to CellId 2
+23.061 UE 11: sent measReport to CellId 5
+23.123 UE 10: sent measReport to CellId 5
+23.164 UE 8: sent measReport to CellId 9
+23.221 UE 6: sent measReport to CellId 8
+23.276 UE 7: sent measReport to CellId 6
+23.313 UE 2: sent measReport to CellId 6
+23.351 UE 8: sent measReport to CellId 9
+23.381 UE 14: sent measReport to CellId 8
+23.411 UE 5: sent measReport to CellId 5
+23.449 UE 16: sent measReport to CellId 5
+23.461 UE 4: sent measReport to CellId 10
+23.466 UE 1: sent measReport to CellId 8
+23.511 UE 13: sent measReport to CellId 5
+23.513 UE 3: sent measReport to CellId 10
+23.541 UE 15: sent measReport to CellId 6
+23.541 UE 9: sent measReport to CellId 6
+23.541 UE 12: sent measReport to CellId 2
+23.541 UE 11: sent measReport to CellId 5
+23.603 UE 10: sent measReport to CellId 5
+23.701 UE 6: sent measReport to CellId 8
+23.756 UE 7: sent measReport to CellId 6
+23.793 UE 2: sent measReport to CellId 6
+23.802 UE 7: sent measReport to CellId 6
+23.831 UE 8: sent measReport to CellId 9
+23.891 UE 5: sent measReport to CellId 5
+23.915 UE 2: sent measReport to CellId 6
+23.929 UE 16: sent measReport to CellId 5
+23.941 UE 4: sent measReport to CellId 10
+23.946 UE 1: sent measReport to CellId 8
+23.976 UE 15: sent measReport to CellId 6
+23.976 node 5 eNB CellId 6: start handover of UE with IMSI 15 RNTI 6 to CellId 2
+23.976 node 28 UE IMSI 15: previously connected to CellId 6 with RNTI 6, doing handover to CellId 2
+23.977 UE 15: sent measReport to CellId 6
+23.980 node 28 UE IMSI 15: successful handover to CellId 2 with RNTI 3
+23.980 node 1 eNB CellId 2: completed handover of UE with IMSI 15 RNTI 3
+23.981 UE 15: sent measReport to CellId 2
+23.991 UE 13: sent measReport to CellId 5
+23.993 UE 3: sent measReport to CellId 10
+24.004 UE 5: sent measReport to CellId 5
+24.021 UE 9: sent measReport to CellId 6
+24.021 UE 12: sent measReport to CellId 2
+24.021 UE 11: sent measReport to CellId 5
+24.058 UE 3: sent measReport to CellId 10
+24.078 UE 10: sent measReport to CellId 5
+24.083 UE 10: sent measReport to CellId 5
+24.111 UE 15: sent measReport to CellId 2
+24.181 UE 6: sent measReport to CellId 8
+24.188 UE 8: sent measReport to CellId 9
+24.236 UE 7: sent measReport to CellId 6
+24.273 UE 2: sent measReport to CellId 6
+24.311 UE 8: sent measReport to CellId 9
+24.371 UE 5: sent measReport to CellId 5
+24.409 UE 16: sent measReport to CellId 5
+24.421 UE 4: sent measReport to CellId 10
+24.426 UE 1: sent measReport to CellId 8
+24.461 UE 15: sent measReport to CellId 2
+24.471 UE 13: sent measReport to CellId 5
+24.473 UE 3: sent measReport to CellId 10
+24.501 UE 9: sent measReport to CellId 6
+24.501 UE 12: sent measReport to CellId 2
+24.501 UE 11: sent measReport to CellId 5
+24.563 UE 10: sent measReport to CellId 5
+24.661 UE 6: sent measReport to CellId 8
+24.716 UE 7: sent measReport to CellId 6
+24.753 UE 2: sent measReport to CellId 6
+24.791 UE 8: sent measReport to CellId 9
+24.826 UE 7: sent measReport to CellId 6
+24.851 UE 5: sent measReport to CellId 5
+24.889 UE 16: sent measReport to CellId 5
+24.901 UE 4: sent measReport to CellId 10
+24.906 UE 1: sent measReport to CellId 8
+24.939 UE 2: sent measReport to CellId 6
+24.941 UE 15: sent measReport to CellId 2
+24.951 UE 13: sent measReport to CellId 5
+24.953 UE 3: sent measReport to CellId 10
+24.981 UE 9: sent measReport to CellId 6
+24.981 UE 12: sent measReport to CellId 2
+24.981 UE 11: sent measReport to CellId 5
+25.028 UE 5: sent measReport to CellId 5
+25.043 UE 10: sent measReport to CellId 5
+25.082 UE 3: sent measReport to CellId 10
+25.101 UE 1: sent measReport to CellId 8
+25.101 node 7 eNB CellId 8: start handover of UE with IMSI 1 RNTI 2 to CellId 5
+25.101 node 14 UE IMSI 1: previously connected to CellId 8 with RNTI 2, doing handover to CellId 5
+25.102 UE 10: sent measReport to CellId 5
+25.102 UE 1: sent measReport to CellId 8
+25.105 node 14 UE IMSI 1: successful handover to CellId 5 with RNTI 11
+25.105 node 4 eNB CellId 5: completed handover of UE with IMSI 1 RNTI 11
+25.106 UE 1: sent measReport to CellId 5
+25.135 UE 15: sent measReport to CellId 2
+25.141 UE 6: sent measReport to CellId 8
+25.196 UE 7: sent measReport to CellId 6
+25.212 UE 8: sent measReport to CellId 9
+25.233 UE 2: sent measReport to CellId 6
+25.271 UE 8: sent measReport to CellId 9
+25.331 UE 5: sent measReport to CellId 5
+25.369 UE 16: sent measReport to CellId 5
+25.381 UE 4: sent measReport to CellId 10
+25.421 UE 15: sent measReport to CellId 2
+25.431 UE 13: sent measReport to CellId 5
+25.433 UE 3: sent measReport to CellId 10
+25.461 UE 9: sent measReport to CellId 6
+25.461 UE 12: sent measReport to CellId 2
+25.461 UE 11: sent measReport to CellId 5
+25.523 UE 10: sent measReport to CellId 5
+25.586 UE 1: sent measReport to CellId 5
+25.621 UE 6: sent measReport to CellId 8
+25.676 UE 7: sent measReport to CellId 6
+25.713 UE 2: sent measReport to CellId 6
+25.751 UE 8: sent measReport to CellId 9
+25.780 node 29 UE IMSI 16: connected to CellId 6 with RNTI 10
+25.780 node 5 eNB CellId 6: successful connection of UE with IMSI 16 RNTI 10
+25.781 UE 16: sent measReport to CellId 6
+25.811 UE 5: sent measReport to CellId 5
+25.850 UE 7: sent measReport to CellId 6
+25.861 UE 4: sent measReport to CellId 10
+25.901 UE 15: sent measReport to CellId 2
+25.911 UE 13: sent measReport to CellId 5
+25.913 UE 3: sent measReport to CellId 10
+25.940 node 23 UE IMSI 10: connected to CellId 8 with RNTI 5
+25.940 node 7 eNB CellId 8: successful connection of UE with IMSI 10 RNTI 5
+25.941 UE 9: sent measReport to CellId 6
+25.941 UE 12: sent measReport to CellId 2
+25.941 UE 11: sent measReport to CellId 5
+25.941 UE 10: sent measReport to CellId 8
+25.963 UE 2: sent measReport to CellId 6
+26.052 UE 5: sent measReport to CellId 5
+26.066 UE 1: sent measReport to CellId 5
+26.101 UE 6: sent measReport to CellId 8
+26.106 UE 3: sent measReport to CellId 10
+26.156 UE 7: sent measReport to CellId 6
+26.159 UE 15: sent measReport to CellId 2
+26.193 UE 2: sent measReport to CellId 6
+26.231 UE 8: sent measReport to CellId 9
+26.236 UE 8: sent measReport to CellId 9
+26.261 UE 16: sent measReport to CellId 6
+26.291 UE 5: sent measReport to CellId 5
+26.341 UE 4: sent measReport to CellId 10
+26.381 UE 15: sent measReport to CellId 2
+26.391 UE 13: sent measReport to CellId 5
+26.393 UE 3: sent measReport to CellId 10
+26.421 UE 9: sent measReport to CellId 6
+26.421 UE 12: sent measReport to CellId 2
+26.421 UE 11: sent measReport to CellId 5
+26.421 UE 10: sent measReport to CellId 8
+26.546 UE 1: sent measReport to CellId 5
+26.581 UE 6: sent measReport to CellId 8
+26.636 UE 7: sent measReport to CellId 6
+26.673 UE 2: sent measReport to CellId 6
+26.711 UE 8: sent measReport to CellId 9
+26.741 UE 16: sent measReport to CellId 6
+26.771 UE 5: sent measReport to CellId 5
+26.821 UE 4: sent measReport to CellId 10
+26.861 UE 15: sent measReport to CellId 2
+26.871 UE 13: sent measReport to CellId 5
+26.873 UE 3: sent measReport to CellId 10
+26.874 UE 7: sent measReport to CellId 6
+26.901 UE 9: sent measReport to CellId 6
+26.901 UE 12: sent measReport to CellId 2
+26.901 UE 11: sent measReport to CellId 5
+26.901 UE 10: sent measReport to CellId 8
+26.987 UE 2: sent measReport to CellId 6
+27.026 UE 1: sent measReport to CellId 5
+27.061 UE 6: sent measReport to CellId 8
+27.076 UE 5: sent measReport to CellId 5
+27.116 UE 7: sent measReport to CellId 6
+27.130 UE 3: sent measReport to CellId 10
+27.153 UE 2: sent measReport to CellId 6
+27.156 UE 14: sent measReport to CellId 8
+27.183 UE 15: sent measReport to CellId 2
+27.191 UE 8: sent measReport to CellId 9
+27.216 UE 13: sent measReport to CellId 5
+27.216 node 4 eNB CellId 5: start handover of UE with IMSI 13 RNTI 5 to CellId 2
+27.216 node 26 UE IMSI 13: previously connected to CellId 5 with RNTI 5, doing handover to CellId 2
+27.217 UE 13: sent measReport to CellId 5
+27.220 node 26 UE IMSI 13: successful handover to CellId 2 with RNTI 4
+27.220 node 1 eNB CellId 2: completed handover of UE with IMSI 13 RNTI 4
+27.221 UE 16: sent measReport to CellId 6
+27.221 UE 13: sent measReport to CellId 2
+27.251 UE 5: sent measReport to CellId 5
+27.260 UE 8: sent measReport to CellId 9
+27.301 UE 4: sent measReport to CellId 10
+27.341 UE 15: sent measReport to CellId 2
+27.353 UE 3: sent measReport to CellId 10
+27.381 UE 9: sent measReport to CellId 6
+27.381 UE 12: sent measReport to CellId 2
+27.381 UE 11: sent measReport to CellId 5
+27.381 UE 10: sent measReport to CellId 8
+27.506 UE 1: sent measReport to CellId 5
+27.541 UE 6: sent measReport to CellId 8
+27.596 UE 7: sent measReport to CellId 6
+27.633 UE 2: sent measReport to CellId 6
+27.636 UE 14: sent measReport to CellId 8
+27.671 UE 8: sent measReport to CellId 9
+27.701 UE 16: sent measReport to CellId 6
+27.701 UE 13: sent measReport to CellId 2
+27.731 UE 5: sent measReport to CellId 5
+27.781 UE 4: sent measReport to CellId 10
+27.821 UE 15: sent measReport to CellId 2
+27.833 UE 3: sent measReport to CellId 10
+27.861 UE 9: sent measReport to CellId 6
+27.861 UE 12: sent measReport to CellId 2
+27.861 UE 11: sent measReport to CellId 5
+27.861 UE 10: sent measReport to CellId 8
+27.898 UE 7: sent measReport to CellId 6
+27.986 UE 1: sent measReport to CellId 5
+28.011 UE 2: sent measReport to CellId 6
+28.021 UE 6: sent measReport to CellId 8
+28.076 UE 7: sent measReport to CellId 6
+28.100 UE 5: sent measReport to CellId 5
+28.100 node 4 eNB CellId 5: start handover of UE with IMSI 5 RNTI 9 to CellId 8
+28.100 node 18 UE IMSI 5: previously connected to CellId 5 with RNTI 9, doing handover to CellId 8
+28.104 node 18 UE IMSI 5: successful handover to CellId 8 with RNTI 6
+28.104 node 7 eNB CellId 8: completed handover of UE with IMSI 5 RNTI 6
+28.106 UE 5: sent measReport to CellId 8
+28.113 UE 2: sent measReport to CellId 6
+28.116 UE 14: sent measReport to CellId 8
+28.151 UE 8: sent measReport to CellId 9
+28.154 UE 3: sent measReport to CellId 10
+28.180 node 23 UE IMSI 10: connected to CellId 9 with RNTI 11
+28.180 node 8 eNB CellId 9: successful connection of UE with IMSI 10 RNTI 11
+28.181 UE 16: sent measReport to CellId 6
+28.181 UE 13: sent measReport to CellId 2
+28.181 UE 10: sent measReport to CellId 9
+28.207 UE 15: sent measReport to CellId 2
+28.261 UE 4: sent measReport to CellId 10
+28.284 UE 8: sent measReport to CellId 9
+28.301 UE 15: sent measReport to CellId 2
+28.340 node 16 UE IMSI 3: connected to CellId 6 with RNTI 11
+28.340 node 5 eNB CellId 6: successful connection of UE with IMSI 3 RNTI 11
+28.341 UE 9: sent measReport to CellId 6
+28.341 UE 12: sent measReport to CellId 2
+28.341 UE 11: sent measReport to CellId 5
+28.341 UE 3: sent measReport to CellId 6
+28.466 UE 1: sent measReport to CellId 5
+28.501 UE 6: sent measReport to CellId 8
+28.556 UE 7: sent measReport to CellId 6
+28.586 UE 5: sent measReport to CellId 8
+28.593 UE 2: sent measReport to CellId 6
+28.596 UE 14: sent measReport to CellId 8
+28.631 UE 8: sent measReport to CellId 9
+28.661 UE 16: sent measReport to CellId 6
+28.661 UE 13: sent measReport to CellId 2
+28.661 UE 10: sent measReport to CellId 9
+28.741 UE 4: sent measReport to CellId 10
+28.781 UE 15: sent measReport to CellId 2
+28.821 UE 9: sent measReport to CellId 6
+28.821 UE 12: sent measReport to CellId 2
+28.821 UE 11: sent measReport to CellId 5
+28.821 UE 3: sent measReport to CellId 6
+28.922 UE 7: sent measReport to CellId 6
+28.946 UE 1: sent measReport to CellId 5
+28.981 UE 6: sent measReport to CellId 8
+29.035 UE 2: sent measReport to CellId 6
+29.036 UE 7: sent measReport to CellId 6
+29.060 node 25 UE IMSI 12: connected to CellId 5 with RNTI 12
+29.060 node 4 eNB CellId 5: successful connection of UE with IMSI 12 RNTI 12
+29.061 UE 12: sent measReport to CellId 5
+29.066 UE 5: sent measReport to CellId 8
+29.073 UE 2: sent measReport to CellId 6
+29.076 UE 14: sent measReport to CellId 8
+29.111 UE 8: sent measReport to CellId 9
+29.141 UE 16: sent measReport to CellId 6
+29.141 UE 13: sent measReport to CellId 2
+29.141 UE 10: sent measReport to CellId 9
+29.221 UE 4: sent measReport to CellId 10
+29.231 UE 15: sent measReport to CellId 2
+29.261 UE 15: sent measReport to CellId 2
+29.301 UE 9: sent measReport to CellId 6
+29.301 UE 11: sent measReport to CellId 5
+29.301 UE 3: sent measReport to CellId 6
+29.308 UE 8: sent measReport to CellId 9
+29.426 UE 1: sent measReport to CellId 5
+29.461 UE 6: sent measReport to CellId 8
+29.516 UE 7: sent measReport to CellId 6
+29.541 UE 12: sent measReport to CellId 5
+29.546 UE 5: sent measReport to CellId 8
+29.553 UE 2: sent measReport to CellId 6
+29.556 UE 14: sent measReport to CellId 8
+29.591 UE 8: sent measReport to CellId 9
+29.621 UE 16: sent measReport to CellId 6
+29.621 UE 13: sent measReport to CellId 2
+29.621 UE 10: sent measReport to CellId 9
+29.701 UE 4: sent measReport to CellId 10
+29.741 UE 15: sent measReport to CellId 2
+29.781 UE 9: sent measReport to CellId 6
+29.781 UE 11: sent measReport to CellId 5
+29.781 UE 3: sent measReport to CellId 6
+29.906 UE 1: sent measReport to CellId 5
+29.941 UE 6: sent measReport to CellId 8
+29.946 UE 7: sent measReport to CellId 6
+29.996 UE 7: sent measReport to CellId 6
+*** Simulation time: 30.0s
+30.021 UE 12: sent measReport to CellId 5
+30.026 UE 5: sent measReport to CellId 8
+30.036 UE 14: sent measReport to CellId 8
+30.059 UE 2: sent measReport to CellId 6
+30.071 UE 8: sent measReport to CellId 9
+30.101 UE 16: sent measReport to CellId 6
+30.101 UE 13: sent measReport to CellId 2
+30.101 UE 10: sent measReport to CellId 9
+30.181 UE 4: sent measReport to CellId 10
+30.221 UE 15: sent measReport to CellId 2
+30.255 UE 15: sent measReport to CellId 2
+30.261 UE 9: sent measReport to CellId 6
+30.261 UE 11: sent measReport to CellId 5
+30.261 UE 3: sent measReport to CellId 6
+30.332 UE 8: sent measReport to CellId 9
+30.386 UE 1: sent measReport to CellId 5
+30.421 UE 6: sent measReport to CellId 8
+30.476 UE 7: sent measReport to CellId 6
+30.501 UE 12: sent measReport to CellId 5
+30.506 UE 5: sent measReport to CellId 8
+30.516 UE 14: sent measReport to CellId 8
+30.551 UE 8: sent measReport to CellId 9
+30.581 UE 16: sent measReport to CellId 6
+30.581 UE 13: sent measReport to CellId 2
+30.581 UE 10: sent measReport to CellId 9
+30.661 UE 4: sent measReport to CellId 10
+30.701 UE 15: sent measReport to CellId 2
+30.741 UE 9: sent measReport to CellId 6
+30.741 UE 11: sent measReport to CellId 5
+30.741 UE 3: sent measReport to CellId 6
+30.866 UE 1: sent measReport to CellId 5
+30.901 UE 6: sent measReport to CellId 8
+30.956 UE 7: sent measReport to CellId 6
+30.970 UE 7: sent measReport to CellId 6
+30.981 UE 12: sent measReport to CellId 5
+30.986 UE 5: sent measReport to CellId 8
+30.996 UE 14: sent measReport to CellId 8
+31.031 UE 8: sent measReport to CellId 9
+31.061 UE 16: sent measReport to CellId 6
+31.061 UE 13: sent measReport to CellId 2
+31.061 UE 10: sent measReport to CellId 9
+31.083 UE 2: sent measReport to CellId 6
+31.141 UE 4: sent measReport to CellId 10
+31.181 UE 15: sent measReport to CellId 2
+31.221 UE 9: sent measReport to CellId 6
+31.221 UE 11: sent measReport to CellId 5
+31.221 UE 3: sent measReport to CellId 6
+31.279 UE 15: sent measReport to CellId 2
+31.346 UE 1: sent measReport to CellId 5
+31.356 UE 8: sent measReport to CellId 9
+31.381 UE 6: sent measReport to CellId 8
+31.436 UE 7: sent measReport to CellId 6
+31.461 UE 12: sent measReport to CellId 5
+31.466 UE 5: sent measReport to CellId 8
+31.476 UE 14: sent measReport to CellId 8
+31.511 UE 8: sent measReport to CellId 9
+31.541 UE 16: sent measReport to CellId 6
+31.541 UE 13: sent measReport to CellId 2
+31.541 UE 10: sent measReport to CellId 9
+31.621 UE 4: sent measReport to CellId 10
+31.661 UE 15: sent measReport to CellId 2
+31.701 UE 9: sent measReport to CellId 6
+31.701 UE 11: sent measReport to CellId 5
+31.701 UE 3: sent measReport to CellId 6
+31.826 UE 1: sent measReport to CellId 5
+31.861 UE 6: sent measReport to CellId 8
+31.916 UE 7: sent measReport to CellId 6
+31.941 UE 12: sent measReport to CellId 5
+31.946 UE 5: sent measReport to CellId 8
+31.956 UE 14: sent measReport to CellId 8
+31.991 UE 8: sent measReport to CellId 9
+31.994 UE 7: sent measReport to CellId 6
+32.021 UE 16: sent measReport to CellId 6
+32.021 UE 13: sent measReport to CellId 2
+32.021 UE 10: sent measReport to CellId 9
+32.101 UE 4: sent measReport to CellId 10
+32.107 UE 2: sent measReport to CellId 6
+32.141 UE 15: sent measReport to CellId 2
+32.181 UE 9: sent measReport to CellId 6
+32.181 UE 11: sent measReport to CellId 5
+32.181 UE 3: sent measReport to CellId 6
+32.303 UE 15: sent measReport to CellId 2
+32.306 UE 1: sent measReport to CellId 5
+32.341 UE 6: sent measReport to CellId 8
+32.380 UE 8: sent measReport to CellId 9
+32.396 UE 7: sent measReport to CellId 6
+32.421 UE 12: sent measReport to CellId 5
+32.426 UE 5: sent measReport to CellId 8
+32.436 UE 14: sent measReport to CellId 8
+32.471 UE 8: sent measReport to CellId 9
+32.501 UE 16: sent measReport to CellId 6
+32.501 UE 13: sent measReport to CellId 2
+32.501 UE 10: sent measReport to CellId 9
+32.581 UE 4: sent measReport to CellId 10
+32.621 UE 15: sent measReport to CellId 2
+32.661 UE 9: sent measReport to CellId 6
+32.661 UE 11: sent measReport to CellId 5
+32.661 UE 3: sent measReport to CellId 6
+32.786 UE 1: sent measReport to CellId 5
+32.821 UE 6: sent measReport to CellId 8
+32.876 UE 7: sent measReport to CellId 6
+32.901 UE 12: sent measReport to CellId 5
+32.906 UE 5: sent measReport to CellId 8
+32.916 UE 14: sent measReport to CellId 8
+32.951 UE 8: sent measReport to CellId 9
+32.981 UE 16: sent measReport to CellId 6
+32.981 UE 13: sent measReport to CellId 2
+32.981 UE 10: sent measReport to CellId 9
+33.018 UE 7: sent measReport to CellId 6
+33.061 UE 4: sent measReport to CellId 10
+33.101 UE 15: sent measReport to CellId 2
+33.131 UE 2: sent measReport to CellId 6
+33.141 UE 9: sent measReport to CellId 6
+33.141 UE 11: sent measReport to CellId 5
+33.141 UE 3: sent measReport to CellId 6
+33.266 UE 1: sent measReport to CellId 5
+33.301 UE 6: sent measReport to CellId 8
+33.327 UE 15: sent measReport to CellId 2
+33.356 UE 7: sent measReport to CellId 6
+33.381 UE 12: sent measReport to CellId 5
+33.386 UE 5: sent measReport to CellId 8
+33.396 UE 14: sent measReport to CellId 8
+33.404 UE 8: sent measReport to CellId 9
+33.431 UE 8: sent measReport to CellId 9
+33.461 UE 16: sent measReport to CellId 6
+33.461 UE 13: sent measReport to CellId 2
+33.461 UE 10: sent measReport to CellId 9
+33.541 UE 4: sent measReport to CellId 10
+33.581 UE 15: sent measReport to CellId 2
+33.621 UE 9: sent measReport to CellId 6
+33.621 UE 11: sent measReport to CellId 5
+33.621 UE 3: sent measReport to CellId 6
+33.781 UE 6: sent measReport to CellId 8
+33.836 UE 7: sent measReport to CellId 6
+33.861 UE 12: sent measReport to CellId 5
+33.866 UE 5: sent measReport to CellId 8
+33.876 UE 14: sent measReport to CellId 8
+33.911 UE 8: sent measReport to CellId 9
+33.941 UE 16: sent measReport to CellId 6
+33.941 UE 13: sent measReport to CellId 2
+33.941 UE 10: sent measReport to CellId 9
+34.021 UE 4: sent measReport to CellId 10
+34.042 UE 7: sent measReport to CellId 6
+34.061 UE 15: sent measReport to CellId 2
+34.101 UE 9: sent measReport to CellId 6
+34.101 UE 11: sent measReport to CellId 5
+34.101 UE 3: sent measReport to CellId 6
+34.155 UE 2: sent measReport to CellId 6
+34.261 UE 6: sent measReport to CellId 8
+34.316 UE 7: sent measReport to CellId 6
+34.341 UE 12: sent measReport to CellId 5
+34.346 UE 5: sent measReport to CellId 8
+34.351 UE 15: sent measReport to CellId 2
+34.356 UE 14: sent measReport to CellId 8
+34.391 UE 8: sent measReport to CellId 9
+34.421 UE 16: sent measReport to CellId 6
+34.421 UE 13: sent measReport to CellId 2
+34.421 UE 10: sent measReport to CellId 9
+34.428 UE 8: sent measReport to CellId 9
+34.501 UE 4: sent measReport to CellId 10
+34.541 UE 15: sent measReport to CellId 2
+34.581 UE 9: sent measReport to CellId 6
+34.581 UE 11: sent measReport to CellId 5
+34.581 UE 3: sent measReport to CellId 6
+34.741 UE 6: sent measReport to CellId 8
+34.796 UE 7: sent measReport to CellId 6
+34.821 UE 12: sent measReport to CellId 5
+34.826 UE 5: sent measReport to CellId 8
+34.836 UE 14: sent measReport to CellId 8
+34.871 UE 8: sent measReport to CellId 9
+34.901 UE 16: sent measReport to CellId 6
+34.901 UE 13: sent measReport to CellId 2
+34.901 UE 10: sent measReport to CellId 9
+34.981 UE 4: sent measReport to CellId 10
+35.021 UE 15: sent measReport to CellId 2
+35.061 UE 9: sent measReport to CellId 6
+35.061 UE 11: sent measReport to CellId 5
+35.061 UE 3: sent measReport to CellId 6
+35.066 UE 7: sent measReport to CellId 6
+35.179 UE 2: sent measReport to CellId 6
+35.221 UE 6: sent measReport to CellId 8
+35.276 UE 7: sent measReport to CellId 6
+35.296 UE 2: sent measReport to CellId 6
+35.301 UE 12: sent measReport to CellId 5
+35.306 UE 5: sent measReport to CellId 8
+35.316 UE 14: sent measReport to CellId 8
+35.351 UE 8: sent measReport to CellId 9
+35.375 UE 15: sent measReport to CellId 2
+35.381 UE 16: sent measReport to CellId 6
+35.381 UE 13: sent measReport to CellId 2
+35.381 UE 10: sent measReport to CellId 9
+35.452 UE 8: sent measReport to CellId 9
+35.461 UE 4: sent measReport to CellId 10
+35.476 UE 1: sent measReport to CellId 5
+35.501 UE 15: sent measReport to CellId 2
+35.541 UE 9: sent measReport to CellId 6
+35.541 UE 11: sent measReport to CellId 5
+35.541 UE 3: sent measReport to CellId 6
+35.701 UE 6: sent measReport to CellId 8
+35.756 UE 7: sent measReport to CellId 6
+35.776 UE 2: sent measReport to CellId 6
+35.781 UE 12: sent measReport to CellId 5
+35.786 UE 5: sent measReport to CellId 8
+35.796 UE 14: sent measReport to CellId 8
+35.831 UE 8: sent measReport to CellId 9
+35.861 UE 16: sent measReport to CellId 6
+35.861 UE 13: sent measReport to CellId 2
+35.861 UE 10: sent measReport to CellId 9
+35.941 UE 4: sent measReport to CellId 10
+35.956 UE 1: sent measReport to CellId 5
+35.981 UE 15: sent measReport to CellId 2
+36.021 UE 9: sent measReport to CellId 6
+36.021 UE 11: sent measReport to CellId 5
+36.021 UE 3: sent measReport to CellId 6
+36.090 UE 7: sent measReport to CellId 6
+36.181 UE 6: sent measReport to CellId 8
+36.203 UE 2: sent measReport to CellId 6
+36.256 UE 2: sent measReport to CellId 6
+36.260 node 20 UE IMSI 7: connected to CellId 5 with RNTI 13
+36.260 node 4 eNB CellId 5: successful connection of UE with IMSI 7 RNTI 13
+36.261 UE 12: sent measReport to CellId 5
+36.261 UE 7: sent measReport to CellId 5
+36.266 UE 5: sent measReport to CellId 8
+36.276 UE 14: sent measReport to CellId 8
+36.311 UE 8: sent measReport to CellId 9
+36.341 UE 16: sent measReport to CellId 6
+36.341 UE 13: sent measReport to CellId 2
+36.341 UE 10: sent measReport to CellId 9
+36.399 UE 15: sent measReport to CellId 2
+36.421 UE 4: sent measReport to CellId 10
+36.436 UE 1: sent measReport to CellId 5
+36.461 UE 15: sent measReport to CellId 2
+36.476 UE 8: sent measReport to CellId 9
+36.501 UE 9: sent measReport to CellId 6
+36.501 UE 11: sent measReport to CellId 5
+36.501 UE 3: sent measReport to CellId 6
+36.661 UE 6: sent measReport to CellId 8
+36.736 UE 2: sent measReport to CellId 6
+36.741 UE 12: sent measReport to CellId 5
+36.741 UE 7: sent measReport to CellId 5
+36.746 UE 5: sent measReport to CellId 8
+36.756 UE 14: sent measReport to CellId 8
+36.791 UE 8: sent measReport to CellId 9
+36.821 UE 16: sent measReport to CellId 6
+36.821 UE 13: sent measReport to CellId 2
+36.821 UE 10: sent measReport to CellId 9
+36.901 UE 4: sent measReport to CellId 10
+36.916 UE 1: sent measReport to CellId 5
+36.941 UE 15: sent measReport to CellId 2
+36.981 UE 9: sent measReport to CellId 6
+36.981 UE 11: sent measReport to CellId 5
+36.981 UE 3: sent measReport to CellId 6
+37.141 UE 6: sent measReport to CellId 8
+37.216 UE 2: sent measReport to CellId 6
+37.221 UE 12: sent measReport to CellId 5
+37.221 UE 7: sent measReport to CellId 5
+37.226 UE 5: sent measReport to CellId 8
+37.227 UE 2: sent measReport to CellId 6
+37.236 UE 14: sent measReport to CellId 8
+37.271 UE 8: sent measReport to CellId 9
+37.301 UE 16: sent measReport to CellId 6
+37.301 UE 13: sent measReport to CellId 2
+37.301 UE 10: sent measReport to CellId 9
+37.381 UE 4: sent measReport to CellId 10
+37.396 UE 1: sent measReport to CellId 5
+37.421 UE 15: sent measReport to CellId 2
+37.423 UE 15: sent measReport to CellId 2
+37.461 UE 9: sent measReport to CellId 6
+37.461 UE 11: sent measReport to CellId 5
+37.461 UE 3: sent measReport to CellId 6
+37.500 UE 8: sent measReport to CellId 9
+37.621 UE 6: sent measReport to CellId 8
+37.696 UE 2: sent measReport to CellId 6
+37.701 UE 12: sent measReport to CellId 5
+37.701 UE 7: sent measReport to CellId 5
+37.706 UE 5: sent measReport to CellId 8
+37.716 UE 14: sent measReport to CellId 8
+37.751 UE 8: sent measReport to CellId 9
+37.781 UE 16: sent measReport to CellId 6
+37.781 UE 13: sent measReport to CellId 2
+37.781 UE 10: sent measReport to CellId 9
+37.861 UE 4: sent measReport to CellId 10
+37.876 UE 1: sent measReport to CellId 5
+37.901 UE 15: sent measReport to CellId 2
+37.941 UE 9: sent measReport to CellId 6
+37.941 UE 11: sent measReport to CellId 5
+37.941 UE 3: sent measReport to CellId 6
+38.101 UE 6: sent measReport to CellId 8
+38.176 UE 2: sent measReport to CellId 6
+38.181 UE 12: sent measReport to CellId 5
+38.181 UE 7: sent measReport to CellId 5
+38.186 UE 5: sent measReport to CellId 8
+38.196 UE 14: sent measReport to CellId 8
+38.231 UE 8: sent measReport to CellId 9
+38.251 UE 2: sent measReport to CellId 6
+38.261 UE 16: sent measReport to CellId 6
+38.261 UE 13: sent measReport to CellId 2
+38.261 UE 10: sent measReport to CellId 9
+38.341 UE 4: sent measReport to CellId 10
+38.356 UE 1: sent measReport to CellId 5
+38.381 UE 15: sent measReport to CellId 2
+38.421 UE 3: sent measReport to CellId 6
+38.447 UE 15: sent measReport to CellId 2
+38.500 node 24 UE IMSI 11: connected to CellId 1 with RNTI 171
+38.500 node 0 eNB CellId 1: successful connection of UE with IMSI 11 RNTI 171
+38.501 UE 11: sent measReport to CellId 1
+38.524 UE 8: sent measReport to CellId 9
+38.581 UE 6: sent measReport to CellId 8
+38.656 UE 2: sent measReport to CellId 6
+38.661 UE 7: sent measReport to CellId 5
+38.666 UE 5: sent measReport to CellId 8
+38.676 UE 14: sent measReport to CellId 8
+38.711 UE 8: sent measReport to CellId 9
+38.741 UE 16: sent measReport to CellId 6
+38.741 UE 13: sent measReport to CellId 2
+38.741 UE 10: sent measReport to CellId 9
+38.821 UE 4: sent measReport to CellId 10
+38.836 UE 1: sent measReport to CellId 5
+38.861 UE 15: sent measReport to CellId 2
+38.901 UE 3: sent measReport to CellId 6
+38.981 UE 11: sent measReport to CellId 1
+39.061 UE 6: sent measReport to CellId 8
+39.136 UE 2: sent measReport to CellId 6
+39.141 UE 7: sent measReport to CellId 5
+39.146 UE 5: sent measReport to CellId 8
+39.156 UE 14: sent measReport to CellId 8
+39.191 UE 8: sent measReport to CellId 9
+39.221 UE 16: sent measReport to CellId 6
+39.221 UE 13: sent measReport to CellId 2
+39.221 UE 10: sent measReport to CellId 9
+39.275 UE 2: sent measReport to CellId 6
+39.301 UE 4: sent measReport to CellId 10
+39.316 UE 1: sent measReport to CellId 5
+39.341 UE 15: sent measReport to CellId 2
+39.381 UE 3: sent measReport to CellId 6
+39.461 UE 11: sent measReport to CellId 1
+39.471 UE 15: sent measReport to CellId 2
+39.541 UE 6: sent measReport to CellId 8
+39.548 UE 8: sent measReport to CellId 9
+39.616 UE 2: sent measReport to CellId 6
+39.621 UE 7: sent measReport to CellId 5
+39.626 UE 5: sent measReport to CellId 8
+39.636 UE 14: sent measReport to CellId 8
+39.671 UE 8: sent measReport to CellId 9
+39.701 UE 16: sent measReport to CellId 6
+39.701 UE 13: sent measReport to CellId 2
+39.701 UE 10: sent measReport to CellId 9
+39.781 UE 4: sent measReport to CellId 10
+39.796 UE 1: sent measReport to CellId 5
+39.821 UE 15: sent measReport to CellId 2
+39.861 UE 3: sent measReport to CellId 6
+39.941 UE 11: sent measReport to CellId 1
+/home/sachin/repos/ns-3-dev-git/scratch/UW-working
+Running with: DQN
+starting
+Starting ns-3 simulation
+==> saving model

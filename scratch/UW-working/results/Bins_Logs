@@ -1,0 +1,117 @@
+Running with: DQN
+starting
+Starting ns-3 simulation
+Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
+Waf: Leaving directory `/home/sachin/repos/ns-3-dev-git/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.592s)
+rf config loaded
+protocol config loaded
+10.8554,588.708
+TCP
+Simulation time: 40 sec
+0.5 node 14 UE IMSI 1: connected to CellId 1 with RNTI 1
+0.5 node 0 eNB CellId 1: successful connection of UE with IMSI 1 RNTI 1
+0.501 UE 1: sent measReport to CellId 1
+0.501 UE 1: sent measReport to CellId 1
+0.501 node 0 eNB CellId 1: start handover of UE with IMSI 1 RNTI 1 to CellId 4
+0.501 node 14 UE IMSI 1: previously connected to CellId 1 with RNTI 1, doing handover to CellId 4
+0.502 UE 1: sent measReport to CellId 1
+0.505 node 14 UE IMSI 1: successful handover to CellId 4 with RNTI 1
+0.505 node 3 eNB CellId 4: completed handover of UE with IMSI 1 RNTI 1
+0.506 UE 1: sent measReport to CellId 4
+0.986 UE 1: sent measReport to CellId 4
+1.47 UE 1: sent measReport to CellId 4
+1.95 UE 1: sent measReport to CellId 4
+2.43 UE 1: sent measReport to CellId 4
+2.74 node 14 UE IMSI 1: connected to CellId 5 with RNTI 1
+2.74 node 4 eNB CellId 5: successful connection of UE with IMSI 1 RNTI 1
+2.74 UE 1: sent measReport to CellId 5
+3.22 UE 1: sent measReport to CellId 5
+3.7 UE 1: sent measReport to CellId 5
+4.18 UE 1: sent measReport to CellId 5
+4.66 UE 1: sent measReport to CellId 5
+5.14 UE 1: sent measReport to CellId 5
+5.62 UE 1: sent measReport to CellId 5
+6.1 UE 1: sent measReport to CellId 5
+6.58 UE 1: sent measReport to CellId 5
+7.06 UE 1: sent measReport to CellId 5
+7.54 UE 1: sent measReport to CellId 5
+8.02 UE 1: sent measReport to CellId 5
+8.5 UE 1: sent measReport to CellId 5
+8.98 UE 1: sent measReport to CellId 5
+9.46 UE 1: sent measReport to CellId 5
+9.94 UE 1: sent measReport to CellId 5
+*** Simulation time: 10.0s
+10.421 UE 1: sent measReport to CellId 5
+10.901 UE 1: sent measReport to CellId 5
+11.381 UE 1: sent measReport to CellId 5
+11.861 UE 1: sent measReport to CellId 5
+12.341 UE 1: sent measReport to CellId 5
+12.821 UE 1: sent measReport to CellId 5
+13.301 UE 1: sent measReport to CellId 5
+13.781 UE 1: sent measReport to CellId 5
+14.261 UE 1: sent measReport to CellId 5
+14.741 UE 1: sent measReport to CellId 5
+15.221 UE 1: sent measReport to CellId 5
+15.701 UE 1: sent measReport to CellId 5
+16.181 UE 1: sent measReport to CellId 5
+16.661 UE 1: sent measReport to CellId 5
+17.141 UE 1: sent measReport to CellId 5
+17.621 UE 1: sent measReport to CellId 5
+18.101 UE 1: sent measReport to CellId 5
+18.581 UE 1: sent measReport to CellId 5
+19.061 UE 1: sent measReport to CellId 5
+19.541 UE 1: sent measReport to CellId 5
+*** Simulation time: 20.0s
+20.021 UE 1: sent measReport to CellId 5
+20.501 UE 1: sent measReport to CellId 5
+20.981 UE 1: sent measReport to CellId 5
+21.461 UE 1: sent measReport to CellId 5
+21.941 UE 1: sent measReport to CellId 5
+22.421 UE 1: sent measReport to CellId 5
+22.901 UE 1: sent measReport to CellId 5
+23.381 UE 1: sent measReport to CellId 5
+23.861 UE 1: sent measReport to CellId 5
+24.341 UE 1: sent measReport to CellId 5
+24.821 UE 1: sent measReport to CellId 5
+25.301 UE 1: sent measReport to CellId 5
+25.781 UE 1: sent measReport to CellId 5
+26.261 UE 1: sent measReport to CellId 5
+26.741 UE 1: sent measReport to CellId 5
+27.221 UE 1: sent measReport to CellId 5
+27.701 UE 1: sent measReport to CellId 5
+27.870 UE 1: sent measReport to CellId 5
+27.870 node 4 eNB CellId 5: start handover of UE with IMSI 1 RNTI 1 to CellId 2
+27.870 node 14 UE IMSI 1: previously connected to CellId 5 with RNTI 1, doing handover to CellId 2
+27.874 node 14 UE IMSI 1: successful handover to CellId 2 with RNTI 1
+27.874 node 1 eNB CellId 2: completed handover of UE with IMSI 1 RNTI 1
+27.876 UE 1: sent measReport to CellId 2
+28.356 UE 1: sent measReport to CellId 2
+28.836 UE 1: sent measReport to CellId 2
+29.316 UE 1: sent measReport to CellId 2
+29.796 UE 1: sent measReport to CellId 2
+*** Simulation time: 30.0s
+30.276 UE 1: sent measReport to CellId 2
+30.756 UE 1: sent measReport to CellId 2
+31.236 UE 1: sent measReport to CellId 2
+31.716 UE 1: sent measReport to CellId 2
+32.196 UE 1: sent measReport to CellId 2
+32.676 UE 1: sent measReport to CellId 2
+33.156 UE 1: sent measReport to CellId 2
+33.636 UE 1: sent measReport to CellId 2
+34.116 UE 1: sent measReport to CellId 2
+34.596 UE 1: sent measReport to CellId 2
+35.076 UE 1: sent measReport to CellId 2
+35.556 UE 1: sent measReport to CellId 2
+36.036 UE 1: sent measReport to CellId 2
+36.516 UE 1: sent measReport to CellId 2
+36.996 UE 1: sent measReport to CellId 2
+37.476 UE 1: sent measReport to CellId 2
+37.956 UE 1: sent measReport to CellId 2
+38.436 UE 1: sent measReport to CellId 2
+38.916 UE 1: sent measReport to CellId 2
+39.396 UE 1: sent measReport to CellId 2
+39.876 UE 1: sent measReport to CellId 2
+==> saving model
+

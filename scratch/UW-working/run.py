@@ -23,7 +23,7 @@ from DQN import *
 #    except Exception:
 #        logging.error(f"{input_file} doesn't exist")
 #        return None
-seed = 1234
+seed = 2
 torch.manual_seed(seed)
 np.random.seed(seed)
 random.seed(seed)
@@ -131,6 +131,9 @@ exp.reset()
 r1 = Ns3AIRL(1357, mlInput, mlOutput)
 pro = exp.run(setting=ns3Settings, show_output=True)
 print ("Starting ns-3 simulation")
+T = 5
+x_arr = np.zeros(T)
+y_arr = np.zeros(T)
 
 while not r1.isFinish():
     with r1 as data:
@@ -139,26 +142,34 @@ while not r1.isFinish():
         if runMode == "DQN":
             imsi = data.env.imsi
             if imsi not in all_dqn:
-                dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
+                dqn = DQN(state_size=12, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
                 all_dqn[imsi] = dqn
             else:
                 dqn = all_dqn[imsi]
+
+            x = data.env.x
+            y = data.env.y
+            x_arr = np.roll(x_arr, 1)
+            x_arr[0] = x
+            y_arr = np.roll(y_arr, 1)
+            y_arr[0] = y
+
             if dqn.not_first_trail:
-                x = data.env.x
-                y = data.env.y
+                #x = data.env.x
+                #y = data.env.y
                 pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
                 rsrp = data.env.rsrp
                 # reward = 0
-                dqn.state_ = np.array([x, y, pkt_size, rsrp])                
+                dqn.state_ = np.concatenate((x_arr, y_arr, np.array([pkt_size, rsrp])))                
                 dqn.store_transition(dqn.state, dqn.action_index, dqn.reward, dqn.state_)
                 dqn.count += 1
             
             # print("Run with DQN")
-            x = data.env.x
-            y = data.env.y
+            #x = data.env.x
+            #y = data.env.y
             pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
             rsrp = data.env.rsrp
-            dqn.state = np.array([x, y, pkt_size, rsrp])
+            dqn.state = np.concatenate((x_arr, y_arr, np.array([pkt_size, rsrp])))
             dqn.action_index = dqn.choose_action(dqn.state)
             action = action_space[dqn.action_index]
             

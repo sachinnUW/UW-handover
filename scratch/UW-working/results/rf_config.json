@@ -1,31 +1,162 @@
 {
-	"UE":
-	[
-		{
-			"name":"UE_1",
-			"initial_position":[10,0,1.5],
-			"velocity":[1,0,0],
-			"initial_attachment":1
-		}
-	],
-	"simulation":
-	{
-		"mobility_type":"constant_velocity",
-		"resource_blocks":50,
-		"simulation_duration_s":40,
-		"seed":1
-	},
-	"BS":
-	[
-		{
-			"name":"BS_1",
-			"location":[0,0,25],
-			"number_of_sectors":1
-		},
-		{
-			"name":"BS_2",
-			"location":[50,0,25],
-			"number_of_sectors":1
-		}
-	]
-}	
+    "UE": [
+        {
+            "name": "UE_1",
+            "initial_position": [
+                10,
+                0,
+                1.5
+            ],
+            "velocity": [
+                1,
+                0,
+                0
+            ],
+            "initial_attachment": 1
+        }
+    ],
+    "simulation": {
+        "mobility_type": "constant_velocity",
+        "resource_blocks": 50,
+        "simulation_duration_s": 40,
+        "seed": 2,
+        "field_edges": [
+            0,
+            1000,
+            0,
+            1000
+        ],
+        "number_of_UE": 16,
+        "inter_BS_distance": 500,
+        "average_UE_speed": 20,
+        "UE_speed_bound": 5
+    },
+    "BS": [
+        {
+            "Name": "BS_1",
+            "location": [
+                0,
+                0,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_2",
+            "location": [
+                500,
+                0,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_3",
+            "location": [
+                1000,
+                0,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_4",
+            "location": [
+                -250.0,
+                433.0127018922193,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_5",
+            "location": [
+                250.0,
+                433.0127018922193,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_6",
+            "location": [
+                750.0,
+                433.0127018922193,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_7",
+            "location": [
+                1250.0,
+                433.0127018922193,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_8",
+            "location": [
+                0.0,
+                866.0254037844386,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_9",
+            "location": [
+                500.0,
+                866.0254037844386,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_10",
+            "location": [
+                1000.0,
+                866.0254037844386,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_11",
+            "location": [
+                -250.0,
+                1299.0381056766578,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_12",
+            "location": [
+                250.0,
+                1299.0381056766578,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_13",
+            "location": [
+                750.0,
+                1299.0381056766578,
+                25
+            ],
+            "number_of_sectors": 1
+        },
+        {
+            "Name": "BS_14",
+            "location": [
+                1250.0,
+                1299.0381056766578,
+                25
+            ],
+            "number_of_sectors": 1
+        }
+    ]
+}
