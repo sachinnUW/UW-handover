@@ -2191,10 +2191,12 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
               {
                 if (!hasTriggered)
                   {
+                    
                     if (m_mroExp)
                       {
                         //m_mroEnv->loadIds(double(Simulator::Now ().GetSeconds ()),int(m_imsi),int(cellId));
                         m_tttAdjustment = m_mroEnv->tableRead(double(uePos.x),double(uePos.y));
+                        m_mroEnv->hoStarted();
                         //std::cout << m_tttAdjustment << std::endl;
                       }
                     concernedCellsEntry.push_back (cellId);
@@ -2893,6 +2895,7 @@ LteUeRrc::VarMeasReportListAdd (uint8_t measId, ConcernedCells_t enteringCells)
         = Simulator::Schedule (UE_MEASUREMENT_REPORT_DELAY,
                                &LteUeRrc::SendMeasurementReport,
                                this, measId);
+      m_mroEnv->hoEnded();
     }
 
   std::map<uint8_t, std::list<PendingTrigger_t> >::iterator

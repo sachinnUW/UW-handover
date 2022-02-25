@@ -30,6 +30,20 @@ void MROENV::loadIds(double time, int imsi, int cellId, double rsrp)
 	SetCompleted();
 }
 
+void MROENV::hoStarted()
+{
+	auto mlInput = EnvSetterCond();
+	mlInput->hoInProgress = 1;
+	SetCompleted();
+}
+
+void MROENV::hoEnded()
+{
+	auto mlInput = EnvSetterCond();
+	mlInput->hoInProgress = 0;
+	mlInput->hoEnded = 1;
+	SetCompleted();
+}
 
 void MROENV::passPacketReception(double time, double packetSize, int packetReceiverId)
 {

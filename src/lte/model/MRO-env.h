@@ -15,6 +15,8 @@ struct mlInput
 	int packetReceiverId;
 	double rsrp;
 	int packetRxFlag;
+        int hoInProgress;
+        int hoEnded;
 }Packed;
 
 struct mlOutput
@@ -29,6 +31,8 @@ class MROENV : public Ns3AIRL<mlInput, mlOutput>
 		MROENV (uint16_t id);
 		double tableRead(double x, double y);
 		void loadIds(double time, int imsi, int cellId, double rsrp);
+                void hoStarted();
+                void hoEnded();
 		void passPacketReception(double time, double packetSize, int packetReceiverId);
 };
 }// namespace ns3
