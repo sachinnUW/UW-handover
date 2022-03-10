@@ -113,14 +113,10 @@ print("Running with: " + runMode)
 #print(len(rfConfig["UE"]))
 
 #parameters for throughput calculation
-recievedPacketRecordFull = []
-throughputRecordFull = []
 recievedPacketRecord = []
 throughputRecord = []
 each_act = []
 for i in range(rfConfig["simulation"]["number_of_UE"]*2):
-    recievedPacketRecordFull.append([])
-    throughputRecordFull.append([])
     recievedPacketRecord.append([])
     throughputRecord.append([])
     each_act.append([])
@@ -135,7 +131,7 @@ exp.reset()
 r1 = Ns3AIRL(1357, mlInput, mlOutput)
 pro = exp.run(setting=ns3Settings, show_output=True)
 print ("Starting ns-3 simulation")
-T = 10
+T = 5
 x_arr = np.zeros(T)
 y_arr = np.zeros(T)
 
@@ -146,77 +142,60 @@ while not r1.isFinish():
         if runMode == "DQN":
             imsi = data.env.imsi
             if imsi not in all_dqn:
-                dqn = DQN(state_size=22, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
+                dqn = DQN(state_size=4, n_actions = len(action_space),loss_val=loss_val, batch_size=1)
                 all_dqn[imsi] = dqn
             else:
                 dqn = all_dqn[imsi]
-            
-            if data.env.hoInProgress == 1:
 
-                x = data.env.x
-                y = data.env.y
-                x_arr = np.roll(x_arr, 1)
-                x_arr[0] = x
-                y_arr = np.roll(y_arr, 1)
-                y_arr[0] = y
+            x = data.env.x
+            y = data.env.y
+            x_arr = np.roll(x_arr, 1)
+            x_arr[0] = x
+            y_arr = np.roll(y_arr, 1)
+            y_arr[0] = y
 
-                if dqn.not_first_trail:
-                    x = data.env.x
-                    y = data.env.y
-                    pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
-                    rsrp = data.env.rsrp
-                    # reward = 0
-                    dqn.state_ = np.concatenate((x_arr, y_arr, np.array([pkt_size, rsrp])))                
-                    dqn.store_transition(dqn.state, dqn.action_index, dqn.reward, dqn.state_)
-                    dqn.count += 1
-            
-                # print("Run with DQN")
+            if dqn.not_first_trail:
                 x = data.env.x
                 y = data.env.y
                 pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
                 rsrp = data.env.rsrp
-                dqn.state = np.concatenate((x_arr, y_arr, np.array([pkt_size, rsrp])))
-                dqn.action_index = dqn.choose_action(dqn.state)
-                action = action_space[dqn.action_index]
+                # reward = 0
+                dqn.state_ = np.array([x, y, pkt_size, rsrp])                
+                dqn.store_transition(dqn.state, dqn.action_index, dqn.reward, dqn.state_)
+                dqn.count += 1
+            
+            # print("Run with DQN")
+            x = data.env.x
+            y = data.env.y
+            pkt_size = 536#data.env.packetSize#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
+            rsrp = data.env.rsrp
+            dqn.state = np.array([x, y, pkt_size, rsrp])
+            dqn.action_index = dqn.choose_action(dqn.state)
+            action = action_space[dqn.action_index]
             
 
-                #print(data.env.imsi,action)
-                data.act.tttAdjustment = action
-                dqn.not_first_trail = 1
-            
+            #print(data.env.imsi,action)
+            data.act.tttAdjustment = 256
+            dqn.not_first_trail = 1
+
+            #print(data.env.packetRxFlag)
             if data.env.packetRxFlag == 1:
                 #print("banana")
-                recievedPacketRecordFull[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                recievedPacketRecordFull[2*(data.env.packetReceiverId-1)+1].append(536)#(data.env.packetSize)#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
-                throughputRecordFull[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                dataReceivedFull = 0
-                for i in range(len(recievedPacketRecordFull[2*(data.env.packetReceiverId-1)]) - 1, -1, -1):
-                #print(i)
-                    if recievedPacketRecordFull[2*(data.env.packetReceiverId-1)][i] >= round(data.env.time,3) - binWidth:
-                        dataReceivedFull = dataReceivedFull + recievedPacketRecordFull[2*(data.env.packetReceiverId-1)+1][i]
+                recievedPacketRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                recievedPacketRecord[2*(data.env.packetReceiverId-1)+1].append(536)#(data.env.packetSize)#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
+                throughputRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                dataReceived = 0
+                for i in range(len(recievedPacketRecord[2*(data.env.packetReceiverId-1)]) - 1, -1, -1):
+                    #print(i)
+                    if recievedPacketRecord[2*(data.env.packetReceiverId-1)][i] >= round(data.env.time,3) - binWidth:
+                        dataReceived = dataReceived + recievedPacketRecord[2*(data.env.packetReceiverId-1)+1][i]
                     else:#if this happens then we are outside of the averaging window, stop calculation
                         break
-                throughputRecordFull[2*(data.env.packetReceiverId-1)+1].append(dataReceivedFull/binWidth)
-                data.env.packetRxFlag = 0                
-
-                #print(data.env.packetRxFlag)
-                if data.env.hoInProgress == 1:
-                    #print("banana")
-                    recievedPacketRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                    recievedPacketRecord[2*(data.env.packetReceiverId-1)+1].append(536)#(data.env.packetSize)#this value is hardcoded due to an oddity in the way tcp works in ns3, multiple duplicate packets can be recieved at once, giving the appearence of a larger reception. This data is however useless to the application layer.
-                    throughputRecord[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                    dataReceived = 0
-                    for i in range(len(recievedPacketRecord[2*(data.env.packetReceiverId-1)]) - 1, -1, -1):
-                    #print(i)
-                        if recievedPacketRecord[2*(data.env.packetReceiverId-1)][i] >= round(data.env.time,3) - binWidth:
-                            dataReceived = dataReceived + recievedPacketRecord[2*(data.env.packetReceiverId-1)+1][i]
-                        else:#if this happens then we are outside of the averaging window, stop calculation
-                            break
-                    throughputRecord[2*(data.env.packetReceiverId-1)+1].append(dataReceived/binWidth)
-                    dqn.reward = dataReceived/binWidth
-                    each_act[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
-                    each_act[2*(data.env.packetReceiverId-1)+1].append(action)
-
+                throughputRecord[2*(data.env.packetReceiverId-1)+1].append(dataReceived/binWidth)
+                data.env.packetRxFlag = 0
+                dqn.reward = dataReceived/binWidth
+                each_act[2*(data.env.packetReceiverId-1)].append(round(data.env.time,3))
+                each_act[2*(data.env.packetReceiverId-1)+1].append(action)
             if data.env.hoEnded == 1:
                  dqn.learn()
                  data.env.hoEnded = 0
@@ -260,14 +239,6 @@ with file:
 
 export_data = zip_longest(*throughputRecord, fillvalue = '')#converts the rows into columns for nicer data formatting
 file = open(resultsDir + 'throughputTest.csv', 'w', newline='')
-with file:
-    write = csv.writer(file)
-    write.writerow(['time','throughput'])
-    write.writerows(export_data)
-
-
-export_data = zip_longest(*throughputRecordFull, fillvalue = '')#converts the rows into columns for nicer data formatting
-file = open(resultsDir + 'throughputTestFull.csv', 'w', newline='')
 with file:
     write = csv.writer(file)
     write.writerow(['time','throughput'])
