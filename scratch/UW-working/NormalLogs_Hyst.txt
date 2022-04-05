@@ -1,0 +1,33 @@
+Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
+Waf: Leaving directory `/home/sachin/repos/ns-3-dev-git/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.083s)
+rf config loaded
+protocol config loaded
+929.006,604.038
+228.206,90.2792
+666.162,198.484
+58.7686,70.2506
+511.781,193.337
+699.263,590.805
+407.527,832.808
+871.889,508.322
+TCP
+Simulation time: 10 sec
+0.0202 node 17 UE IMSI 4: connected to CellId 1 with RNTI 2
+0.0202 node 0 eNB CellId 1: successful connection of UE with IMSI 4 RNTI 2
+0.0252 node 15 UE IMSI 2: connected to CellId 1 with RNTI 7
+0.0252 node 0 eNB CellId 1: successful connection of UE with IMSI 2 RNTI 7
+0.0432 node 16 UE IMSI 3: connected to CellId 1 with RNTI 16
+0.0432 node 20 UE IMSI 7: connected to CellId 1 with RNTI 17
+0.0432 node 0 eNB CellId 1: successful connection of UE with IMSI 3 RNTI 16
+0.0432 node 0 eNB CellId 1: successful connection of UE with IMSI 7 RNTI 17
+0.0612 node 18 UE IMSI 5: connected to CellId 1 with RNTI 21
+0.0612 node 0 eNB CellId 1: successful connection of UE with IMSI 5 RNTI 21
+0.18 node 14 UE IMSI 1: connected to CellId 1 with RNTI 36
+0.18 node 0 eNB CellId 1: successful connection of UE with IMSI 1 RNTI 36
+/home/sachin/repos/ns-3-dev-git/scratch/UW-working
+Running with: DQN
+starting
+Starting ns-3 simulation
+[01;31mInterrupted[0m 

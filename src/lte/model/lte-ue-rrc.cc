@@ -2182,7 +2182,8 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
             
 
             off = reportConfigEutra.perCellA3Offset.at(storedMeasIt->first - 1);
-            hys = reportConfigEutra.perCellHysteresis.at(storedMeasIt->first - 1);
+            hys = m_mroEnv->tableRead2(double(uePos.x),double(uePos.y));
+            //hys = reportConfigEutra.perCellHysteresis.at(storedMeasIt->first - 1);
             //std::cout<<off<<','<<hys<<std::endl;
             // Inequality A3-1 (Entering condition): Mn + Ofn + Ocn - Hys > Mp + Ofp + Ocp + Off
             bool entryCond = mn + ofn + ocn - hys > mp + ofp + ocp + off;

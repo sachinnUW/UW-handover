@@ -1,7 +1,7 @@
 Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
 Waf: Leaving directory `/home/sachin/repos/ns-3-dev-git/build'
 Build commands will be stored in build/compile_commands.json
-'build' finished successfully (0.469s)
+'build' finished successfully (1.191s)
 rf config loaded
 protocol config loaded
 10.8554,588.708

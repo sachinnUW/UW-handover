@@ -22,6 +22,7 @@ struct mlInput
 struct mlOutput
 {
 	double tttAdjustment;
+        double hystAdjustment;
 }Packed;
 
 class MROENV : public Ns3AIRL<mlInput, mlOutput>
@@ -30,6 +31,7 @@ class MROENV : public Ns3AIRL<mlInput, mlOutput>
 		MROENV (void) = delete;
 		MROENV (uint16_t id);
 		double tableRead(double x, double y);
+		double tableRead2(double x, double y);
 		void loadIds(double time, int imsi, int cellId, double rsrp);
                 void hoStarted();
                 void hoEnded();

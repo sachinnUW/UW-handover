@@ -20,6 +20,19 @@ double MROENV::tableRead(double x, double y)
     return ret;
 }
 
+double MROENV::tableRead2(double x, double y)
+{
+    auto mlInput = EnvSetterCond();
+    mlInput->x = x;
+    mlInput->y = y;
+    SetCompleted();
+    
+    auto mlOutput = ActionGetterCond();
+    double ret = mlOutput->hystAdjustment;
+    GetCompleted();
+    return ret;
+}
+
 void MROENV::loadIds(double time, int imsi, int cellId, double rsrp)
 {
 	auto mlInput = EnvSetterCond();

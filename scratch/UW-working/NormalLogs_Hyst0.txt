@@ -1,0 +1,6 @@
+Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
+/home/sachin/repos/ns-3-dev-git/scratch/UW-working
+Running with: DQN
+starting
+Starting ns-3 simulation
+[01;31mInterrupted[0m 

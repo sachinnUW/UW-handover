@@ -18,7 +18,7 @@
     "simulation": {
         "mobility_type": "constant_velocity",
         "resource_blocks": 50,
-        "simulation_duration_s": 50,
+        "simulation_duration_s": 10,
         "seed": 2,
         "field_edges": [
             0,
@@ -26,7 +26,7 @@
             0,
             1000
         ],
-        "number_of_UE": 1,
+        "number_of_UE": 8,
         "inter_BS_distance": 500,
         "average_UE_speed": 200,
         "UE_speed_bound": 5

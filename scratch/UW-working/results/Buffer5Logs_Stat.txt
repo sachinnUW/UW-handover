@@ -1,0 +1,269 @@
+Waf: Entering directory `/home/sachin/repos/ns-3-dev-git/build'
+Waf: Leaving directory `/home/sachin/repos/ns-3-dev-git/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (0.776s)
+rf config loaded
+protocol config loaded
+10.8554,588.708
+TCP
+Simulation time: 50 sec
+0.5 node 14 UE IMSI 1: connected to CellId 1 with RNTI 1
+0.5 node 0 eNB CellId 1: successful connection of UE with IMSI 1 RNTI 1
+0.501 UE 1: sent measReport to CellId 1
+0.501 UE 1: sent measReport to CellId 1
+0.501 node 0 eNB CellId 1: start handover of UE with IMSI 1 RNTI 1 to CellId 4
+0.501 node 14 UE IMSI 1: previously connected to CellId 1 with RNTI 1, doing handover to CellId 4
+0.502 UE 1: sent measReport to CellId 1
+0.511 node 14 UE IMSI 1: successful handover to CellId 4 with RNTI 1
+0.511 node 3 eNB CellId 4: completed handover of UE with IMSI 1 RNTI 1
+0.512 UE 1: sent measReport to CellId 4
+0.512 UE 1: sent measReport to CellId 4
+0.512 node 3 eNB CellId 4: start handover of UE with IMSI 1 RNTI 1 to CellId 5
+0.512 node 14 UE IMSI 1: previously connected to CellId 4 with RNTI 1, doing handover to CellId 5
+0.513 UE 1: sent measReport to CellId 4
+0.516 node 14 UE IMSI 1: successful handover to CellId 5 with RNTI 1
+0.516 node 4 eNB CellId 5: completed handover of UE with IMSI 1 RNTI 1
+0.517 UE 1: sent measReport to CellId 5
+0.997 UE 1: sent measReport to CellId 5
+1.48 UE 1: sent measReport to CellId 5
+1.96 UE 1: sent measReport to CellId 5
+2.44 UE 1: sent measReport to CellId 5
+2.92 UE 1: sent measReport to CellId 5
+2.93 UE 1: sent measReport to CellId 5
+2.93 node 4 eNB CellId 5: start handover of UE with IMSI 1 RNTI 1 to CellId 2
+2.93 node 14 UE IMSI 1: previously connected to CellId 5 with RNTI 1, doing handover to CellId 2
+2.93 UE 1: sent measReport to CellId 5
+2.94 node 14 UE IMSI 1: successful handover to CellId 2 with RNTI 1
+2.94 node 1 eNB CellId 2: completed handover of UE with IMSI 1 RNTI 1
+2.94 UE 1: sent measReport to CellId 2
+3.17 UE 1: sent measReport to CellId 2
+3.42 UE 1: sent measReport to CellId 2
+3.9 UE 1: sent measReport to CellId 2
+4.2 UE 1: sent measReport to CellId 2
+4.38 UE 1: sent measReport to CellId 2
+4.86 UE 1: sent measReport to CellId 2
+5.22 UE 1: sent measReport to CellId 2
+5.34 UE 1: sent measReport to CellId 2
+5.82 UE 1: sent measReport to CellId 2
+6.24 UE 1: sent measReport to CellId 2
+6.24 node 1 eNB CellId 2: start handover of UE with IMSI 1 RNTI 1 to CellId 6
+6.24 node 14 UE IMSI 1: previously connected to CellId 2 with RNTI 1, doing handover to CellId 6
+6.25 UE 1: sent measReport to CellId 2
+6.25 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 1
+6.25 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 1
+6.25 UE 1: sent measReport to CellId 6
+6.73 UE 1: sent measReport to CellId 6
+7.21 UE 1: sent measReport to CellId 6
+7.69 UE 1: sent measReport to CellId 6
+8.17 UE 1: sent measReport to CellId 6
+8.65 UE 1: sent measReport to CellId 6
+9.13 UE 1: sent measReport to CellId 6
+9.46 UE 1: sent measReport to CellId 6
+9.46 node 5 eNB CellId 6: start handover of UE with IMSI 1 RNTI 1 to CellId 9
+9.46 node 14 UE IMSI 1: previously connected to CellId 6 with RNTI 1, doing handover to CellId 9
+9.46 UE 1: sent measReport to CellId 6
+9.47 node 14 UE IMSI 1: successful handover to CellId 9 with RNTI 1
+9.47 node 8 eNB CellId 9: completed handover of UE with IMSI 1 RNTI 1
+9.47 UE 1: sent measReport to CellId 9
+9.52 UE 1: sent measReport to CellId 9
+9.95 UE 1: sent measReport to CellId 9
+*** Simulation time: 10.0s
+10.545 UE 1: sent measReport to CellId 9
+10.691 UE 1: sent measReport to CellId 9
+11.171 UE 1: sent measReport to CellId 9
+11.569 UE 1: sent measReport to CellId 9
+11.651 UE 1: sent measReport to CellId 9
+12.131 UE 1: sent measReport to CellId 9
+12.593 UE 1: sent measReport to CellId 9
+12.593 node 8 eNB CellId 9: start handover of UE with IMSI 1 RNTI 1 to CellId 8
+12.593 node 14 UE IMSI 1: previously connected to CellId 9 with RNTI 1, doing handover to CellId 8
+12.594 UE 1: sent measReport to CellId 9
+12.597 node 14 UE IMSI 1: successful handover to CellId 8 with RNTI 1
+12.597 node 7 eNB CellId 8: completed handover of UE with IMSI 1 RNTI 1
+12.598 UE 1: sent measReport to CellId 8
+13.078 UE 1: sent measReport to CellId 8
+13.558 UE 1: sent measReport to CellId 8
+14.038 UE 1: sent measReport to CellId 8
+14.518 UE 1: sent measReport to CellId 8
+14.571 UE 1: sent measReport to CellId 8
+14.571 node 7 eNB CellId 8: start handover of UE with IMSI 1 RNTI 1 to CellId 5
+14.571 node 14 UE IMSI 1: previously connected to CellId 8 with RNTI 1, doing handover to CellId 5
+14.572 UE 1: sent measReport to CellId 8
+14.575 node 14 UE IMSI 1: successful handover to CellId 5 with RNTI 2
+14.575 node 4 eNB CellId 5: completed handover of UE with IMSI 1 RNTI 2
+14.576 UE 1: sent measReport to CellId 5
+15.056 UE 1: sent measReport to CellId 5
+15.786 UE 1: sent measReport to CellId 5
+16.266 UE 1: sent measReport to CellId 5
+16.746 UE 1: sent measReport to CellId 5
+17.226 UE 1: sent measReport to CellId 5
+17.236 UE 1: sent measReport to CellId 5
+17.236 node 4 eNB CellId 5: start handover of UE with IMSI 1 RNTI 2 to CellId 2
+17.236 node 14 UE IMSI 1: previously connected to CellId 5 with RNTI 2, doing handover to CellId 2
+17.237 UE 1: sent measReport to CellId 5
+17.240 node 14 UE IMSI 1: successful handover to CellId 2 with RNTI 2
+17.240 node 1 eNB CellId 2: completed handover of UE with IMSI 1 RNTI 2
+17.241 UE 1: sent measReport to CellId 2
+17.721 UE 1: sent measReport to CellId 2
+18.201 UE 1: sent measReport to CellId 2
+18.681 UE 1: sent measReport to CellId 2
+19.101 UE 1: sent measReport to CellId 2
+19.101 node 1 eNB CellId 2: start handover of UE with IMSI 1 RNTI 2 to CellId 3
+19.101 node 14 UE IMSI 1: previously connected to CellId 2 with RNTI 2, doing handover to CellId 3
+19.102 UE 1: sent measReport to CellId 2
+19.105 node 14 UE IMSI 1: successful handover to CellId 3 with RNTI 1
+19.105 node 2 eNB CellId 3: completed handover of UE with IMSI 1 RNTI 1
+19.106 UE 1: sent measReport to CellId 3
+19.586 UE 1: sent measReport to CellId 3
+*** Simulation time: 20.0s
+20.066 UE 1: sent measReport to CellId 3
+20.546 UE 1: sent measReport to CellId 3
+21.026 UE 1: sent measReport to CellId 3
+21.091 UE 1: sent measReport to CellId 3
+21.091 node 2 eNB CellId 3: start handover of UE with IMSI 1 RNTI 1 to CellId 6
+21.091 node 14 UE IMSI 1: previously connected to CellId 3 with RNTI 1, doing handover to CellId 6
+21.092 UE 1: sent measReport to CellId 3
+21.095 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 2
+21.095 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 2
+21.096 UE 1: sent measReport to CellId 6
+21.576 UE 1: sent measReport to CellId 6
+22.431 UE 1: sent measReport to CellId 6
+22.911 UE 1: sent measReport to CellId 6
+23.391 UE 1: sent measReport to CellId 6
+23.701 UE 1: sent measReport to CellId 6
+23.701 node 5 eNB CellId 6: start handover of UE with IMSI 1 RNTI 2 to CellId 9
+23.701 node 14 UE IMSI 1: previously connected to CellId 6 with RNTI 2, doing handover to CellId 9
+23.702 UE 1: sent measReport to CellId 6
+23.705 node 14 UE IMSI 1: successful handover to CellId 9 with RNTI 2
+23.705 node 8 eNB CellId 9: completed handover of UE with IMSI 1 RNTI 2
+23.706 UE 1: sent measReport to CellId 9
+24.186 UE 1: sent measReport to CellId 9
+24.666 UE 1: sent measReport to CellId 9
+25.146 UE 1: sent measReport to CellId 9
+25.626 UE 1: sent measReport to CellId 9
+25.931 UE 1: sent measReport to CellId 9
+25.931 node 8 eNB CellId 9: start handover of UE with IMSI 1 RNTI 2 to CellId 8
+25.931 node 14 UE IMSI 1: previously connected to CellId 9 with RNTI 2, doing handover to CellId 8
+25.932 UE 1: sent measReport to CellId 9
+25.935 node 14 UE IMSI 1: successful handover to CellId 8 with RNTI 2
+25.935 node 7 eNB CellId 8: completed handover of UE with IMSI 1 RNTI 2
+25.936 UE 1: sent measReport to CellId 8
+26.416 UE 1: sent measReport to CellId 8
+26.896 UE 1: sent measReport to CellId 8
+27.536 UE 1: sent measReport to CellId 8
+28.016 UE 1: sent measReport to CellId 8
+28.496 UE 1: sent measReport to CellId 8
+28.811 UE 1: sent measReport to CellId 8
+28.811 node 7 eNB CellId 8: start handover of UE with IMSI 1 RNTI 2 to CellId 5
+28.811 node 14 UE IMSI 1: previously connected to CellId 8 with RNTI 2, doing handover to CellId 5
+28.812 UE 1: sent measReport to CellId 8
+28.815 node 14 UE IMSI 1: successful handover to CellId 5 with RNTI 3
+28.815 node 4 eNB CellId 5: completed handover of UE with IMSI 1 RNTI 3
+28.816 UE 1: sent measReport to CellId 5
+29.296 UE 1: sent measReport to CellId 5
+29.776 UE 1: sent measReport to CellId 5
+*** Simulation time: 30.0s
+30.256 UE 1: sent measReport to CellId 5
+30.736 UE 1: sent measReport to CellId 5
+31.021 UE 1: sent measReport to CellId 5
+31.021 node 4 eNB CellId 5: start handover of UE with IMSI 1 RNTI 3 to CellId 6
+31.021 node 14 UE IMSI 1: previously connected to CellId 5 with RNTI 3, doing handover to CellId 6
+31.022 UE 1: sent measReport to CellId 5
+31.025 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 3
+31.025 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 3
+31.026 UE 1: sent measReport to CellId 6
+31.506 UE 1: sent measReport to CellId 6
+31.986 UE 1: sent measReport to CellId 6
+32.466 UE 1: sent measReport to CellId 6
+32.741 UE 1: sent measReport to CellId 6
+32.741 node 5 eNB CellId 6: start handover of UE with IMSI 1 RNTI 3 to CellId 3
+32.741 node 14 UE IMSI 1: previously connected to CellId 6 with RNTI 3, doing handover to CellId 3
+32.742 UE 1: sent measReport to CellId 6
+32.745 node 14 UE IMSI 1: successful handover to CellId 3 with RNTI 2
+32.745 node 2 eNB CellId 3: completed handover of UE with IMSI 1 RNTI 2
+32.746 UE 1: sent measReport to CellId 3
+33.226 UE 1: sent measReport to CellId 3
+33.961 UE 1: sent measReport to CellId 3
+34.441 UE 1: sent measReport to CellId 3
+34.921 UE 1: sent measReport to CellId 3
+35.296 UE 1: sent measReport to CellId 3
+35.296 node 2 eNB CellId 3: start handover of UE with IMSI 1 RNTI 2 to CellId 6
+35.296 node 14 UE IMSI 1: previously connected to CellId 3 with RNTI 2, doing handover to CellId 6
+35.297 UE 1: sent measReport to CellId 3
+35.300 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 4
+35.300 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 4
+35.301 UE 1: sent measReport to CellId 6
+35.781 UE 1: sent measReport to CellId 6
+36.261 UE 1: sent measReport to CellId 6
+36.741 UE 1: sent measReport to CellId 6
+37.221 UE 1: sent measReport to CellId 6
+37.701 UE 1: sent measReport to CellId 6
+37.906 UE 1: sent measReport to CellId 6
+37.906 node 5 eNB CellId 6: start handover of UE with IMSI 1 RNTI 4 to CellId 5
+37.906 node 14 UE IMSI 1: previously connected to CellId 6 with RNTI 4, doing handover to CellId 5
+37.907 UE 1: sent measReport to CellId 6
+37.910 node 14 UE IMSI 1: successful handover to CellId 5 with RNTI 4
+37.910 node 4 eNB CellId 5: completed handover of UE with IMSI 1 RNTI 4
+37.911 UE 1: sent measReport to CellId 5
+38.391 UE 1: sent measReport to CellId 5
+38.871 UE 1: sent measReport to CellId 5
+39.291 UE 1: sent measReport to CellId 5
+39.291 node 4 eNB CellId 5: start handover of UE with IMSI 1 RNTI 4 to CellId 8
+39.291 node 14 UE IMSI 1: previously connected to CellId 5 with RNTI 4, doing handover to CellId 8
+39.292 UE 1: sent measReport to CellId 5
+39.295 node 14 UE IMSI 1: successful handover to CellId 8 with RNTI 3
+39.295 node 7 eNB CellId 8: completed handover of UE with IMSI 1 RNTI 3
+39.296 UE 1: sent measReport to CellId 8
+39.776 UE 1: sent measReport to CellId 8
+*** Simulation time: 40.0s
+40.256 UE 1: sent measReport to CellId 8
+40.736 UE 1: sent measReport to CellId 8
+41.216 UE 1: sent measReport to CellId 8
+41.696 UE 1: sent measReport to CellId 8
+42.176 UE 1: sent measReport to CellId 8
+42.656 UE 1: sent measReport to CellId 8
+42.996 UE 1: sent measReport to CellId 8
+42.996 node 7 eNB CellId 8: start handover of UE with IMSI 1 RNTI 3 to CellId 9
+42.996 node 14 UE IMSI 1: previously connected to CellId 8 with RNTI 3, doing handover to CellId 9
+42.997 UE 1: sent measReport to CellId 8
+43.000 node 14 UE IMSI 1: successful handover to CellId 9 with RNTI 3
+43.000 node 8 eNB CellId 9: completed handover of UE with IMSI 1 RNTI 3
+43.001 UE 1: sent measReport to CellId 9
+43.481 UE 1: sent measReport to CellId 9
+43.961 UE 1: sent measReport to CellId 9
+44.401 UE 1: sent measReport to CellId 9
+44.401 node 8 eNB CellId 9: start handover of UE with IMSI 1 RNTI 3 to CellId 6
+44.401 node 14 UE IMSI 1: previously connected to CellId 9 with RNTI 3, doing handover to CellId 6
+44.402 UE 1: sent measReport to CellId 9
+44.405 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 5
+44.405 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 5
+44.406 UE 1: sent measReport to CellId 6
+44.886 UE 1: sent measReport to CellId 6
+45.366 UE 1: sent measReport to CellId 6
+45.846 UE 1: sent measReport to CellId 6
+46.326 UE 1: sent measReport to CellId 6
+46.806 UE 1: sent measReport to CellId 6
+46.906 UE 1: sent measReport to CellId 6
+46.906 node 5 eNB CellId 6: start handover of UE with IMSI 1 RNTI 5 to CellId 3
+46.906 node 14 UE IMSI 1: previously connected to CellId 6 with RNTI 5, doing handover to CellId 3
+46.907 UE 1: sent measReport to CellId 6
+46.910 node 14 UE IMSI 1: successful handover to CellId 3 with RNTI 3
+46.910 node 2 eNB CellId 3: completed handover of UE with IMSI 1 RNTI 3
+46.911 UE 1: sent measReport to CellId 3
+47.391 UE 1: sent measReport to CellId 3
+48.041 UE 1: sent measReport to CellId 3
+48.521 UE 1: sent measReport to CellId 3
+49.001 UE 1: sent measReport to CellId 3
+49.481 UE 1: sent measReport to CellId 3
+49.586 UE 1: sent measReport to CellId 3
+49.586 node 2 eNB CellId 3: start handover of UE with IMSI 1 RNTI 3 to CellId 6
+49.586 node 14 UE IMSI 1: previously connected to CellId 3 with RNTI 3, doing handover to CellId 6
+49.587 UE 1: sent measReport to CellId 3
+49.590 node 14 UE IMSI 1: successful handover to CellId 6 with RNTI 6
+49.590 node 5 eNB CellId 6: completed handover of UE with IMSI 1 RNTI 6
+49.591 UE 1: sent measReport to CellId 6
+/home/sachin/repos/ns-3-dev-git/scratch/UW-working
+Running with: DQN
+starting
+Starting ns-3 simulation
+==> saving model
